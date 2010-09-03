@@ -1,0 +1,3 @@
+export(memoise, memoize)
+importFrom(digest, digest)
+export(forget)
