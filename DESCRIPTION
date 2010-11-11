@@ -1,0 +1,14 @@
+Package: memoise
+Title: Memoise functions
+Version: 0.1
+Author: Hadley Wickham <h.wickham@gmail.com>
+Maintainer: Hadley Wickham <h.wickham@gmail.com>
+Description: Cache the results of a function so that when you call it
+        again with the same arguments it returns the pre-computed
+        value.
+Imports: digest
+License: MIT
+Collate: 'cache.r' 'memoise.r'
+Packaged: 2010-09-03 18:41:27 UTC; hadley
+Repository: CRAN
+Date/Publication: 2010-09-03 19:38:30
