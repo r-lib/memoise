@@ -1,3 +1,4 @@
 export(memoise, memoize)
 importFrom(digest, digest)
 export(forget)
+export(is.memoised, is.memoized)
