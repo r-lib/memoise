@@ -26,15 +26,16 @@
 #'     take care that you don't just put \cr
 #'       \code{  glm <- memoise(stats::glm)} \cr
 #'     at the top of your file: that would reinitialise the memoised
-#'     function every time the file was sourced.  Do the memoisation
-#'     assignment once at the R prompt, or put it somewhere else where
-#'     it won't get repeated.
+#'     function every time the file was sourced. Wrap it in \cr
+#'       \code{  if (!is.memoised(glm)) }, or do the memoisation call
+#'     once at the R prompt, or put it somewhere else where it won't get
+#'     repeated.
 #' }
 #'
 #' @name memoise
 #' @title Memoise a function.
 #' @param f     Function of which to create a memoised copy.
-#' @seealso \code{\link{forget}},
+#' @seealso \code{\link{forget}}, \code{\link{is.memoised}}, 
 #'     \url{http://en.wikipedia.org/wiki/Memoization}
 #' @aliases memoise memoize
 #' @export memoise memoize
@@ -72,15 +73,15 @@
 #' memA2(2) # Different cache, different outcome
 #' 
 #' # Don't do the same memoisation assignment twice: a brand-new memoised
-#' # function also means a brand-new cache, and \emph{that} you can as
-#' # easily and more legibly achieve using \link{forget}.
+#' # function also means a brand-new cache, and \emph{that} you could as
+#' # easily and more legibly achieve using \code{\link{forget}}.
 #' memA(2)
 #' memA <- memoise(a)
 #' memA(2)
-memoize <- memoise <- function(f) {
+memoise <- memoize <- function(f) {
   cache <- new_cache()
   
-  function(...) {
+  memo_f <- function(...) {
     hash <- digest(list(...))
     
     if (cache$has_key(hash)) {
@@ -91,6 +92,8 @@ memoize <- memoise <- function(f) {
       res
     }
   }
+  attr(memo_f, "memoised") <- TRUE
+  return(f)
 }
 
 #' Forget past results.
@@ -98,7 +101,7 @@ memoize <- memoise <- function(f) {
 #'
 #' @param f memoised function
 #' @export
-#' @seealso \code{\link{memoise}}
+#' @seealso \code{\link{memoise}}, \code{\link{is.memoised}}
 #' @examples
 #' memX <- memoise(function() { Sys.sleep(1); runif(1) })
 #' # The forget() function
@@ -116,4 +119,19 @@ forget <- function(f) {
   cache$reset()
   
   TRUE
+}
+
+#' Test whether a function is a memoised copy.
+#' Memoised copies of functions carry an attribute 
+#' \code{memoised = TRUE}, which is.memoised() tests for.
+#' @param f Function to test.
+#' @seealso \code{\link{memoise}}, \code{\link{forget}}
+#' @export is.memoised is.memoized
+#' @aliases is.memoised is.memoized
+#' @examples
+#' mem_lm <- memoise(lm)
+#' is.memoised(lm) # FALSE
+#' is.memoised(mem_lm) # TRUE
+is.memoised <- is.memoized <- function(f) {
+  identical(attr(f, "memoised"), TRUE)
 }
