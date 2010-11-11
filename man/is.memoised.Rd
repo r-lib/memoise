@@ -1,8 +1,8 @@
 \name{is.memoised}
 \title{Test whether a function is a memoised copy.}
 \description{Test whether a function is a memoised copy.
-is.memoised(\kbd{f}) returns \code{TRUE} if \kbd{f} is a memoised
-function. It looks for an attribute \code{memoised} set to \code{TRUE}.}
+Memoised copies of functions carry an attribute 
+\code{memoised = TRUE}, which is.memoised() tests for.}
 \seealso{\code{\link{memoise}}, \code{\link{forget}}}
 \alias{is.memoised}
 \alias{is.memoized}

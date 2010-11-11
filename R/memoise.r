@@ -41,8 +41,8 @@
 #' @export memoise memoize
 #' @importFrom digest digest
 #' @examples
-#' # a() is evaluated anew each time. memA() is only re-evaluated when you
-#' # call it with a new set of parameters.
+#' # a() is evaluated anew each time. memA() is only re-evaluated 
+#' # when you call it with a new set of parameters.
 #' a <- function(n) { runif(n) }
 #' memA <- memoise(a)
 #' replicate(5, a(2))
@@ -52,8 +52,8 @@
 #' # changed-value correctly produces two different outcomes...
 #' N <- 4; memA(N)
 #' N <- 5; memA(N)
-#' # ... and same-value-but-different-name correctly produces the same
-#' # cached outcome.
+#' # ... and same-value-but-different-name correctly produces 
+#' #     the same cached outcome.
 #' N <- 4; memA(N)
 #' N2 <- 4; memA(N2)
 #' 
@@ -61,20 +61,23 @@
 #' memB <- memoise(function(n, dummy="a") { runif(n) })
 #' memB(2)
 #' memB(2, dummy="a")
-#' # It doesn't know about parameter relevance, either. Different call
-#' # means different cacheing, no matter that the outcome is the same.
+#' # It doesn't know about parameter relevance, either. 
+#' # Different call means different cacheing, no matter 
+#' # that the outcome is the same.
 #' memB(2, dummy="b")
 #' 
-#' # You can create multiple memoisations of the same function, and
-#' # they'll be independent. 
+#' # You can create multiple memoisations of the same function, 
+#' # and they'll be independent. 
 #' memA(2)
 #' memA2 <- memoise(a)
 #' memA(2)  # Still the same outcome
 #' memA2(2) # Different cache, different outcome
 #' 
-#' # Don't do the same memoisation assignment twice: a brand-new memoised
-#' # function also means a brand-new cache, and \emph{that} you could as
-#' # easily and more legibly achieve using \code{\link{forget}}.
+#' # Don't do the same memoisation assignment twice: a brand-new 
+#' # memoised function also means a brand-new cache, and *that* 
+#' # you could as easily and more legibly achieve using forget().
+#' # (If you're not sure whether you already memoised something,  
+#' #  use is.memoised() to check.)
 #' memA(2)
 #' memA <- memoise(a)
 #' memA(2)
