@@ -88,11 +88,16 @@ memoise <- memoize <- function(f) {
     hash <- digest(list(...))
     
     if (cache$has_key(hash)) {
-      cache$get(hash)
+      res <- cache$get(hash)
     } else {
-      res <- f(...)
+      res <- withVisible(f(...))
       cache$set(hash, res)
-      res
+    }
+
+    if (res$visible) {
+      res$value
+    } else {
+      invisible(res$value)
     }
   }
   attr(memo_f, "memoised") <- TRUE
