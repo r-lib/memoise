@@ -9,5 +9,5 @@ URL: http://github.com/hadley/memoise
 BugReports: http://github.com/hadley/memoise/issues
 Imports:
     digest
-License: MIT
+License: MIT + file LICENSE
 Roxygen: list(wrap = FALSE)
