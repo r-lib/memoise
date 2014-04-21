@@ -5,6 +5,7 @@ Author: Hadley Wickham <h.wickham@gmail.com>
 Maintainer: Hadley Wickham <h.wickham@gmail.com>
 Description: Cache the results of a function so that when you call it
     again with the same arguments it returns the pre-computed value.
-Imports: digest
+Imports:
+    digest
 License: MIT
-Collate: 'cache.r' 'memoise.r'
+Roxygen: list(wrap = FALSE)
