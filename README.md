@@ -2,7 +2,7 @@
 
 If a function is called multiple times with the same input, you can
 often speed things up by keeping a cache of known answers that it can
-retrieve. This is called memoisation <http://en/wikipedia.org/wiki/Memoization>.
+retrieve. This is called memoisation <http://en.wikipedia.org/wiki/Memoization>.
 The `memoise` package provides a simple syntax 
 
     mf <- memoise(f)
