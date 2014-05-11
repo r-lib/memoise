@@ -82,6 +82,10 @@
 #' memA <- memoise(a)
 #' memA(2)
 memoise <- memoize <- function(f) {
+  if(is.memoised(f))
+  {
+    warning(deparse(substitute(f)), " is already memoised.")
+  }
   cache <- new_cache()
   
   memo_f <- function(...) {
