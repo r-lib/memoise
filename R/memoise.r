@@ -83,10 +83,13 @@
 #' memA(2)
 memoise <- memoize <- function(f) {
   cache <- new_cache()
-  
+  formal.args = as.list(f)
+
   memo_f <- function(...) {
-    hash <- digest(list(...))
-    
+    actual.args = names(as.list(match.call(f))[-1])
+    default.args = setdiff(names(formal.args), c(actual.args, "..."))
+    default.values = lapply(formal.args[default.args], eval, envir = environment(f))
+    hash <- digest(c(list(...), default.values))
     if (cache$has_key(hash)) {
       cache$get(hash)
     } else {
