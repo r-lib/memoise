@@ -138,3 +138,24 @@ forget <- function(f) {
 is.memoised <- is.memoized <- function(f) {
   identical(attr(f, "memoised"), TRUE)
 }
+
+#' Test whether a memoised function has been cached for particular arguments.
+#' @param f Function to test.
+#' @param ... arguments to function.
+#' @seealso \code{\link{is.memoised}}, \code{\link{memoise}}
+#' @export has.cache
+#' @examples
+#' mem_sum <- memoise(sum)
+#' has.cache( mem_sum, 1, 2, 3) # FALSE
+#' mem_sum(1, 2, 3)
+#' has.cache( mem_sum, 1, 2, 3) # TRUE
+has.cache <- function(f, ...) {
+  if(!is.memoised(f)) return(FALSE)
+  
+  hash <- digest(list(...))
+  env <- environment(f)
+  if (!exists("cache", env, inherits = FALSE)) return(FALSE)
+  cache <- get("cache", env)
+  
+  cache$has_key(hash)
+}
