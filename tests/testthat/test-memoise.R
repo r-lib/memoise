@@ -14,3 +14,19 @@ test_that("memoisation works", {
   forget(fnm)
   expect_equal(fnm(), 5)
 })
+
+test_that("memoisation depends on argument", {
+  fn <- function(j) { i <<- i + 1; i }
+  i <- 0
+  fnm <- memoise(fn)
+  expect_equal(fn(1), 1)
+  expect_equal(fn(1), 2)
+  expect_equal(fnm(1), 3)
+  expect_equal(fnm(1), 3)
+  expect_equal(fn(1), 4)
+  expect_equal(fnm(1), 3)
+  expect_equal(fnm(2), 5)
+  expect_equal(fnm(2), 5)
+  expect_equal(fnm(1), 3)
+  expect_equal(fn(2), 6)
+})
