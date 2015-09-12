@@ -1,4 +1,4 @@
-# memoise
+# memoise [![Travis-CI Build Status](https://travis-ci.org/hadley/memoise.svg?branch=master)](https://travis-ci.org/hadley/memoise)
 
 If a function is called multiple times with the same input, you can
 often speed things up by keeping a cache of known answers that it can
