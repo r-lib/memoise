@@ -83,14 +83,27 @@
 #' memA(2)
 memoise <- memoize <- function(f) {
   cache <- new_cache()
-  
-  memo_f <- function(...) {
-    hash <- digest(list(...))
-    
+
+  f_formals <- formals(f)
+  f_formal_names <- names(f_formals)
+  f_formal_name_list <- lapply(f_formal_names, as.name)
+
+  # list(...)
+  list_call <- as.call(c(list(as.name("list")), f_formal_name_list))
+
+  # memoised_function(...)
+  init_call_args <- setNames(f_formal_name_list, f_formal_names)
+  init_call <- as.call(c(as.name("memoised_function"), init_call_args))
+
+  memoised_function <- f
+
+  memo_f <- eval(bquote(function(...) {
+    hash <- digest(.(list_call))
+
     if (cache$has_key(hash)) {
       res <- cache$get(hash)
     } else {
-      res <- withVisible(f(...))
+      res <- withVisible(.(init_call))
       cache$set(hash, res)
     }
 
@@ -99,7 +112,8 @@ memoise <- memoize <- function(f) {
     } else {
       invisible(res$value)
     }
-  }
+  }))
+  formals(memo_f) <- f_formals
   attr(memo_f, "memoised") <- TRUE
   return(memo_f)
 }
