@@ -3,7 +3,8 @@
 language: r
 warnings_are_errors: true
 sudo: required
-r_binary_packages: covr
+r_binary_packages:
+  - covr
 
 after_success:
   - Rscript -e 'library(covr);codecov()'
