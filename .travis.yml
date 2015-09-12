@@ -3,3 +3,6 @@
 language: r
 warnings_are_errors: true
 sudo: required
+
+after_success:
+  - Rscript -e 'library(covr);coveralls()'
