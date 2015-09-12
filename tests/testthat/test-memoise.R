@@ -13,6 +13,9 @@ test_that("memoisation works", {
 
   forget(fnm)
   expect_equal(fnm(), 5)
+
+  expect_true(is.memoised(fnm))
+  expect_false(is.memoised(fn))
 })
 
 test_that("memoisation depends on argument", {
