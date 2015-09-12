@@ -11,7 +11,7 @@ test_that("memoisation works", {
   expect_equal(fn(), 4)
   expect_equal(fnm(), 3)
 
-  forget(fnm)
+  expect_true(forget(fnm))
   expect_equal(fnm(), 5)
 
   expect_true(is.memoised(fnm))
@@ -32,4 +32,61 @@ test_that("memoisation depends on argument", {
   expect_equal(fnm(2), 5)
   expect_equal(fnm(1), 3)
   expect_equal(fn(2), 6)
+})
+
+test_that("interface of wrapper matches interface of memoised function", {
+  fn <- function(j) { i <<- i + 1; i }
+  i <- 0
+
+  expect_equal(formals(fn), formals(memoise(fn)))
+  expect_equal(formals(runif), formals(memoise(runif)))
+  expect_equal(formals(paste), formals(memoise(paste)))
+})
+
+test_that("dot arguments are used for hash", {
+  fn <- function(...) { i <<- i + 1; i }
+  i <- 0
+  fnm <- memoise(fn)
+
+  expect_equal(fn(1), 1)
+  expect_equal(fnm(1), 2)
+  expect_equal(fnm(1), 2)
+  expect_equal(fnm(1, 2), 3)
+  expect_equal(fnm(1), 2)
+  expect_equal(fnm(), 4)
+
+  expect_true(forget(fnm))
+
+  expect_equal(fnm(1), 5)
+  expect_equal(fnm(1, 2), 6)
+  expect_equal(fnm(), 7)
+})
+
+test_that("default arguments are used for hash", {
+  fn <- function(j = 1) { i <<- i + 1; i }
+  i <- 0
+  fnm <- memoise(fn)
+
+  expect_equal(fn(1), 1)
+  expect_equal(fnm(1), 2)
+  expect_equal(fnm(1), 2)
+  expect_equal(fnm(), 2)
+  expect_equal(fnm(2), 3)
+  expect_equal(fnm(), 2)
+})
+
+test_that("symbol collision", {
+  cache <- function(j = 1) { i <<- i + 1; i }
+  i <- 0
+  cachem <- memoise(cache)
+
+  expect_equal(cache(), 1)
+  expect_equal(cache(), 2)
+  expect_equal(cachem(), 3)
+  expect_equal(cachem(), 3)
+  expect_equal(cache(), 4)
+  expect_equal(cachem(), 3)
+
+  expect_true(forget(cachem))
+  expect_equal(cachem(), 5)
 })
