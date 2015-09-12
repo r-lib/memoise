@@ -3,7 +3,7 @@
 language: r
 warnings_are_errors: true
 sudo: required
-r_binary_packages:
+r_packages:
   - covr
 
 after_success:
