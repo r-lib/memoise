@@ -5,4 +5,4 @@ warnings_are_errors: true
 sudo: required
 
 after_success:
-  - Rscript -e 'library(covr);coveralls()'
+  - Rscript -e 'library(covr);codecov()'
