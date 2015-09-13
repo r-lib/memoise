@@ -1,6 +1,6 @@
 Package: memoise
 Title: Memoisation of Functions
-Version: 0.2.1.9000
+Version: 0.2.99.9000
 Author: Hadley Wickham <h.wickham@gmail.com>
 Maintainer: Hadley Wickham <h.wickham@gmail.com>
 Description: Cache the results of a function so that when you call it
