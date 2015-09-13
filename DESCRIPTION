@@ -1,13 +1,13 @@
 Package: memoise
-Title: Memoise functions
-Version: 0.2.99
+Title: Memoisation of Functions
+Version: 0.2.99.9000
 Author: Hadley Wickham <h.wickham@gmail.com>
 Maintainer: Hadley Wickham <h.wickham@gmail.com>
 Description: Cache the results of a function so that when you call it
     again with the same arguments it returns the pre-computed value.
-URL: http://github.com/hadley/memoise
-BugReports: http://github.com/hadley/memoise/issues
+URL: https://github.com/hadley/memoise
+BugReports: https://github.com/hadley/memoise/issues
 Imports:
     digest
+Suggests: testthat
 License: MIT + file LICENSE
-Roxygen: list(wrap = FALSE)
