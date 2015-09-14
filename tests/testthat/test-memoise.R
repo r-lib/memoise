@@ -11,6 +11,7 @@ test_that("memoisation works", {
   expect_equal(fn(), 4)
   expect_equal(fnm(), 3)
 
+  expect_false(forget(fn))
   expect_true(forget(fnm))
   expect_equal(fnm(), 5)
 
