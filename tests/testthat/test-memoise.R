@@ -106,3 +106,11 @@ test_that("is.memoised", {
   expect_false(is.memoised(is.memoised))
   expect_true(is.memoised(memoise(identical)))
 })
+
+test_that("visibility", {
+  vis <- function() NULL
+  invis <- function() invisible()
+
+  expect_true(withVisible(memoise(vis)())$visible)
+  expect_false(withVisible(memoise(invis)())$visible)
+})
