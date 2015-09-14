@@ -90,3 +90,11 @@ test_that("symbol collision", {
   expect_true(forget(cachem))
   expect_equal(cachem(), 5)
 })
+
+test_that("visibility", {
+  vis <- function() NULL
+  invis <- function() invisible()
+
+  expect_true(withVisible(memoise(vis)())$visible)
+  expect_false(withVisible(memoise(invis)())$visible)
+})
