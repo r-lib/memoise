@@ -1,5 +1,8 @@
 # Version 0.2.99.9000
 
+* A memoised function now has the same interface as the original function
+  (#14, @krlmlr).
+
 # Version 0.2.1
 
 * Update to fix outstanding R CMD check issues.
