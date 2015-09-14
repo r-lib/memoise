@@ -63,11 +63,16 @@ N <- 5; memA(N)
 N <- 4; memA(N)
 N2 <- 4; memA(N2)
 
-# memoise() doesn't know about default parameters.
-memB <- memoise(function(n, dummy="a") { runif(n) })
+# memoise() knows about default parameters.
+b <- function(n, dummy="a") { runif(n) }
+memB <- memoise(b)
 memB(2)
 memB(2, dummy="a")
-# It doesn't know about parameter relevance, either.
+# This works, because the interface of the memoised function is the same as
+# that of the original function.
+formals(b)
+formals(memB)
+# However, it doesn't know about parameter relevance.
 # Different call means different cacheing, no matter
 # that the outcome is the same.
 memB(2, dummy="b")

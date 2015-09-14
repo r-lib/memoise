@@ -57,11 +57,16 @@
 #' N <- 4; memA(N)
 #' N2 <- 4; memA(N2)
 #'
-#' # memoise() doesn't know about default parameters.
-#' memB <- memoise(function(n, dummy="a") { runif(n) })
+#' # memoise() knows about default parameters.
+#' b <- function(n, dummy="a") { runif(n) }
+#' memB <- memoise(b)
 #' memB(2)
 #' memB(2, dummy="a")
-#' # It doesn't know about parameter relevance, either.
+#' # This works, because the interface of the memoised function is the same as
+#' # that of the original function.
+#' formals(b)
+#' formals(memB)
+#' # However, it doesn't know about parameter relevance.
 #' # Different call means different cacheing, no matter
 #' # that the outcome is the same.
 #' memB(2, dummy="b")
@@ -83,18 +88,37 @@
 #' memA(2)
 memoise <- memoize <- function(f) {
   cache <- new_cache()
-  
-  memo_f <- function(...) {
-    hash <- digest(list(...))
-    
+
+  f_formals <- formals(f)
+  f_formal_names <- names(f_formals)
+  f_formal_name_list <- lapply(f_formal_names, as.name)
+
+  # list(...)
+  list_call <- as.call(c(list(as.name("list")), f_formal_name_list))
+
+  # memoised_function(...)
+  init_call_args <- setNames(f_formal_name_list, f_formal_names)
+  init_call <- as.call(c(as.name("memoised_function"), init_call_args))
+
+  memoised_function <- f
+
+  memo_f <- eval(bquote(function(...) {
+    hash <- digest(.(list_call))
+
     if (cache$has_key(hash)) {
-      cache$get(hash)
+      res <- cache$get(hash)
     } else {
-      res <- f(...)
+      res <- withVisible(.(init_call))
       cache$set(hash, res)
-      res
     }
-  }
+
+    if (res$visible) {
+      res$value
+    } else {
+      invisible(res$value)
+    }
+  }))
+  formals(memo_f) <- f_formals
   attr(memo_f, "memoised") <- TRUE
   return(memo_f)
 }
