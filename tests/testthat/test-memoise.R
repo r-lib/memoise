@@ -99,3 +99,10 @@ test_that("visibility", {
   expect_true(withVisible(memoise(vis)())$visible)
   expect_false(withVisible(memoise(invis)())$visible)
 })
+
+test_that("is.memoised", {
+  i <- 0
+  expect_false(is.memoised(i))
+  expect_false(is.memoised(is.memoised))
+  expect_true(is.memoised(memoise(identical)))
+})
