@@ -137,7 +137,9 @@ memoise <- memoize <- function(f) {
 #' forget(memX)
 #' system.time(print(memX()))
 forget <- function(f) {
-  if (!is.function(f)) return(FALSE)
+  if (!is.memoised(f)) {
+    return(FALSE)
+  }
 
   env <- environment(f)
   if (!exists("cache", env, inherits = FALSE)) return(FALSE)
@@ -160,5 +162,5 @@ forget <- function(f) {
 #' is.memoised(lm) # FALSE
 #' is.memoised(mem_lm) # TRUE
 is.memoised <- is.memoized <- function(f) {
-  identical(attr(f, "memoised"), TRUE)
+  is.function(f) && identical(attr(f, "memoised"), TRUE)
 }
