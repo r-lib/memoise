@@ -5,7 +5,6 @@ warnings_are_errors: true
 sudo: required
 r_binary_packages:
   - jsonlite
-  - rex
   - devtools
   - httr
   - crayon
