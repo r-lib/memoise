@@ -87,8 +87,17 @@
 #' memA <- memoise(a)
 #' memA(2)
 memoise <- memoize <- function(f) {
-  cache <- new_cache()
+  # We must not even try evaluating f -- once we start, there's no way back
+  if (inherits(try(eval.parent(substitute(f)), silent = TRUE), "try-error")) {
+    warning("Can't access f -- using old-style memoisation with dots interface. ",
+            "Define the memoised function before memoising to avoid this warning.")
+    memoise_old(f)
+  } else {
+    memoise_new(f)
+  }
+}
 
+memoise_new <- function(f) {
   f_formals <- formals(f)
   f_formal_names <- names(f_formals)
   f_formal_name_list <- lapply(f_formal_names, as.name)
@@ -101,6 +110,8 @@ memoise <- memoize <- function(f) {
   init_call <- as.call(c(as.name("memoised_function"), init_call_args))
 
   memoised_function <- f
+
+  cache <- new_cache()
 
   memo_f <- eval(bquote(function(...) {
     hash <- digest(.(list_call))
@@ -119,6 +130,29 @@ memoise <- memoize <- function(f) {
     }
   }))
   formals(memo_f) <- f_formals
+  attr(memo_f, "memoised") <- TRUE
+  return(memo_f)
+}
+
+memoise_old <- function(f) {
+  cache <- new_cache()
+
+  memo_f <- function(...) {
+    hash <- digest(list(...))
+
+    if (cache$has_key(hash)) {
+      res <- cache$get(hash)
+    } else {
+      res <- withVisible(f(...))
+      cache$set(hash, res)
+    }
+
+    if (res$visible) {
+      res$value
+    } else {
+      invisible(res$value)
+    }
+  }
   attr(memo_f, "memoised") <- TRUE
   return(memo_f)
 }
