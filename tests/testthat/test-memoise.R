@@ -11,6 +11,7 @@ test_that("memoisation works", {
   expect_equal(fn(), 4)
   expect_equal(fnm(), 3)
 
+  expect_false(forget(fn))
   expect_true(forget(fnm))
   expect_equal(fnm(), 5)
 
@@ -89,6 +90,21 @@ test_that("symbol collision", {
 
   expect_true(forget(cachem))
   expect_equal(cachem(), 5)
+})
+
+test_that("visibility", {
+  vis <- function() NULL
+  invis <- function() invisible()
+
+  expect_true(withVisible(memoise(vis)())$visible)
+  expect_false(withVisible(memoise(invis)())$visible)
+})
+
+test_that("is.memoised", {
+  i <- 0
+  expect_false(is.memoised(i))
+  expect_false(is.memoised(is.memoised))
+  expect_true(is.memoised(memoise(identical)))
 })
 
 test_that("visibility", {
