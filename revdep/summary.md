@@ -10,7 +10,7 @@
 |language |en_US:en                     |
 |collate  |en_US.UTF-8                  |
 |tz       |NA                           |
-|date     |2015-09-14                   |
+|date     |2015-09-17                   |
 
 ## Packages
 
@@ -321,7 +321,7 @@ Status: 5 NOTEs
 ```
 
 ## surveillance (1.9-1)
-Maintainer: Michael Höhle <hoehle@math.su.se>  
+Maintainer: Michael HÃ¶hle <hoehle@math.su.se>  
 Bug reports: https://r-forge.r-project.org/tracker/?group_id=45
 
 ```
