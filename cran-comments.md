@@ -1,21 +1,12 @@
 ## Test environments
-* local OS X install, R 3.1.2
-* ubuntu 12.04 (on travis-ci), R 3.1.2
+* Ubuntu 15.04, R 3.2.2 (locally and on Travis)
 * win-builder (devel and release)
 
 ## R CMD check results
-There were no ERRORs or WARNINGs. 
-
-There was 1 NOTE:
-
-* checking dependencies in R code ... NOTE
-  Namespace in Imports field not imported from: 'R6'
-
-  R6 is a build-time dependency.
+There were no ERRORs, WARNINGs or NOTEs.
 
 ## Downstream dependencies
-I have also run R CMD check on downstream dependencies of httr 
-(https://github.com/wch/checkresults/blob/master/httr/r-release). All packages 
-that I could install passed except:
+I have also run R CMD check on 10 downstream dependencies of memoise
+(https://github.com/hadley/memoise/blob/7597e250e87322a064cd97adeea36e5bad669f7d/revdep/summary.md). All packages that I could install passed except:
 
-* XYZ:...
+* lubridate: example failed most likely due to localized system (LC_TIME=de_CH.UTF-8)
