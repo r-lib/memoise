@@ -114,3 +114,21 @@ test_that("visibility", {
   expect_true(withVisible(memoise(vis)())$visible)
   expect_false(withVisible(memoise(invis)())$visible)
 })
+
+test_that("old-style interface", {
+  expect_warning(fm <- memoise(f), "old-style")
+  f <- function(a = 1) a
+
+  expect_equal(formals(fm), formals(function(...) NULL))
+
+  expect_equal(fm(), 1)
+  expect_equal(fm(3), 3)
+  expect_true(withVisible(fm())$visible)
+})
+
+test_that("old-style interface with invisible result", {
+  expect_warning(fm <- memoise(f), "old-style")
+  f <- function(a = 1) invisible(a)
+
+  expect_false(withVisible(fm())$visible)
+})
