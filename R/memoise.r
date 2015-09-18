@@ -134,6 +134,7 @@ memoise_new <- function(f, envir) {
   cache_env <- new.env(parent = envir)
   cache_env$cache <- cache
   cache_env$memoised_function <- f
+  cache_env$digest <- digest
   environment(memo_f) <- cache_env
 
   return(memo_f)
