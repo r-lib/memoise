@@ -111,22 +111,25 @@ memoise_new <- function(f) {
 
   cache <- new_cache()
 
-  memo_f <- eval(bquote(function(...) {
-    hash <- digest(.(list_call))
+  memo_f <- eval(
+    bquote(function(...) {
+      hash <- digest(.(list_call))
 
-    if (cache$has_key(hash)) {
-      res <- cache$get(hash)
-    } else {
-      res <- withVisible(.(init_call))
-      cache$set(hash, res)
-    }
+      if (cache$has_key(hash)) {
+        res <- cache$get(hash)
+      } else {
+        res <- withVisible(.(init_call))
+        cache$set(hash, res)
+      }
 
-    if (res$visible) {
-      res$value
-    } else {
-      invisible(res$value)
-    }
-  }))
+      if (res$visible) {
+        res$value
+      } else {
+        invisible(res$value)
+      }
+    },
+    as.environment(list(list_call = list_call, init_call = init_call)))
+  )
   formals(memo_f) <- f_formals
   attr(memo_f, "memoised") <- TRUE
 
