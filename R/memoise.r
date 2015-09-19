@@ -35,7 +35,6 @@
 #' @name memoise
 #' @title Memoise a function.
 #' @param f     Function of which to create a memoised copy.
-#' @param envir Environment of the returned function.
 #' @seealso \code{\link{forget}}, \code{\link{is.memoised}},
 #'     \url{http://en.wikipedia.org/wiki/Memoization}
 #' @aliases memoise memoize
@@ -87,18 +86,18 @@
 #' memA(2)
 #' memA <- memoise(a)
 #' memA(2)
-memoise <- memoize <- function(f, envir = parent.frame()) {
+memoise <- memoize <- function(f) {
   # We must not even try evaluating f -- once we start, there's no way back
   if (inherits(try(eval.parent(substitute(f)), silent = TRUE), "try-error")) {
     warning("Can't access f -- using old-style memoisation with dots interface. ",
             "Define the memoised function before memoising to avoid this warning.")
     memoise_old(f)
   } else {
-    memoise_new(f, envir)
+    memoise_new(f)
   }
 }
 
-memoise_new <- function(f, envir) {
+memoise_new <- function(f) {
   f_formals <- formals(f)
   f_formal_names <- names(f_formals)
   f_formal_name_list <- lapply(f_formal_names, as.name)
@@ -131,7 +130,7 @@ memoise_new <- function(f, envir) {
   formals(memo_f) <- f_formals
   attr(memo_f, "memoised") <- TRUE
 
-  cache_env <- new.env(parent = envir)
+  cache_env <- new.env(parent = baseenv())
   cache_env$cache <- cache
   cache_env$memoised_function <- f
   cache_env$digest <- digest
