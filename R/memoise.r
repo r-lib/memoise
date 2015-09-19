@@ -109,28 +109,36 @@ memoise_new <- function(f) {
   init_call_args <- setNames(f_formal_name_list, f_formal_names)
   init_call <- as.call(c(as.name("memoised_function"), init_call_args))
 
-  memoised_function <- f
-
   cache <- new_cache()
 
-  memo_f <- eval(bquote(function(...) {
-    hash <- digest(.(list_call))
+  memo_f <- eval(
+    bquote(function(...) {
+      hash <- digest(.(list_call))
 
-    if (cache$has_key(hash)) {
-      res <- cache$get(hash)
-    } else {
-      res <- withVisible(.(init_call))
-      cache$set(hash, res)
-    }
+      if (cache$has_key(hash)) {
+        res <- cache$get(hash)
+      } else {
+        res <- withVisible(.(init_call))
+        cache$set(hash, res)
+      }
 
-    if (res$visible) {
-      res$value
-    } else {
-      invisible(res$value)
-    }
-  }))
+      if (res$visible) {
+        res$value
+      } else {
+        invisible(res$value)
+      }
+    },
+    as.environment(list(list_call = list_call, init_call = init_call)))
+  )
   formals(memo_f) <- f_formals
   attr(memo_f, "memoised") <- TRUE
+
+  cache_env <- new.env(parent = baseenv())
+  cache_env$cache <- cache
+  cache_env$memoised_function <- f
+  cache_env$digest <- digest
+  environment(memo_f) <- cache_env
+
   return(memo_f)
 }
 
