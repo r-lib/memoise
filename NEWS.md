@@ -1,7 +1,12 @@
 # Version 0.2.99.9000
 
-* A memoised function now has the same interface as the original function
-  (#14, @krlmlr).
+* A memoised function now has the same interface as the original function,
+  if the original function is known when `memoise` is called. (Otherwise,
+  the old behavior is invoked, with a warning.) (#14, @krlmlr)
+* The enclosing environment of the memoised function contains only the necessary
+  symbols (#14, @krlmlr).
+* `is.memoised` now checks if the argument is a function.
+* Testing infrastructure, full test coverage.
 
 # Version 0.2.1
 
