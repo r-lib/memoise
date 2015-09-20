@@ -76,6 +76,21 @@ test_that("default arguments are used for hash", {
   expect_equal(fnm(), 2)
 })
 
+test_that("default arguments are evaluated correctly", {
+  expect_false(exists("g"))
+  g <- function() 1
+  fn <- function(j = g()) { i <<- i + 1; i }
+  i <- 0
+  fnm <- memoise(fn)
+
+  expect_equal(fn(1), 1)
+  expect_equal(fnm(1), 2)
+  expect_equal(fnm(1), 2)
+  expect_equal(fnm(), 2)
+  expect_equal(fnm(2), 3)
+  expect_equal(fnm(), 2)
+})
+
 test_that("symbol collision", {
   cache <- function(j = 1) { i <<- i + 1; i }
   i <- 0
