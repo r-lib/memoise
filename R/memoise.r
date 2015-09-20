@@ -98,6 +98,7 @@ memoise <- memoize <- function(f, envir = parent.frame()) {
   }
 }
 
+#' @importFrom stats setNames
 memoise_new <- function(f, envir) {
   f_formals <- formals(f)
   f_formal_names <- names(f_formals)
