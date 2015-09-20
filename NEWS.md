@@ -3,8 +3,8 @@
 * A memoised function now has the same interface as the original function,
   if the original function is known when `memoise` is called. (Otherwise,
   the old behavior is invoked, with a warning.) (#14, @krlmlr)
-* The enclosing environment of the memoised function contains only the necessary
-  symbols (#14, @krlmlr).
+* The enclosing environment of the memoised function is specified explicitly,
+  defaults to `parent.frame()`.
 * `is.memoised` now checks if the argument is a function.
 * Testing infrastructure, full test coverage.
 
