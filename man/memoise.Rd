@@ -5,10 +5,12 @@
 \alias{memoize}
 \title{Memoise a function.}
 \usage{
-memoise(f)
+memoise(f, envir = parent.frame())
 }
 \arguments{
 \item{f}{Function of which to create a memoised copy.}
+
+\item{envir}{Environment of the returned function.}
 }
 \description{
 \code{mf <- memoise(f)} creates \code{mf}, a memoised copy of
