@@ -3,7 +3,7 @@
 * win-builder (devel and release)
 
 ## R CMD check results
-There were no ERRORs or WARNINGs, and one NOTE: The spell checker warned about "memoisation" and a "pre-" prefix.
+There were no ERRORs, WARNINGs, or NOTEs.
 
 ## Downstream dependencies
 I have also run R CMD check on 9 downstream dependencies of memoise
