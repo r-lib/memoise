@@ -100,16 +100,16 @@ memoise <- memoize <- function(f, envir = parent.frame()) {
 
 #' @importFrom stats setNames
 memoise_new <- function(f, envir) {
-  f_formals <- formals(f)
+  f_formals <- formals(args(f))
   f_formal_names <- names(f_formals)
   f_formal_name_list <- lapply(f_formal_names, as.name)
 
   # list(...)
-  list_call <- as.call(c(list(as.name("list")), f_formal_name_list))
+  list_call <- make_call(quote(list), f_formal_name_list)
 
   # memoised_function(...)
   init_call_args <- setNames(f_formal_name_list, f_formal_names)
-  init_call <- as.call(c(as.name("memoised_function"), init_call_args))
+  init_call <- make_call(quote(memoised_function), init_call_args)
 
   cache <- new_cache()
 
@@ -135,13 +135,18 @@ memoise_new <- function(f, envir) {
   formals(memo_f) <- f_formals
   attr(memo_f, "memoised") <- TRUE
 
-  cache_env <- new.env(parent = envir)
-  cache_env$cache <- cache
-  cache_env$memoised_function <- f
-  cache_env$digest <- digest
-  environment(memo_f) <- cache_env
+  memo_f_env <- new.env(parent = envir)
+  memo_f_env$cache <- cache
+  memo_f_env$memoised_function <- f
+  memo_f_env$digest <- digest
+  environment(memo_f) <- memo_f_env
 
   return(memo_f)
+}
+
+make_call <- function(name, args) {
+  stopifnot(is.name(name), is.list(args))
+  as.call(c(list(name), args))
 }
 
 memoise_old <- function(f) {
