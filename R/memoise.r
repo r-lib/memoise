@@ -135,11 +135,11 @@ memoise_new <- function(f, envir) {
   formals(memo_f) <- f_formals
   attr(memo_f, "memoised") <- TRUE
 
-  cache_env <- new.env(parent = envir)
-  cache_env$cache <- cache
-  cache_env$memoised_function <- f
-  cache_env$digest <- digest
-  environment(memo_f) <- cache_env
+  memo_f_env <- new.env(parent = envir)
+  memo_f_env$cache <- cache
+  memo_f_env$memoised_function <- f
+  memo_f_env$digest <- digest
+  environment(memo_f) <- memo_f_env
 
   return(memo_f)
 }
