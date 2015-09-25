@@ -157,3 +157,11 @@ test_that("can memoise anonymous function", {
   expect_equal(fm(2), 2)
   expect_equal(fm(1), 1)
 })
+
+test_that("can memoise primitive", {
+  expect_that(fm <- memoise(`+`), not(gives_warning()))
+  expect_equal(names(formals(fm)), names(formals(args(`+`))))
+  expect_equal(fm(1, 2), 1 + 2)
+  expect_equal(fm(2, 3), 2 + 3)
+  expect_equal(fm(1, 2), 1 + 2)
+})
