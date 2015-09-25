@@ -149,3 +149,11 @@ test_that("old-style interface with invisible result", {
 
   expect_false(withVisible(fm())$visible)
 })
+
+test_that("can memoise anonymous function", {
+  expect_that(fm <- memoise(function(a = 1) a), not(gives_warning()))
+  expect_equal(names(formals(fm))[[1]], "a")
+  expect_equal(fm(1), 1)
+  expect_equal(fm(2), 2)
+  expect_equal(fm(1), 1)
+})
