@@ -3,7 +3,8 @@ context("memoise")
 test_that("memoisation works", {
   fn <- function() { i <<- i + 1; i }
   i <- 0
-  fnm <- memoise(fn)
+
+  expect_that(fnm <- memoise(fn), not(gives_warning()))
   expect_equal(fn(), 1)
   expect_equal(fn(), 2)
   expect_equal(fnm(), 3)
@@ -22,7 +23,8 @@ test_that("memoisation works", {
 test_that("memoisation depends on argument", {
   fn <- function(j) { i <<- i + 1; i }
   i <- 0
-  fnm <- memoise(fn)
+
+  expect_that(fnm <- memoise(fn), not(gives_warning()))
   expect_equal(fn(1), 1)
   expect_equal(fn(1), 2)
   expect_equal(fnm(1), 3)
@@ -47,8 +49,8 @@ test_that("interface of wrapper matches interface of memoised function", {
 test_that("dot arguments are used for hash", {
   fn <- function(...) { i <<- i + 1; i }
   i <- 0
-  fnm <- memoise(fn)
 
+  expect_that(fnm <- memoise(fn), not(gives_warning()))
   expect_equal(fn(1), 1)
   expect_equal(fnm(1), 2)
   expect_equal(fnm(1), 2)
@@ -66,8 +68,8 @@ test_that("dot arguments are used for hash", {
 test_that("default arguments are used for hash", {
   fn <- function(j = 1) { i <<- i + 1; i }
   i <- 0
-  fnm <- memoise(fn)
 
+  expect_that(fnm <- memoise(fn), not(gives_warning()))
   expect_equal(fn(1), 1)
   expect_equal(fnm(1), 2)
   expect_equal(fnm(1), 2)
@@ -81,8 +83,8 @@ test_that("default arguments are evaluated correctly", {
   g <- function() 1
   fn <- function(j = g()) { i <<- i + 1; i }
   i <- 0
-  fnm <- memoise(fn)
 
+  expect_that(fnm <- memoise(fn), not(gives_warning()))
   expect_equal(fn(1), 1)
   expect_equal(fnm(1), 2)
   expect_equal(fnm(1), 2)
