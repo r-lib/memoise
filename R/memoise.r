@@ -105,11 +105,11 @@ memoise_new <- function(f, envir) {
   f_formal_name_list <- lapply(f_formal_names, as.name)
 
   # list(...)
-  list_call <- as.call(c(list(quote(list)), f_formal_name_list))
+  list_call <- make_call(quote(list), f_formal_name_list)
 
   # memoised_function(...)
   init_call_args <- setNames(f_formal_name_list, f_formal_names)
-  init_call <- as.call(c(quote(memoised_function), init_call_args))
+  init_call <- make_call(quote(memoised_function), init_call_args)
 
   cache <- new_cache()
 
@@ -142,6 +142,11 @@ memoise_new <- function(f, envir) {
   environment(memo_f) <- cache_env
 
   return(memo_f)
+}
+
+make_call <- function(name, args) {
+  stopifnot(is.name(name), is.list(args))
+  as.call(c(list(name), args))
 }
 
 memoise_old <- function(f) {
