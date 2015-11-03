@@ -141,6 +141,8 @@ memoise_new <- function(f, envir) {
   memo_f_env$digest <- digest
   environment(memo_f) <- memo_f_env
 
+  class(memo_f) <- c("memoised", "function")
+
   memo_f
 }
 
@@ -168,8 +170,16 @@ memoise_old <- function(f) {
       invisible(res$value)
     }
   }
-  attr(memo_f, "memoised") <- TRUE
+  class(memo_f) <- c("memoised", "function")
   memo_f
+}
+
+#' @export
+print.memoised <- function(x) {
+  cat("Memoised Function: ",
+    capture.output(print(environment(x)$f)),
+    sep = "\n"
+  )
 }
 
 #' Forget past results.
@@ -211,5 +221,5 @@ forget <- function(f) {
 #' is.memoised(lm) # FALSE
 #' is.memoised(mem_lm) # TRUE
 is.memoised <- is.memoized <- function(f) {
-  is.function(f) && identical(attr(f, "memoised"), TRUE)
+  is.function(f) && inherits(f, "memoised")
 }
