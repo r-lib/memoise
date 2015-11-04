@@ -175,7 +175,7 @@ memoise_old <- function(f) {
 }
 
 #' @export
-print.memoised <- function(x) {
+print.memoised <- function(x, ...) {
   cat("Memoised Function:\n")
   print(environment(x)$f)
 }
