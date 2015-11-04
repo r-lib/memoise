@@ -175,7 +175,7 @@ test_that("printing a memoised function prints the original definition", {
   fn_output <- capture.output(fn)
   fnm_output <- capture.output(fnm)
 
-  expect_equal(fnm_output[1], "Memoised Function: ")
+  expect_equal(fnm_output[1], "Memoised Function:")
 
   expect_equal(fnm_output[-1], fn_output)
 })
