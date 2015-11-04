@@ -1,5 +1,7 @@
 # Version 0.2.99.9000
 
+* Memoised functions now have a print method which displays the original
+  function definition, rather than the memoisation code (#15, @jimhester).
 * A memoised function now has the same interface as the original function,
   if the original function is known when `memoise` is called. (Otherwise,
   the old behavior is invoked, with a warning.) (#14, @krlmlr)
