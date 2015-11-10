@@ -87,19 +87,19 @@
 #' memA(2)
 #' memA <- memoise(a)
 #' memA(2)
-memoise <- memoize <- function(f, envir = parent.frame()) {
+memoise <- memoize <- function(f, ..., envir = parent.frame()) {
   # We must not even try evaluating f -- once we start, there's no way back
   if (inherits(try(eval.parent(substitute(f)), silent = TRUE), "try-error")) {
     warning("Can't access f -- using old-style memoisation. ",
             "Define the memoised function before memoising to avoid this warning.")
-    memoise_old(f)
+    memoise_old(f, ...)
   } else {
-    memoise_new(f, envir)
+    memoise_new(f, ..., envir = envir)
   }
 }
 
 #' @importFrom stats setNames
-memoise_new <- function(f, envir) {
+memoise_new <- function(f, ..., envir) {
   f_formals <- formals(args(f))
   f_formal_names <- names(f_formals)
   f_formal_name_list <- lapply(f_formal_names, as.name)
@@ -112,10 +112,11 @@ memoise_new <- function(f, envir) {
   init_call <- make_call(quote(f), init_call_args)
 
   cache <- new_cache()
+  additional <- eval(substitute(alist(...)))
 
   memo_f <- eval(
     bquote(function(...) {
-      hash <- digest(.(list_call))
+      hash <- digest(c(.(list_call), eval(additional)))
 
       if (cache$has_key(hash)) {
         res <- cache$get(hash)
@@ -139,6 +140,7 @@ memoise_new <- function(f, envir) {
   memo_f_env$cache <- cache
   memo_f_env$f <- f
   memo_f_env$digest <- digest
+  memo_f_env$additional <- additional
   environment(memo_f) <- memo_f_env
 
   class(memo_f) <- c("memoised", "function")
@@ -151,11 +153,12 @@ make_call <- function(name, args) {
   as.call(c(list(name), args))
 }
 
-memoise_old <- function(f) {
+memoise_old <- function(f, ...) {
   cache <- new_cache()
+  additional <- eval(substitute(alist(...)))
 
   memo_f <- function(...) {
-    hash <- digest(list(...))
+    hash <- digest(c(list(...), eval(additional)))
 
     if (cache$has_key(hash)) {
       res <- cache$get(hash)
