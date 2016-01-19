@@ -185,11 +185,11 @@ test_that("memoisation can depend on non-arguments", {
   i <- 0
   j <- 2
 
-  expect_error(memoise(fn, j), "Input must be a formula")
+  expect_error(memoise(fn, j), "`x` must be a formula\\.")
 
-  expect_error(memoise(fn, ~j, k), "Input must be a formula")
+  expect_error(memoise(fn, ~j, k), "`x` must be a formula\\.")
 
-  expect_error(memoise(fn, j ~ 1), "Formulas with a LHS cannot be evaluated")
+  expect_error(memoise(fn, j ~ 1), "`x` must be a one sided formula \\[not j ~ 1\\]\\.")
 
   fnm <- memoise(fn, ~j)
   expect_equal(fn(1), 1)

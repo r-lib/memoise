@@ -123,7 +123,7 @@ memoise_new <- function(f, ..., envir) {
 
   memo_f <- eval(
     bquote(function(...) {
-      hash <- digest(c(.(list_call), lapply(additional, evaluate_formula)))
+      hash <- digest(c(.(list_call), lapply(additional, function(x) eval(x[[2L]], environment(x)))))
 
       if (cache$has_key(hash)) {
         res <- cache$get(hash)
@@ -167,7 +167,7 @@ memoise_old <- function(f, ...) {
   additional <- list(...)
 
   memo_f <- function(...) {
-    hash <- digest(c(list(...), lapply(additional, evaluate_formula)))
+    hash <- digest(c(list(...), lapply(additional, function(x) eval(x[[2L]], environment(x)))))
 
     if (cache$has_key(hash)) {
       res <- cache$get(hash)
@@ -190,25 +190,15 @@ validate_formulas <- function(...) {
   is_formula <- function(x) {
     if (is.call(x) && identical(x[[1]], as.name("~"))) {
       if (length(x) > 2L) {
-        stop("Formulas with a LHS cannot be evaluated", call. = FALSE)
+        stop("`x` must be a one sided formula [not ", format(x), "].", call. = FALSE)
       }
     } else {
-      stop("Input must be a formula", call. = FALSE)
+      stop("`x` must be a formula.", call. = FALSE)
     }
   }
 
   dots <- eval(substitute(alist(...)))
   lapply(dots, is_formula)
-}
-
-evaluate_formula <- function(x) {
-  if (!inherits(x, "formula")) {
-    stop("Must evaluate a formula", call. = FALSE)
-  }
-  if (length(x) > 2) {
-    stop("formulas with a LHS cannot be evaluated", call. = FALSE)
-  }
-  eval(x[[2]], environment(x))
 }
 
 #' @export
