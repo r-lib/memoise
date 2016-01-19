@@ -187,13 +187,14 @@ memoise_old <- function(f, ...) {
 }
 
 validate_formulas <- function(...) {
+  format.name <- function(x, ...) format(as.character(x), ...)
   is_formula <- function(x) {
     if (is.call(x) && identical(x[[1]], as.name("~"))) {
       if (length(x) > 2L) {
         stop("`x` must be a one sided formula [not ", format(x), "].", call. = FALSE)
       }
     } else {
-      stop("`x` must be a formula.", call. = FALSE)
+      stop("`", format(x), "` must be a formula.", call. = FALSE)
     }
   }
 
