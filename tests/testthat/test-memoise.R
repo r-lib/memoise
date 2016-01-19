@@ -165,3 +165,19 @@ test_that("can memoise primitive", {
   expect_equal(fm(2, 3), 2 + 3)
   expect_equal(fm(1, 2), 1 + 2)
 })
+
+test_that("printing a memoised function prints the original definition", {
+
+  fn <- function(j) { i <<- i + 1; i }
+
+  fnm <- memoise(fn)
+
+  fn_output <- capture.output(fn)
+  str(fn_output)
+  fnm_output <- capture.output(fnm)
+  str(fnm_output)
+
+  expect_equal(fnm_output[1], "Memoised Function:")
+
+  expect_equal(fnm_output[-1], fn_output)
+})
