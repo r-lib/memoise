@@ -181,10 +181,17 @@ test_that("printing a memoised function prints the original definition", {
 })
 
 test_that("memoisation can depend on non-arguments", {
-  fn <- function(j) { i <<- i + 1; i }
+  fn <- function(x) { i <<- i + 1; i }
   i <- 0
   j <- 2
-  fnm <- memoise(fn, j)
+
+  expect_error(memoise(fn, j), "Input must be a formula")
+
+  expect_error(memoise(fn, ~j, k), "Input must be a formula")
+
+  expect_error(memoise(fn, j ~ 1), "Formulas with a LHS cannot be evaluated")
+
+  fnm <- memoise(fn, ~j)
   expect_equal(fn(1), 1)
   expect_equal(fn(1), 2)
   expect_equal(fnm(1), 3)
@@ -193,6 +200,9 @@ test_that("memoisation can depend on non-arguments", {
   expect_equal(fnm(1), 4)
   expect_equal(fnm(1), 4)
   j <- 2
+  expect_equal(fnm(1), 3)
+  expect_equal(fnm(1), 3)
+  j <- 3
   expect_equal(fnm(1), 5)
   expect_equal(fnm(1), 5)
 })

@@ -35,6 +35,8 @@
 #' @name memoise
 #' @title Memoise a function.
 #' @param f     Function of which to create a memoised copy.
+#' @param ... optional variables specified as formulas with no RHS to use as
+#' additional restrictions on caching. See Examples for usage.
 #' @param envir Environment of the returned function.
 #' @seealso \code{\link{forget}}, \code{\link{is.memoised}},
 #'     \url{http://en.wikipedia.org/wiki/Memoization}
@@ -87,6 +89,9 @@
 #' memA(2)
 #' memA <- memoise(a)
 #' memA(2)
+#' # Making a memoized automatically time out after 10 seconds.
+#' memA3 <- memoise(a, ~{current <- as.numeric(Sys.time()); (current - current %% 10) %/% 10 })
+#' memA3(2)
 memoise <- memoize <- function(f, ..., envir = parent.frame()) {
   # We must not even try evaluating f -- once we start, there's no way back
   if (inherits(try(eval.parent(substitute(f)), silent = TRUE), "try-error")) {
@@ -112,11 +117,13 @@ memoise_new <- function(f, ..., envir) {
   init_call <- make_call(quote(f), init_call_args)
 
   cache <- new_cache()
-  additional <- eval(substitute(alist(...)))
+
+  validate_formulas(...)
+  additional <- list(...)
 
   memo_f <- eval(
     bquote(function(...) {
-      hash <- digest(c(.(list_call), eval(additional)))
+      hash <- digest(c(.(list_call), lapply(additional, evaluate_formula)))
 
       if (cache$has_key(hash)) {
         res <- cache$get(hash)
@@ -155,10 +162,12 @@ make_call <- function(name, args) {
 
 memoise_old <- function(f, ...) {
   cache <- new_cache()
-  additional <- eval(substitute(alist(...)))
+
+  validate_formulas(...)
+  additional <- list(...)
 
   memo_f <- function(...) {
-    hash <- digest(c(list(...), eval(additional)))
+    hash <- digest(c(list(...), lapply(additional, evaluate_formula)))
 
     if (cache$has_key(hash)) {
       res <- cache$get(hash)
@@ -175,6 +184,31 @@ memoise_old <- function(f, ...) {
   }
   class(memo_f) <- c("memoised", "function")
   memo_f
+}
+
+validate_formulas <- function(...) {
+  is_formula <- function(x) {
+    if (is.call(x) && identical(x[[1]], as.name("~"))) {
+      if (length(x) > 2L) {
+        stop("Formulas with a LHS cannot be evaluated", call. = FALSE)
+      }
+    } else {
+      stop("Input must be a formula", call. = FALSE)
+    }
+  }
+
+  dots <- eval(substitute(alist(...)))
+  lapply(dots, is_formula)
+}
+
+evaluate_formula <- function(x) {
+  if (!inherits(x, "formula")) {
+    stop("Must evaluate a formula", call. = FALSE)
+  }
+  if (length(x) > 2) {
+    stop("formulas with a LHS cannot be evaluated", call. = FALSE)
+  }
+  eval(x[[2]], environment(x))
 }
 
 #' @export

@@ -4,7 +4,7 @@
 \alias{is.memoised}
 \alias{is.memoized}
 \title{Test whether a function is a memoised copy.
-Memoised copies of functions carry an attribute 
+Memoised copies of functions carry an attribute
 \code{memoised = TRUE}, which is.memoised() tests for.}
 \usage{
 is.memoised(f)
@@ -14,7 +14,7 @@ is.memoised(f)
 }
 \description{
 Test whether a function is a memoised copy.
-Memoised copies of functions carry an attribute 
+Memoised copies of functions carry an attribute
 \code{memoised = TRUE}, which is.memoised() tests for.
 }
 \examples{
