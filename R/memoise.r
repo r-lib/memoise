@@ -90,7 +90,7 @@
 memoise <- memoize <- function(f, envir = parent.frame()) {
   # We must not even try evaluating f -- once we start, there's no way back
   if (inherits(try(eval.parent(substitute(f)), silent = TRUE), "try-error")) {
-    warning("Can't access f -- using old-style memoisation with dots interface. ",
+    warning("Can't access f -- using old-style memoisation. ",
             "Define the memoised function before memoising to avoid this warning.")
     memoise_old(f)
   } else {
@@ -109,7 +109,7 @@ memoise_new <- function(f, envir) {
 
   # memoised_function(...)
   init_call_args <- setNames(f_formal_name_list, f_formal_names)
-  init_call <- make_call(quote(memoised_function), init_call_args)
+  init_call <- make_call(quote(f), init_call_args)
 
   cache <- new_cache()
 
@@ -137,11 +137,11 @@ memoise_new <- function(f, envir) {
 
   memo_f_env <- new.env(parent = envir)
   memo_f_env$cache <- cache
-  memo_f_env$memoised_function <- f
+  memo_f_env$f <- f
   memo_f_env$digest <- digest
   environment(memo_f) <- memo_f_env
 
-  return(memo_f)
+  memo_f
 }
 
 make_call <- function(name, args) {
@@ -169,7 +169,7 @@ memoise_old <- function(f) {
     }
   }
   attr(memo_f, "memoised") <- TRUE
-  return(memo_f)
+  memo_f
 }
 
 #' Forget past results.
