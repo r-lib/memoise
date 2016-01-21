@@ -185,6 +185,10 @@ test_that("memoisation can depend on non-arguments", {
   i <- 0
   j <- 2
 
+  fn2 <- function(y, ...) {
+    fnm <- memoise(fn, ~y)
+    fnm(...)
+  }
   expect_error(memoise(fn, j), "`j` must be a formula\\.")
 
   expect_error(memoise(fn, ~j, k), "`k` must be a formula\\.")

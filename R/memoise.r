@@ -92,20 +92,15 @@
 #' # Making a memoized automatically time out after 10 seconds.
 #' memA3 <- memoise(a, ~{current <- as.numeric(Sys.time()); (current - current %% 10) %/% 10 })
 #' memA3(2)
+#' @importFrom stats setNames
 memoise <- memoize <- function(f, ..., envir = parent.frame()) {
-  # We must not even try evaluating f -- once we start, there's no way back
   if (inherits(try(eval.parent(substitute(f)), silent = TRUE), "try-error")) {
     warning("Can't access f -- using old-style memoisation. ",
             "Define the memoised function before memoising to avoid this warning.")
-    memoise_old(f, ...)
+    f_formals <- alist(... = )
   } else {
-    memoise_new(f, ..., envir = envir)
+    f_formals <- formals(args(f))
   }
-}
-
-#' @importFrom stats setNames
-memoise_new <- function(f, ..., envir) {
-  f_formals <- formals(args(f))
   f_formal_names <- names(f_formals)
   f_formal_name_list <- lapply(f_formal_names, as.name)
 
@@ -145,7 +140,7 @@ memoise_new <- function(f, ..., envir) {
 
   memo_f_env <- new.env(parent = envir)
   memo_f_env$cache <- cache
-  memo_f_env$f <- f
+  delayedAssign("f", f, eval.env = environment(), assign.env = memo_f_env)
   memo_f_env$digest <- digest
   memo_f_env$additional <- additional
   environment(memo_f) <- memo_f_env
@@ -158,32 +153,6 @@ memoise_new <- function(f, ..., envir) {
 make_call <- function(name, args) {
   stopifnot(is.name(name), is.list(args))
   as.call(c(list(name), args))
-}
-
-memoise_old <- function(f, ...) {
-  cache <- new_cache()
-
-  validate_formulas(...)
-  additional <- list(...)
-
-  memo_f <- function(...) {
-    hash <- digest(c(list(...), lapply(additional, function(x) eval(x[[2L]], environment(x)))))
-
-    if (cache$has_key(hash)) {
-      res <- cache$get(hash)
-    } else {
-      res <- withVisible(f(...))
-      cache$set(hash, res)
-    }
-
-    if (res$visible) {
-      res$value
-    } else {
-      invisible(res$value)
-    }
-  }
-  class(memo_f) <- c("memoised", "function")
-  memo_f
 }
 
 validate_formulas <- function(...) {
@@ -205,7 +174,7 @@ validate_formulas <- function(...) {
 #' @export
 print.memoised <- function(x, ...) {
   cat("Memoised Function:\n")
-  print(environment(x)$f)
+  tryCatch(print(environment(x)$f), error = function(e) stop("No function defined!", call. = FALSE))
 }
 
 #' Forget past results.
