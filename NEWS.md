@@ -1,5 +1,7 @@
 # Version 0.2.99.9000
 
+* `has_cache()` function added which returns a boolean depending on if the
+  given call is cached or not (#10, @dkesh).
 * Memoised functions now have a print method which displays the original
   function definition, rather than the memoisation code (#15, @jimhester).
 * A memoised function now has the same interface as the original function,
