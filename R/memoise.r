@@ -223,19 +223,20 @@ is.memoised <- is.memoized <- function(f) {
 #' @param f Function to test.
 #' @param ... arguments to function.
 #' @seealso \code{\link{is.memoised}}, \code{\link{memoise}}
-#' @export has.cache
+#' @export
 #' @examples
 #' mem_sum <- memoise(sum)
-#' has.cache( mem_sum, 1, 2, 3) # FALSE
+#' has_cache(mem_sum)(1, 2, 3) # FALSE
 #' mem_sum(1, 2, 3)
-#' has.cache( mem_sum, 1, 2, 3) # TRUE
-has.cache <- function(f, ...) {
-  if(!is.memoised(f)) return(FALSE)
-  
-  hash <- digest(list(...))
-  env <- environment(f)
-  if (!exists("cache", env, inherits = FALSE)) return(FALSE)
-  cache <- get("cache", env)
-  
-  cache$has_key(hash)
+#' has_cache(mem_sum)(1, 2, 3) # TRUE
+has_cache <- function(f, ...) {
+  if(!is.memoised(f)) stop("`f` is not a memoised function!", call. = FALSE)
+
+  # Modify the function body of the function to simply return TRUE and FALSE
+  # rather than get or set the results of the cache
+  body <- body(f)
+  body[[3]] <- quote(if (cache$has_key(hash)) return(TRUE) else return(FALSE))
+  body(f) <- body
+
+  f
 }

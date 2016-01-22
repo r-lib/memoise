@@ -2,7 +2,7 @@
 
 S3method(print,memoised)
 export(forget)
-export(has.cache)
+export(has_cache)
 export(is.memoised)
 export(is.memoized)
 export(memoise)
