@@ -35,6 +35,8 @@
 #' @name memoise
 #' @title Memoise a function.
 #' @param f     Function of which to create a memoised copy.
+#' @param ... optional variables specified as formulas with no RHS to use as
+#' additional restrictions on caching. See Examples for usage.
 #' @param envir Environment of the returned function.
 #' @seealso \code{\link{forget}}, \code{\link{is.memoised}},
 #'     \url{http://en.wikipedia.org/wiki/Memoization}
@@ -87,20 +89,18 @@
 #' memA(2)
 #' memA <- memoise(a)
 #' memA(2)
-memoise <- memoize <- function(f, envir = parent.frame()) {
-  # We must not even try evaluating f -- once we start, there's no way back
+#' # Making a memoized automatically time out after 10 seconds.
+#' memA3 <- memoise(a, ~{current <- as.numeric(Sys.time()); (current - current %% 10) %/% 10 })
+#' memA3(2)
+#' @importFrom stats setNames
+memoise <- memoize <- function(f, ..., envir = parent.frame()) {
   if (inherits(try(eval.parent(substitute(f)), silent = TRUE), "try-error")) {
     warning("Can't access f -- using old-style memoisation. ",
             "Define the memoised function before memoising to avoid this warning.")
-    memoise_old(f)
+    f_formals <- alist(... = )
   } else {
-    memoise_new(f, envir)
+    f_formals <- formals(args(f))
   }
-}
-
-#' @importFrom stats setNames
-memoise_new <- function(f, envir) {
-  f_formals <- formals(args(f))
   f_formal_names <- names(f_formals)
   f_formal_name_list <- lapply(f_formal_names, as.name)
 
@@ -113,9 +113,12 @@ memoise_new <- function(f, envir) {
 
   cache <- new_cache()
 
+  validate_formulas(...)
+  additional <- list(...)
+
   memo_f <- eval(
     bquote(function(...) {
-      hash <- digest(.(list_call))
+      hash <- digest(c(.(list_call), lapply(additional, function(x) eval(x[[2L]], environment(x)))))
 
       if (cache$has_key(hash)) {
         res <- cache$get(hash)
@@ -137,8 +140,9 @@ memoise_new <- function(f, envir) {
 
   memo_f_env <- new.env(parent = envir)
   memo_f_env$cache <- cache
-  memo_f_env$f <- f
+  delayedAssign("f", f, eval.env = environment(), assign.env = memo_f_env)
   memo_f_env$digest <- digest
+  memo_f_env$additional <- additional
   environment(memo_f) <- memo_f_env
 
   class(memo_f) <- c("memoised", "function")
@@ -151,33 +155,26 @@ make_call <- function(name, args) {
   as.call(c(list(name), args))
 }
 
-memoise_old <- function(f) {
-  cache <- new_cache()
-
-  memo_f <- function(...) {
-    hash <- digest(list(...))
-
-    if (cache$has_key(hash)) {
-      res <- cache$get(hash)
+validate_formulas <- function(...) {
+  format.name <- function(x, ...) format(as.character(x), ...)
+  is_formula <- function(x) {
+    if (is.call(x) && identical(x[[1]], as.name("~"))) {
+      if (length(x) > 2L) {
+        stop("`x` must be a one sided formula [not ", format(x), "].", call. = FALSE)
+      }
     } else {
-      res <- withVisible(f(...))
-      cache$set(hash, res)
-    }
-
-    if (res$visible) {
-      res$value
-    } else {
-      invisible(res$value)
+      stop("`", format(x), "` must be a formula.", call. = FALSE)
     }
   }
-  class(memo_f) <- c("memoised", "function")
-  memo_f
+
+  dots <- eval(substitute(alist(...)))
+  lapply(dots, is_formula)
 }
 
 #' @export
 print.memoised <- function(x, ...) {
   cat("Memoised Function:\n")
-  print(environment(x)$f)
+  tryCatch(print(environment(x)$f), error = function(e) stop("No function defined!", call. = FALSE))
 }
 
 #' Forget past results.

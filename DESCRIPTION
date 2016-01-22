@@ -12,4 +12,4 @@ Imports:
 Suggests:
     testthat
 License: MIT + file LICENSE
-RoxygenNote: 5.0.0
+RoxygenNote: 5.0.1

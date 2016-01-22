@@ -173,11 +173,40 @@ test_that("printing a memoised function prints the original definition", {
   fnm <- memoise(fn)
 
   fn_output <- capture.output(fn)
-  str(fn_output)
   fnm_output <- capture.output(fnm)
-  str(fnm_output)
 
   expect_equal(fnm_output[1], "Memoised Function:")
 
   expect_equal(fnm_output[-1], fn_output)
+})
+
+test_that("memoisation can depend on non-arguments", {
+  fn <- function(x) { i <<- i + 1; i }
+  i <- 0
+  j <- 2
+
+  fn2 <- function(y, ...) {
+    fnm <- memoise(fn, ~y)
+    fnm(...)
+  }
+  expect_error(memoise(fn, j), "`j` must be a formula\\.")
+
+  expect_error(memoise(fn, ~j, k), "`k` must be a formula\\.")
+
+  expect_error(memoise(fn, j ~ 1), "`x` must be a one sided formula \\[not j ~ 1\\]\\.")
+
+  fnm <- memoise(fn, ~j)
+  expect_equal(fn(1), 1)
+  expect_equal(fn(1), 2)
+  expect_equal(fnm(1), 3)
+  expect_equal(fnm(1), 3)
+  j <- 1
+  expect_equal(fnm(1), 4)
+  expect_equal(fnm(1), 4)
+  j <- 2
+  expect_equal(fnm(1), 3)
+  expect_equal(fnm(1), 3)
+  j <- 3
+  expect_equal(fnm(1), 5)
+  expect_equal(fnm(1), 5)
 })
