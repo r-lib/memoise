@@ -39,7 +39,7 @@
 #' additional restrictions on caching. See Examples for usage.
 #' @param envir Environment of the returned function.
 #' @seealso \code{\link{forget}}, \code{\link{is.memoised}},
-#'     \url{http://en.wikipedia.org/wiki/Memoization}
+#'   \code{\link{timeout}}, \url{http://en.wikipedia.org/wiki/Memoization}
 #' @aliases memoise memoize
 #' @export memoise memoize
 #' @importFrom digest digest
@@ -92,6 +92,10 @@
 #' # Making a memoized automatically time out after 10 seconds.
 #' memA3 <- memoise(a, ~{current <- as.numeric(Sys.time()); (current - current %% 10) %/% 10 })
 #' memA3(2)
+#'
+#' # The timeout function is any easy way to do the above.
+#' memA4 <- memoise(a, ~timeout(10))
+#' memA4(2)
 #' @importFrom stats setNames
 memoise <- memoize <- function(f, ..., envir = parent.frame()) {
   if (inherits(try(eval.parent(substitute(f)), silent = TRUE), "try-error")) {
@@ -157,6 +161,24 @@ memoise <- memoize <- function(f, ..., envir = parent.frame()) {
 make_call <- function(name, args) {
   stopifnot(is.name(name), is.list(args))
   as.call(c(list(name), args))
+}
+
+#' Return a new number after a given number of seconds
+#'
+#' This function will return a number corresponding to the system time and
+#' remain stable until a given number of seconds have elapsed, after which it
+#' will update to the current time. This makes it useful as a way to timeout
+#' and invalidate a memoised cache after a certain period of time.
+#' @param seconds Number of seconds after which to timeout.
+#' @param current The current time as a numeric.
+#' @return A numeric that will remain constant until the seconds have elapsed.
+#' @seealso \code{\link{memoise}}
+#' @examples
+#' a <- function(n) { runif(n) }
+#' memA <- memoise(a, ~timeout(10))
+#' memA(2)
+timeout <- function(seconds, current = as.numeric(Sys.time())) {
+  (current - current %% seconds) %/% seconds
 }
 
 validate_formulas <- function(...) {

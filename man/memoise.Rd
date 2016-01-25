@@ -100,9 +100,13 @@ memA(2)
 # Making a memoized automatically time out after 10 seconds.
 memA3 <- memoise(a, ~{current <- as.numeric(Sys.time()); (current - current \%\% 10) \%/\% 10 })
 memA3(2)
+
+# The timeout function is any easy way to do the above.
+memA4 <- memoise(a, ~timeout(10))
+memA4(2)
 }
 \seealso{
 \code{\link{forget}}, \code{\link{is.memoised}},
-    \url{http://en.wikipedia.org/wiki/Memoization}
+  \code{\link{timeout}}, \url{http://en.wikipedia.org/wiki/Memoization}
 }
 

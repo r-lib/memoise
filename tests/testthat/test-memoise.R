@@ -236,3 +236,27 @@ test_that("it works as expected with memoised functions", {
 test_that("it errors with an un-memoised function", {
   expect_error(has_cache(sum)(1, 2, 3), "`f` is not a memoised function.")
 })
+
+context("timeout")
+test_that("it stays the same if not enough time has passed", {
+  duration <- 10
+  first <- timeout(duration, 0)
+
+  expect_equal(first, timeout(duration, 1))
+  expect_equal(first, timeout(duration, 5))
+  expect_equal(first, timeout(duration, 7))
+  expect_equal(first, timeout(duration, 9))
+
+  expect_that(first, not(equals(timeout(duration, 10))))
+
+
+  duration <- 100
+  first <- timeout(duration, 0)
+
+  expect_equal(first, timeout(duration, 10))
+  expect_equal(first, timeout(duration, 50))
+  expect_equal(first, timeout(duration, 70))
+  expect_equal(first, timeout(duration, 99))
+
+  expect_that(first, not(equals(timeout(duration, 100))))
+})
