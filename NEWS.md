@@ -1,5 +1,7 @@
-# Version 0.2.99.9000
+# Version 1.0.0
 
+* `memoise()` now signals an error if an already memoised function is used as
+  input (#4, @richierocks).
 * `has_cache()` function added which returns a boolean depending on if the
   given call is cached or not (#10, @dkesh).
 * Memoised functions now have a print method which displays the original
