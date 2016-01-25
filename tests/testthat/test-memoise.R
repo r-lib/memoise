@@ -211,6 +211,15 @@ test_that("memoisation can depend on non-arguments", {
   expect_equal(fnm(1), 5)
 })
 
+test_that("it fails if already memoised", {
+  mem_sum <- memoise(sum)
+  expect_error(memoise(mem_sum), "`f` must not be memoised.")
+
+  expect_warning(mem_f <- memoise(f), "old-style")
+
+  expect_error(memoise(mem_f), "`f` must not be memoised.")
+})
+
 context("has_cache")
 test_that("it works as expected with memoised functions", {
   mem_sum <- memoise(sum)

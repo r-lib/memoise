@@ -100,7 +100,11 @@ memoise <- memoize <- function(f, ..., envir = parent.frame()) {
     f_formals <- alist(... = )
   } else {
     f_formals <- formals(args(f))
+    if(is.memoised(f)) {
+      stop("`f` must not be memoised.", call. = FALSE)
+    }
   }
+
   f_formal_names <- names(f_formals)
   f_formal_name_list <- lapply(f_formal_names, as.name)
 
