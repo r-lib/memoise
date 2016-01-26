@@ -10,7 +10,7 @@ Description: Cache the results of a function so that when you call it
 URL: https://github.com/hadley/memoise
 BugReports: https://github.com/hadley/memoise/issues
 Imports:
-    digest
+    digest (>= 0.6.3)
 Suggests:
     testthat
 License: MIT + file LICENSE

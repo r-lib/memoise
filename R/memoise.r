@@ -126,7 +126,9 @@ memoise <- memoize <- function(f, ..., envir = parent.frame()) {
 
   memo_f <- eval(
     bquote(function(...) {
-      hash <- digest(c(.(list_call), lapply(additional, function(x) eval(x[[2L]], environment(x)))))
+      hash <- digest(c(.(list_call),
+          lapply(additional, function(x) eval(x[[2L]], environment(x)))),
+        algo = "sha512")
 
       if (cache$has_key(hash)) {
         res <- cache$get(hash)
