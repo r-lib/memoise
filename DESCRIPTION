@@ -3,7 +3,7 @@ Title: Memoisation of Functions
 Version: 0.2.99.9000
 Authors@R: c(
     person("Hadley", "Wickham", , "hadley@rstudio.com", role = "aut"),
-    person("James", "Hester", , "james.hester@rstudio.com", role = c("aut", "cre")),
+    person("Jim", "Hester", , "jim.hester@rstudio.com", role = c("aut", "cre")),
     person("Kirill", "Müller", , "krlmlr+r@mailbox.org", role = "aut"))
 Description: Cache the results of a function so that when you call it
     again with the same arguments it returns the pre-computed value.
