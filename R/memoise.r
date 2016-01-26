@@ -97,11 +97,12 @@
 #' memA4 <- memoise(a, ~timeout(10))
 #' memA4(2)
 #' @importFrom stats setNames
-memoise <- memoize <- function(f, ..., envir = parent.frame()) {
+memoise <- memoize <- function(f, ..., envir = environment(f)) {
   if (inherits(try(eval.parent(substitute(f)), silent = TRUE), "try-error")) {
     warning("Can't access f -- using old-style memoisation. ",
             "Define the memoised function before memoising to avoid this warning.")
     f_formals <- alist(... = )
+    envir <- baseenv()
   } else {
     f_formals <- formals(args(f))
     if(is.memoised(f)) {
@@ -117,7 +118,7 @@ memoise <- memoize <- function(f, ..., envir = parent.frame()) {
 
   # memoised_function(...)
   init_call_args <- setNames(f_formal_name_list, f_formal_names)
-  init_call <- make_call(quote(f), init_call_args)
+  init_call <- make_call(quote(`_f`), init_call_args)
 
   cache <- new_cache()
 
@@ -126,15 +127,15 @@ memoise <- memoize <- function(f, ..., envir = parent.frame()) {
 
   memo_f <- eval(
     bquote(function(...) {
-      hash <- digest(c(.(list_call),
-          lapply(additional, function(x) eval(x[[2L]], environment(x)))),
+      hash <- digest::digest(c(.(list_call),
+          lapply(`_additional`, function(x) eval(x[[2L]], environment(x)))),
         algo = "sha512")
 
-      if (cache$has_key(hash)) {
-        res <- cache$get(hash)
+      if (`_cache`$has_key(hash)) {
+        res <- `_cache`$get(hash)
       } else {
         res <- withVisible(.(init_call))
-        cache$set(hash, res)
+        `_cache`$set(hash, res)
       }
 
       if (res$visible) {
@@ -148,11 +149,16 @@ memoise <- memoize <- function(f, ..., envir = parent.frame()) {
   formals(memo_f) <- f_formals
   attr(memo_f, "memoised") <- TRUE
 
+  # This should only happen for primitive functions
+  if (is.null(envir)) {
+     envir <- baseenv()
+  }
+
   memo_f_env <- new.env(parent = envir)
-  memo_f_env$cache <- cache
-  delayedAssign("f", f, eval.env = environment(), assign.env = memo_f_env)
-  memo_f_env$digest <- digest
-  memo_f_env$additional <- additional
+  memo_f_env$`_cache` <- cache
+  delayedAssign("_f", f, eval.env = environment(), assign.env = memo_f_env)
+  memo_f_env$`_digest` <- digest
+  memo_f_env$`_additional` <- additional
   environment(memo_f) <- memo_f_env
 
   class(memo_f) <- c("memoised", "function")
@@ -203,7 +209,7 @@ validate_formulas <- function(...) {
 #' @export
 print.memoised <- function(x, ...) {
   cat("Memoised Function:\n")
-  tryCatch(print(environment(x)$f), error = function(e) stop("No function defined!", call. = FALSE))
+  tryCatch(print(environment(x)$`_f`), error = function(e) stop("No function defined!", call. = FALSE))
 }
 
 #' Forget past results.
@@ -225,9 +231,9 @@ forget <- function(f) {
   }
 
   env <- environment(f)
-  if (!exists("cache", env, inherits = FALSE)) return(FALSE)
+  if (!exists("_cache", env, inherits = FALSE)) return(FALSE)
 
-  cache <- get("cache", env)
+  cache <- get("_cache", env)
   cache$reset()
 
   TRUE
@@ -264,7 +270,7 @@ has_cache <- function(f, ...) {
   # Modify the function body of the function to simply return TRUE and FALSE
   # rather than get or set the results of the cache
   body <- body(f)
-  body[[3]] <- quote(if (cache$has_key(hash)) return(TRUE) else return(FALSE))
+  body[[3]] <- quote(if (`_cache`$has_key(hash)) return(TRUE) else return(FALSE))
   body(f) <- body
 
   f

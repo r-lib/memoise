@@ -220,6 +220,26 @@ test_that("it fails if already memoised", {
   expect_error(memoise(mem_f), "`f` must not be memoised.")
 })
 
+test_that("it evaluates arguments in proper environment", {
+  e <- new.env(parent = baseenv())
+  e$a <- 5
+  fun <- function(x, y = a) { x + y }
+  environment(fun) <- e
+  fun_mem <- memoise(fun)
+  expect_equal(fun(1), fun_mem(1))
+  expect_equal(fun(10), fun_mem(10))
+})
+
+test_that("it does have namespace clashes with internal memoise symbols", {
+  e <- new.env(parent = baseenv())
+  e$f <- 5
+  fun <- function(x, y = f) { x + y }
+  environment(fun) <- e
+  fun_mem <- memoise(fun)
+  expect_equal(fun(1), fun_mem(1))
+  expect_equal(fun(10), fun_mem(10))
+})
+
 context("has_cache")
 test_that("it works as expected with memoised functions", {
   mem_sum <- memoise(sum)
