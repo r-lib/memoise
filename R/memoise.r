@@ -173,6 +173,7 @@ make_call <- function(name, args) {
 #' @param current The current time as a numeric.
 #' @return A numeric that will remain constant until the seconds have elapsed.
 #' @seealso \code{\link{memoise}}
+#' @export
 #' @examples
 #' a <- function(n) { runif(n) }
 #' memA <- memoise(a, ~timeout(10))
