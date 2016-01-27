@@ -98,16 +98,9 @@
 #' memA4(2)
 #' @importFrom stats setNames
 memoise <- memoize <- function(f, ..., envir = environment(f)) {
-  if (inherits(try(eval.parent(substitute(f)), silent = TRUE), "try-error")) {
-    warning("Can't access f -- using old-style memoisation. ",
-            "Define the memoised function before memoising to avoid this warning.")
-    f_formals <- alist(... = )
-    envir <- baseenv()
-  } else {
-    f_formals <- formals(args(f))
-    if(is.memoised(f)) {
-      stop("`f` must not be memoised.", call. = FALSE)
-    }
+  f_formals <- formals(args(f))
+  if(is.memoised(f)) {
+    stop("`f` must not be memoised.", call. = FALSE)
   }
 
   f_formal_names <- names(f_formals)
@@ -156,7 +149,7 @@ memoise <- memoize <- function(f, ..., envir = environment(f)) {
 
   memo_f_env <- new.env(parent = envir)
   memo_f_env$`_cache` <- cache
-  delayedAssign("_f", f, eval.env = environment(), assign.env = memo_f_env)
+  memo_f_env$`_f` <- f
   memo_f_env$`_digest` <- digest
   memo_f_env$`_additional` <- additional
   environment(memo_f) <- memo_f_env

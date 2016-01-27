@@ -132,24 +132,6 @@ test_that("visibility", {
   expect_false(withVisible(memoise(invis)())$visible)
 })
 
-test_that("old-style interface", {
-  expect_warning(fm <- memoise(f), "old-style")
-  f <- function(a = 1) a
-
-  expect_equal(formals(fm), formals(function(...) NULL))
-
-  expect_equal(fm(), 1)
-  expect_equal(fm(3), 3)
-  expect_true(withVisible(fm())$visible)
-})
-
-test_that("old-style interface with invisible result", {
-  expect_warning(fm <- memoise(f), "old-style")
-  f <- function(a = 1) invisible(a)
-
-  expect_false(withVisible(fm())$visible)
-})
-
 test_that("can memoise anonymous function", {
   expect_that(fm <- memoise(function(a = 1) a), not(gives_warning()))
   expect_equal(names(formals(fm))[[1]], "a")
@@ -214,10 +196,6 @@ test_that("memoisation can depend on non-arguments", {
 test_that("it fails if already memoised", {
   mem_sum <- memoise(sum)
   expect_error(memoise(mem_sum), "`f` must not be memoised.")
-
-  expect_warning(mem_f <- memoise(f), "old-style")
-
-  expect_error(memoise(mem_f), "`f` must not be memoised.")
 })
 
 test_that("it evaluates arguments in proper environment", {
