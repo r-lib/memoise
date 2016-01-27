@@ -120,7 +120,7 @@ memoise <- memoize <- function(f, ..., envir = environment(f)) {
 
   memo_f <- eval(
     bquote(function(...) {
-      hash <- digest::digest(c(.(list_call),
+      hash <- `_digest`(c(.(list_call),
           lapply(`_additional`, function(x) eval(x[[2L]], environment(x)))),
         algo = "sha512")
 
