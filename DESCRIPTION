@@ -1,6 +1,6 @@
 Package: memoise
 Title: Memoisation of Functions
-Version: 0.2.99.9000
+Version: 1.0.0
 Authors@R: c(
     person("Hadley", "Wickham", , "hadley@rstudio.com", role = "aut"),
     person("Jim", "Hester", , "jim.hester@rstudio.com", role = c("aut", "cre")),
