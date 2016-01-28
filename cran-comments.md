@@ -1,14 +1,22 @@
 ## Test environments
-* Ubuntu 15.04, R 3.2.2 (locally and on Travis)
+* local OS X install, R 3.2.3
+* ubuntu 12.04 (on travis-ci), R 3.2.2
 * win-builder (devel and release)
 
 ## R CMD check results
-There were no ERRORs, WARNINGs, or NOTEs.
+There were no ERRORs, WARNINGs or NOTEs.
 
 ## Downstream dependencies
-I have also run R CMD check on 9 downstream dependencies of memoise
-(https://github.com/hadley/memoise/blob/7597e250e87322a064cd97adeea36e5bad669f7d/revdep/summary.md). All packages that I could install passed except:
 
-* lubridate: example failed most likely due to localized system (LC_TIME=de_CH.UTF-8).
-  The lubridate maintainers are aware of the problem and a currently working
-  on a release to fix this (and other) problems.
+* I ran R CMD check on all 11 downstream dependencies of memoise
+  Summary at: https://github.com/hadley/memoise/blob/master/revdep/summary.md
+
+* There were 2 ERRORs:
+
+  * gWidgets2RGtk2: this is an error on OSX builds independent of memoise, it is
+    currently failing in CRANs nightly builds with the same error.
+    (https://www.r-project.org/nosvn/R.check/r-devel-osx-x86_64-clang/gWidgets2RGtk2-00check.html)
+
+  * surveillance: This looks like a error in the parallel code of surveillance
+    which I believe is unrelated to it's use of memoise. I have notified the authors of
+    the issue.
