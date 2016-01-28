@@ -1,3 +1,4 @@
+Encoding: UTF-8
 Package: memoise
 Title: Memoisation of Functions
 Version: 1.0.0
