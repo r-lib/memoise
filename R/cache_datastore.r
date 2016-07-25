@@ -44,8 +44,6 @@ datastore_cache <- function(project = project_id, cache_name = "rcache") {
                                              data_parse_function = function(resp) resp)
 
 
-  cache <- NULL
-
   cache_reset <- function() {
     query_results <- query_ds(the_body = list(gqlQuery = list(queryString = paste0("SELECT * FROM ", cache_name))))
     while((query_results$batch$moreResults != "NO_MORE_RESULTS") | is.null(query_results$batch$entityResults) == FALSE) {
@@ -99,6 +97,7 @@ datastore_cache <- function(project = project_id, cache_name = "rcache") {
     )
 
     resp <- load_ds(the_body = list(keys = list(path = path_item)))
+    resp
   }
 
   cache_has_key <- function(key) {
@@ -109,7 +108,6 @@ datastore_cache <- function(project = project_id, cache_name = "rcache") {
     class(res) != "try-error"
   }
 
-  cache_reset()
   list(
     reset = cache_reset,
     set = cache_set,
