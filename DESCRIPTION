@@ -1,5 +1,5 @@
 Encoding: UTF-8
-Package: memoise2
+Package: xmemoise
 Title: Memoisation of Functions
 Version: 1.0.0.9000
 Authors@R: c(
