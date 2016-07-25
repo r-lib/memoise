@@ -65,7 +65,7 @@ Use `cache_s3` to cache objects using s3 storage. Requires you to specify a buck
 Sys.setenv("AWS_ACCESS_KEY_ID" = "<access key>",
            "AWS_SECRET_ACCESS_KEY" = "<access secret>")
 
-mrunif <- memoise(runif, cache = cache_aws("<unique bucket name>"))
+mrunif <- memoise(runif, cache = cache_s3("<unique bucket name>"))
 
 mrunif(10) # First run, saves cache
 mrunif(10) # Loads cache, results should be identical
