@@ -30,10 +30,14 @@ cache with
 
 `xmemoise` extends upon `memoise` by adding in additional types of caches. Items can be cached using the original cache implemented in `memoise` in addition to other options:
 
-* [x] Google Datastore; Switch to using googleAuthR
+* [x] Google Datastore
 * [ ] Dropbox
 * [ ] Google Storage
 * [ ] AWS
+
+### To Do
+
+* [ ] Switch to using GoogleAuthR
 
 
 # Memoization with google datastore
