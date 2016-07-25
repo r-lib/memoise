@@ -33,25 +33,41 @@ cache with
 * [x] Google Datastore
 * [ ] Dropbox
 * [ ] Google Storage
-* [ ] AWS
+* [X] AWS
 
 ### To Do
 
 * [ ] Switch to using GoogleAuthR
 
 
-# Memoization with google datastore
+# Caches
 
-Google Datastore 
+## Google Datastore
 
-There are a few trade-offs to using google datastore for memoization.
+Use `cache_datastore` to set up a cache on google datastore. Requires you to set a `project` and `cache_name`. The `cache_name` 
+is used to set the kind for each entity stored on google datastore.
 
+```r
+library(xmemoise)
+
+# Generate a memoised function.
+mrunif <- memoise(runif, cache = cache_datastore("<project id here>", "rcache"))
+
+mrunif(10) # First run, saves cache
+mrunif(10) # Loads cache, results should be identical
 ```
-key <- "<google cloud oauth key>"
-secret <- "<google cloud oauth secret>"
-authenticate_datastore(key, secret, "<project-id>")
 
-mem_fib <- memoise(fib, cache = datastore_cache("custom_cache_name"))
-mem_fib(20) # Saved to datastore; Can be retrieved on another computer.
-mem_fib(20) # Cached version retrieved from google datastore.
+## AWS S3
+
+Use `cache_s3` to cache objects using s3 storage. Requires you to specify a bucket using `cache_name`. When creating buckets, they must be unique among all s3 users when created.
+
+```r
+Sys.setenv("AWS_ACCESS_KEY_ID" = "<access key>",
+           "AWS_SECRET_ACCESS_KEY" = "<access secret>")
+
+mrunif <- memoise(runif, cache = cache_aws("<unique bucket name>"))
+
+mrunif(10) # First run, saves cache
+mrunif(10) # Loads cache, results should be identical
+
 ```

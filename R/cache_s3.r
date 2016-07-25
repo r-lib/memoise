@@ -4,7 +4,7 @@
 #'
 #' @export
 
-cache_aws <- function(cache_name = "rcache") {
+cache_s3 <- function(cache_name = "rcache") {
 
   if (!(aws.s3::bucket_exists(cache_name))) {
     aws.s3::put_bucket(cache_name)
