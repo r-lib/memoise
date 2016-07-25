@@ -101,13 +101,13 @@ datastore_cache <- function(cache_name = "rcache") {
 
   cache_set <- function(key, value) {
     # Serialize value
-    svalue <- base64enc::base64encode(serialize(value, NULL, ascii=T))
+    svalue <- base64enc::base64encode(memCompress(serialize(value, NULL, ascii=T), type = "gzip"))
     path_item <- list(
       kind = cache_name,
       name = key
     )
     prop = list(
-      object = list(blobValue = svalue)
+      object = list(blobValue = svalue, excludeFromIndexes = T)
     )
 
     transaction_id <- transaction()
@@ -115,7 +115,7 @@ datastore_cache <- function(cache_name = "rcache") {
     key_obj <- c(list(key = list(path = path_item),
                       properties = prop))
     mutation = list()
-    mutation[["insert"]] =  key_obj
+    mutation[["upsert"]] =  key_obj
     body <- list(mutations = mutation,
                  transaction = transaction_id
     )
@@ -124,6 +124,10 @@ datastore_cache <- function(cache_name = "rcache") {
                       httr::config(token = rdatastore_env$token),
                       body =  body,
                       encode = "json")
+
+    if (req$status_code != 200) {
+      warning(httr::content(req)$error$message)
+    }
 
   }
 
@@ -139,13 +143,21 @@ datastore_cache <- function(cache_name = "rcache") {
                       encode = "json")
 
     # Unserialize and return
-    resp <- jsonlite::fromJSON(httr::content(req, as = "text"))$found
-    value <- resp$entity$properties$object$blobValue
-    unserialize(base64enc::base64decode(value))
+    req <- jsonlite::fromJSON(httr::content(req, as = "text"))
+    if ("found" %in% names(req)) {
+      resp <- req$found
+      value <- resp$entity$properties$object$blobValue
+      unserialize(memDecompress(base64enc::base64decode(value), type = "gzip"))
+    } else {
+      stop("Not Found")
+    }
   }
 
   cache_has_key <- function(key) {
     res <- try(cache_get(key), silent = TRUE)
+    if (class(res) != "try-error") {
+      message("Using Cached Version")
+    }
     class(res) != "try-error"
   }
 
