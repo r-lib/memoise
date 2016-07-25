@@ -8,14 +8,14 @@
 #'
 #' @export
 
-datastore_cache <- function(project = project_id, cache_name = "rcache") {
+datastore_cache <- function(project, cache_name = "rcache") {
 
   options("googleAuthR.scopes.selected" = c("https://www.googleapis.com/auth/datastore",
                                             "https://www.googleapis.com/auth/userinfo.email"))
 
   googleAuthR::gar_auth()
 
-  base_url <- paste0("https://datastore.googleapis.com/v1beta3/projects/", project_id)
+  base_url <- paste0("https://datastore.googleapis.com/v1beta3/projects/", project)
 
   transaction <- googleAuthR::gar_api_generator(paste0(base_url, ":beginTransaction"),
                     "POST",
@@ -23,8 +23,7 @@ datastore_cache <- function(project = project_id, cache_name = "rcache") {
 
   commit_ds <- googleAuthR::gar_api_generator(paste0(base_url, ":commit"),
                                             "POST",
-                                            data_parse_function = function(x) x,
-                                            simplifyVector = F)
+                                            data_parse_function = function(x) x)
 
   load_ds <- googleAuthR::gar_api_generator(paste0(base_url, ":lookup"),
                                             "POST",
@@ -33,9 +32,11 @@ datastore_cache <- function(project = project_id, cache_name = "rcache") {
                                               if ("found" %in% names(resp)) {
                                                 resp <- resp$found
                                                 value <- resp$entity$properties$object$blobValue
-                                                unserialize(memDecompress(base64enc::base64decode(value), type = "gzip"))
+                                                response <- unserialize(memDecompress(base64enc::base64decode(value), type = "gzip"))
+                                              } else if ("missing" %in% names(resp)) {
+                                                "!cache-not-found"
                                               } else {
-                                                stop("Not Found")
+                                                stop("Error")
                                               }
                                             })
 
@@ -97,11 +98,14 @@ datastore_cache <- function(project = project_id, cache_name = "rcache") {
     )
 
     resp <- load_ds(the_body = list(keys = list(path = path_item)))
+    suppressWarnings( if(resp == "!cache-not-found") {
+      stop("Cache Not Found")
+    })
     resp
   }
 
   cache_has_key <- function(key) {
-    res <- try(cache_get(key), silent = TRUE)
+    res <- try(suppressWarnings(cache_get(key)), silent = TRUE)
     if (class(res) != "try-error") {
       message("Using Cached Version")
     }
