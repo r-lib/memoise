@@ -1,77 +1,3 @@
-rdatastore_env <- new.env()
-datastore_url <- "https://www.googleapis.com/auth/datastore"
-
-
-#' Authenticate Datastore using a service account
-#'
-#' Set credentials to the name of an environmental variable
-#' or the location of your service account json key file.
-#'
-#' @param credentials Environmental variable or service account.
-#' @param project Google cloud platform project id/name.
-#'
-#' @seealso \url{https://cloud.google.com/}
-#' @seealso \url{https://cloud.google.com/datastore/docs/concepts/overview}
-#' @seealso \url{https://developers.google.com/identity/protocols/OAuth2#basicsteps}
-#'
-#' @export
-
-
-authenticate_datastore_service <- function(credentials, project) {
-  # Locate Credentials
-  if (file.exists(as.character(credentials))) {
-    credentials <- jsonlite::fromJSON(credentials)
-  } else if (Sys.getenv(credentials) != "") {
-    credentials <- jsonlite::fromJSON(Sys.getenv(credentials))
-  } else {
-    stop("Could not find credentials")
-  }
-
-  google_token <- httr::oauth_service_token(httr::oauth_endpoints("google"),
-                                            credentials,
-                                            scope = datastore_url)
-
-  url <- paste0("https://datastore.googleapis.com/v1beta3/projects/", project)
-  # Create global variable for project id
-  assign("project_id", project, envir=rdatastore_env)
-  assign("token", google_token, envir=rdatastore_env)
-  assign("url", url, envir=rdatastore_env)
-}
-
-#' Authenticate Datastore
-#'
-#' Authenticate datastore using OAuth 2.0. Create an application on the
-#' \strong{google cloud platform}
-#' and generate
-#'
-#' @param key OAuth 2.0 credential key
-#' @param secret OAuth credential secret key
-#' @param project Google cloud platform project id/name.
-#'
-#' @seealso \url{https://cloud.google.com/}
-#' @seealso \url{https://cloud.google.com/datastore/docs/concepts/overview}
-#' @seealso \url{https://developers.google.com/identity/protocols/OAuth2#basicsteps}
-#'
-#' @export
-
-authenticate_datastore <- function(key, secret, project) {
-  # Authorize app
-  app <- httr::oauth_app("google",
-                         key = key,
-                         secret = secret)
-
-  # Fetch token
-  google_token <- httr::oauth2.0_token(httr::oauth_endpoints("google"),
-                                       app,
-                                       scope = datastore_url)
-  url <- paste0("https://datastore.googleapis.com/v1beta3/projects/", project)
-  # Create global variable for project id
-  assign("project_id", project, envir=rdatastore_env)
-  assign("token", google_token, envir=rdatastore_env)
-  assign("url", url, envir=rdatastore_env)
-}
-
-
 #' datastore_cache
 #'
 #' Use google datastore to store and retrieve cache items. Requires authentication.
@@ -82,22 +8,62 @@ authenticate_datastore <- function(key, secret, project) {
 #'
 #' @export
 
-datastore_cache <- function(cache_name = "rcache") {
+datastore_cache <- function(project = project_id, cache_name = "rcache") {
 
-  transaction <- function() {
-    req <- httr::POST(paste0(rdatastore_env$url, ":beginTransaction"),
-                      httr::config(token = rdatastore_env$token),
-                      encode = "json")
-    if (req$status_code != 200) {
-      stop(httr::content(req)$error$message)
-    }
-    httr::content(req)$transaction
-  }
+  options("googleAuthR.scopes.selected" = c("https://www.googleapis.com/auth/datastore",
+                                            "https://www.googleapis.com/auth/userinfo.email"))
+
+  googleAuthR::gar_auth()
+
+  base_url <- paste0("https://datastore.googleapis.com/v1beta3/projects/", project_id)
+
+  transaction <- googleAuthR::gar_api_generator(paste0(base_url, ":beginTransaction"),
+                    "POST",
+                    data_parse_function = function(x) x$transaction)
+
+  commit_ds <- googleAuthR::gar_api_generator(paste0(base_url, ":commit"),
+                                            "POST",
+                                            data_parse_function = function(x) x,
+                                            simplifyVector = F)
+
+  load_ds <- googleAuthR::gar_api_generator(paste0(base_url, ":lookup"),
+                                            "POST",
+                                            data_parse_function = function(resp) {
+                                              # Unserialize and return
+                                              if ("found" %in% names(resp)) {
+                                                resp <- resp$found
+                                                value <- resp$entity$properties$object$blobValue
+                                                unserialize(memDecompress(base64enc::base64decode(value), type = "gzip"))
+                                              } else {
+                                                stop("Not Found")
+                                              }
+                                            })
+
+  query_ds <- googleAuthR::gar_api_generator(paste0(base_url, ":runQuery"),
+                                             "POST",
+                                             data_parse_function = function(resp) resp)
+
 
   cache <- NULL
-  cache_reset <- function() {
 
+  cache_reset <- function() {
+    query_results <- query_ds(the_body = list(gqlQuery = list(queryString = paste0("SELECT * FROM ", cache_name))))
+    while((query_results$batch$moreResults != "NO_MORE_RESULTS") | is.null(query_results$batch$entityResults) == FALSE) {
+        ids <- (query_results$batch$entityResults$entity$key$path %>% dplyr::bind_rows())$name
+
+        item_groups <- split(ids, (1:length(ids)) %/% 25)
+        sapply(item_groups, function(idset) {
+          mutations <- lapply(idset, function(x) {
+            c(list("delete" = list(path = list(kind = cache_name, name = x))))
+          })
+          body <- list(mutations = mutations, transaction = transaction())
+          resp <- try(commit_ds(the_body = body), silent = T)
+          message("Clearing Cache")
+        })
+        query_results <- query_ds(the_body = list(gqlQuery = list(queryString = paste0("SELECT * FROM ", cache_name))))
+    }
   }
+
 
   cache_set <- function(key, value) {
     # Serialize value
@@ -120,15 +86,10 @@ datastore_cache <- function(cache_name = "rcache") {
                  transaction = transaction_id
     )
 
-    req <- httr::POST(paste0(rdatastore_env$url, ":commit"),
-                      httr::config(token = rdatastore_env$token),
-                      body =  body,
-                      encode = "json")
-
-    if (req$status_code != 200) {
-      warning(httr::content(req)$error$message)
+    resp <- try(commit_ds(the_body = body), silent = T)
+    if (class(resp) == "try-error") {
+      warning(attr(resp, "condition"))
     }
-
   }
 
   cache_get <- function(key) {
@@ -137,20 +98,7 @@ datastore_cache <- function(cache_name = "rcache") {
       name = key
     )
 
-    req <- httr::POST(paste0(rdatastore_env$url, ":lookup"),
-                      httr::config(token = rdatastore_env$token),
-                      body = list(keys = list(path = path_item)),
-                      encode = "json")
-
-    # Unserialize and return
-    req <- jsonlite::fromJSON(httr::content(req, as = "text"))
-    if ("found" %in% names(req)) {
-      resp <- req$found
-      value <- resp$entity$properties$object$blobValue
-      unserialize(memDecompress(base64enc::base64decode(value), type = "gzip"))
-    } else {
-      stop("Not Found")
-    }
+    resp <- load_ds(the_body = list(keys = list(path = path_item)))
   }
 
   cache_has_key <- function(key) {
@@ -167,7 +115,7 @@ datastore_cache <- function(cache_name = "rcache") {
     set = cache_set,
     get = cache_get,
     has_key = cache_has_key,
-    keys = function() message("Keys can't be listed with google datastore.")
+    keys = function() message("Keys can't be listed with the google datastore cache.")
   )
 }
 
