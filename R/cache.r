@@ -1,3 +1,9 @@
+#' new_cache
+#'
+#' Use R to cache items.
+#'
+#' @export
+
 new_cache <- function() {
 
   cache <- NULL

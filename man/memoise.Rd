@@ -5,7 +5,7 @@
 \alias{memoize}
 \title{Memoise a function.}
 \usage{
-memoise(f, ..., envir = environment(f))
+memoise(f, ..., envir = environment(f), cache = new_cache())
 }
 \arguments{
 \item{f}{Function of which to create a memoised copy.}

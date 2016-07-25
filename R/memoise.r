@@ -97,7 +97,7 @@
 #' memA4 <- memoise(a, ~timeout(10))
 #' memA4(2)
 #' @importFrom stats setNames
-memoise <- memoize <- function(f, ..., envir = environment(f)) {
+memoise <- memoize <- function(f, ..., envir = environment(f), cache = new_cache()) {
   f_formals <- formals(args(f))
   if(is.memoised(f)) {
     stop("`f` must not be memoised.", call. = FALSE)
@@ -112,8 +112,6 @@ memoise <- memoize <- function(f, ..., envir = environment(f)) {
   # memoised_function(...)
   init_call_args <- setNames(f_formal_name_list, f_formal_names)
   init_call <- make_call(quote(`_f`), init_call_args)
-
-  cache <- new_cache()
 
   validate_formulas(...)
   additional <- list(...)
