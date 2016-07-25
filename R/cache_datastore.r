@@ -8,7 +8,7 @@
 #'
 #' @export
 
-datastore_cache <- function(project, cache_name = "rcache") {
+cache_datastore <- function(project, cache_name = "rcache") {
 
   options("googleAuthR.scopes.selected" = c("https://www.googleapis.com/auth/datastore",
                                             "https://www.googleapis.com/auth/userinfo.email"))
