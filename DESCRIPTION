@@ -18,8 +18,9 @@ Imports:
     digest (>= 0.6.3),
     googleAuthR,
     base64enc
-Remotes: git::https://github.com/cloudyr/aws.s3.git
 Suggests:
     testthat
+Remotes:
+    cloudyr/aws.s3
 License: MIT + file LICENSE
 RoxygenNote: 5.0.1
