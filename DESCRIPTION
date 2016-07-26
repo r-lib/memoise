@@ -18,7 +18,8 @@ Imports:
     digest (>= 0.6.3),
     googleAuthR,
     base64enc
-Remotes: github::cloudyr/aws.s3,
+Remotes:
+    cloudyr/aws.s3
 Suggests:
     testthat
 License: MIT + file LICENSE
