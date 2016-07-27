@@ -37,7 +37,7 @@ cache with
 
 ### To Do
 
-* [ ] Switch to using GoogleAuthR
+* [x] Switch to using GoogleAuthR
 
 
 # Caches
