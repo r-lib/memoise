@@ -1,11 +1,13 @@
 #' @name cache_aws_s3
-#' @title Initiate an Amazon Web Services Cache
+#' @title Amazon Web Services S3 Cache
+#' @description
+#' Initiate an Amazon Web Services Cache
 #' @usage
 #'
 #' Sys.setenv("AWS_ACCESS_KEY_ID" = "<access key>",
 #'            "AWS_SECRET_ACCESS_KEY" = "<access secret>")
 #'
-#' cache_aws_s3("unique-bucket-name")
+#' cache_aws_s3(cache_name = "unique-bucket-name")
 #'
 #' @param cache_name Bucket name for storing cache files.
 #' Use R to cache items.

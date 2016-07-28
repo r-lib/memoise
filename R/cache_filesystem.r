@@ -1,5 +1,7 @@
 #' @name cache_filesystem
-#' @title Initiate a filesystem cache.
+#' @title Filesystem Cache
+#' @description
+#' Initiate a filesystem cache.
 #' @usage
 #' cache_filesystem stores cached items within a directory. It can be used with
 #' Dropbox or Google Drive to allow for cache access from multiple computers.

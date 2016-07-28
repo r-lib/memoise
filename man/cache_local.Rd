@@ -2,10 +2,13 @@
 % Please edit documentation in R/cache_local.r
 \name{cache_local}
 \alias{cache_local}
-\title{Initiate an in memory cache.
-
-cache_local() stores cached items in memory.}
+\title{In Memory Cache}
 \usage{
 cache_local()
+}
+\description{
+Initiate an in memory cache.
+
+cache_local() stores cached items in memory.
 }
 

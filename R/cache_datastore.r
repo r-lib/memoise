@@ -1,5 +1,6 @@
 #' @name cache_datastore
-#' @title Initiate a datastore cache.
+#' @title Google Datastore Cache
+#' @description Initiate a Google Datastore cache.
 #' @param project Google Cloud project
 #' @param cache_name datastore kind to use for storing cache entities.
 #' @usage

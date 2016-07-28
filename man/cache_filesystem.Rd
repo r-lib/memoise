@@ -2,7 +2,7 @@
 % Please edit documentation in R/cache_filesystem.r
 \name{cache_filesystem}
 \alias{cache_filesystem}
-\title{Initiate a filesystem cache.}
+\title{Filesystem Cache}
 \usage{
 cache_filesystem stores cached items within a directory. It can be used with
 Dropbox or Google Drive to allow for cache access from multiple computers.
@@ -17,5 +17,8 @@ For Google Drive:
 }
 \arguments{
 \item{path}{Directory in which to store cached items.}
+}
+\description{
+Initiate a filesystem cache.
 }
 

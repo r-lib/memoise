@@ -1,5 +1,6 @@
 #' @name cache_local
-#' @title Initiate an in memory cache.
+#' @title In Memory Cache
+#' @description Initiate an in memory cache.
 #'
 #' cache_local() stores cached items in memory.
 #'

@@ -2,7 +2,7 @@
 % Please edit documentation in R/cache_datastore.r
 \name{cache_datastore}
 \alias{cache_datastore}
-\title{Initiate a datastore cache.}
+\title{Google Datastore Cache}
 \usage{
 cache_datastore(project="your-project-name",
                 cache_name = "rcache")
@@ -11,6 +11,9 @@ cache_datastore(project="your-project-name",
 \item{project}{Google Cloud project}
 
 \item{cache_name}{datastore kind to use for storing cache entities.}
+}
+\description{
+Initiate a Google Datastore cache.
 }
 \seealso{
 \url{https://cloud.google.com/}
