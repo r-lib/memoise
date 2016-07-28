@@ -70,7 +70,7 @@
 #' formals(b)
 #' formals(memB)
 #' # However, it doesn't know about parameter relevance.
-#' # Different call means different cacheing, no matter
+#' # Different call means different caching, no matter
 #' # that the outcome is the same.
 #' memB(2, dummy="b")
 #'
@@ -93,7 +93,7 @@
 #' memA3 <- memoise(a, ~{current <- as.numeric(Sys.time()); (current - current %% 10) %/% 10 })
 #' memA3(2)
 #'
-#' # The timeout function is any easy way to do the above.
+#' # The timeout function is an easy way to do the above.
 #' memA4 <- memoise(a, ~timeout(10))
 #' memA4(2)
 #' @importFrom stats setNames
