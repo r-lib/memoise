@@ -19,7 +19,8 @@ Imports:
     base64enc
 Suggests:
     testthat,
-    googleAuthR
+    googleAuthR,
+    aws.s3
 Remotes:
     cloudyr/aws.s3
 License: MIT + file LICENSE

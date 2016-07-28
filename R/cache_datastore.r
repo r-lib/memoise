@@ -3,7 +3,6 @@
 #' @description Initiate a Google Datastore cache.
 #' @param project Google Cloud project
 #' @param cache_name datastore kind to use for storing cache entities.
-#' @usage
 #'
 #'
 #' @seealso \url{https://cloud.google.com/}
