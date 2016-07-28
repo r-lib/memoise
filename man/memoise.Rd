@@ -5,7 +5,7 @@
 \alias{memoize}
 \title{Memoise a function.}
 \usage{
-memoise(f, ..., envir = environment(f), cache = new_cache())
+memoise(f, ..., envir = environment(f), cache = cache_local())
 }
 \arguments{
 \item{f}{Function of which to create a memoised copy.}
@@ -14,6 +14,8 @@ memoise(f, ..., envir = environment(f), cache = new_cache())
 additional restrictions on caching. See Examples for usage.}
 
 \item{envir}{Environment of the returned function.}
+
+\item{cache}{Cache function.}
 }
 \description{
 \code{mf <- memoise(f)} creates \code{mf}, a memoised copy of

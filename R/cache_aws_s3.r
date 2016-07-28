@@ -1,10 +1,20 @@
-#' new_cache
+#' @name cache_aws_s3
+#' @title Initiate an Amazon Web Services Cache
+#' @usage
 #'
+#' Sys.setenv("AWS_ACCESS_KEY_ID" = "<access key>",
+#'            "AWS_SECRET_ACCESS_KEY" = "<access secret>")
+#'
+#' cache_aws_s3("unique-bucket-name")
+#'
+#' @param cache_name Bucket name for storing cache files.
 #' Use R to cache items.
 #'
 #' @export
 
-cache_s3 <- function(cache_name = "rcache") {
+cache_aws_s3 <- function(cache_name = "rcache") {
+
+  if (!("aws.s3" %in% installed.packages()[,"Package"])) { stop("aws.s3 required for datastore cache.") }
 
   if (!(aws.s3::bucket_exists(cache_name))) {
     aws.s3::put_bucket(cache_name)

@@ -2,18 +2,19 @@
 % Please edit documentation in R/cache_datastore.r
 \name{cache_datastore}
 \alias{cache_datastore}
-\title{datastore_cache}
+\title{Initiate a datastore cache.}
 \usage{
-cache_datastore(project, cache_name = "rcache")
+cache_datastore(project="your-project-name",
+                cache_name = "rcache")
 }
-\description{
-Use google datastore to store and retrieve cache items. Requires authentication.
+\arguments{
+\item{project}{Google Cloud project}
+
+\item{cache_name}{datastore kind to use for storing cache entities.}
 }
 \seealso{
 \url{https://cloud.google.com/}
 
 \url{https://cloud.google.com/datastore/docs/concepts/overview}
-
-\url{https://developers.google.com/identity/protocols/OAuth2#basicsteps}
 }
 

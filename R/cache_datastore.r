@@ -1,14 +1,20 @@
-#' datastore_cache
+#' @name cache_datastore
+#' @title Initiate a datastore cache.
+#' @param project Google Cloud project
+#' @param cache_name datastore kind to use for storing cache entities.
+#' @usage
 #'
-#' Use google datastore to store and retrieve cache items. Requires authentication.
+#' cache_datastore(project="your-project-name",
+#'                 cache_name = "rcache")
 #'
 #' @seealso \url{https://cloud.google.com/}
 #' @seealso \url{https://cloud.google.com/datastore/docs/concepts/overview}
-#' @seealso \url{https://developers.google.com/identity/protocols/OAuth2#basicsteps}
 #'
 #' @export
 
 cache_datastore <- function(project, cache_name = "rcache") {
+
+  if (!("googleAuthR" %in% installed.packages()[,"Package"])) { stop("googleAuthR required for datastore cache.") }
 
   options("googleAuthR.scopes.selected" = c("https://www.googleapis.com/auth/datastore",
                                             "https://www.googleapis.com/auth/userinfo.email"))
@@ -48,7 +54,9 @@ cache_datastore <- function(project, cache_name = "rcache") {
   cache_reset <- function() {
     query_results <- query_ds(the_body = list(gqlQuery = list(queryString = paste0("SELECT * FROM ", cache_name))))
     while((query_results$batch$moreResults != "NO_MORE_RESULTS") | is.null(query_results$batch$entityResults) == FALSE) {
-        ids <- (query_results$batch$entityResults$entity$key$path %>% dplyr::bind_rows())$name
+
+
+      ids <- (sapply(query_results$batch$entityResults$entity$key$path, function(x) x$name))
 
         item_groups <- split(ids, (1:length(ids)) %/% 25)
         sapply(item_groups, function(idset) {

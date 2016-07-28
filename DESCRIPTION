@@ -1,5 +1,5 @@
 Encoding: UTF-8
-Package: xmemoise
+Package: memoise
 Title: Memoisation of Functions
 Description: Memoisation allows the results of functions to be cached based on input parameters
     xmemoise offers both local and remote caches, enabling memoisation across computers.
@@ -16,10 +16,10 @@ URL: https://github.com/danielecook/xmemoise
 BugReports: https://github.com/hadley/memoise/issues
 Imports:
     digest (>= 0.6.3),
-    googleAuthR,
     base64enc
 Suggests:
-    testthat
+    testthat,
+    googleAuthR
 Remotes:
     cloudyr/aws.s3
 License: MIT + file LICENSE

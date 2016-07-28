@@ -38,6 +38,7 @@
 #' @param ... optional variables specified as formulas with no RHS to use as
 #' additional restrictions on caching. See Examples for usage.
 #' @param envir Environment of the returned function.
+#' @param cache Cache function.
 #' @seealso \code{\link{forget}}, \code{\link{is.memoised}},
 #'   \code{\link{timeout}}, \url{http://en.wikipedia.org/wiki/Memoization}
 #' @aliases memoise memoize
@@ -97,7 +98,7 @@
 #' memA4 <- memoise(a, ~timeout(10))
 #' memA4(2)
 #' @importFrom stats setNames
-memoise <- memoize <- function(f, ..., envir = environment(f), cache = new_cache()) {
+memoise <- memoize <- function(f, ..., envir = environment(f), cache = cache_local()) {
   f_formals <- formals(args(f))
   if(is.memoised(f)) {
     stop("`f` must not be memoised.", call. = FALSE)

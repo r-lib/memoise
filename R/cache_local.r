@@ -1,10 +1,11 @@
-#' new_cache
+#' @name cache_local
+#' @title Initiate an in memory cache.
 #'
-#' Use R to cache items.
+#' cache_local() stores cached items in memory.
 #'
 #' @export
 
-new_cache <- function() {
+cache_local <- function() {
 
   cache <- NULL
   cache_reset <- function() {
