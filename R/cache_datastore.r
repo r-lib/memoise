@@ -5,8 +5,6 @@
 #' @param cache_name datastore kind to use for storing cache entities.
 #' @usage
 #'
-#' cache_datastore(project="your-project-name",
-#'                 cache_name = "rcache")
 #'
 #' @seealso \url{https://cloud.google.com/}
 #' @seealso \url{https://cloud.google.com/datastore/docs/concepts/overview}

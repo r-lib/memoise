@@ -4,16 +4,7 @@
 \alias{cache_filesystem}
 \title{Filesystem Cache}
 \usage{
-cache_filesystem stores cached items within a directory. It can be used with
-Dropbox or Google Drive to allow for cache access from multiple computers.
-
-To use cache_filesystem with Dropbox, you can specify:
-
-  cache_filesystem("~/Dropbox/.rcache")
-
-For Google Drive:
-
-  cache_filesystem("~/Google Drive/.rcache")
+cache_filesystem(path)
 }
 \arguments{
 \item{path}{Directory in which to store cached items.}

@@ -4,8 +4,7 @@
 \alias{cache_datastore}
 \title{Google Datastore Cache}
 \usage{
-cache_datastore(project="your-project-name",
-                cache_name = "rcache")
+
 }
 \arguments{
 \item{project}{Google Cloud project}
