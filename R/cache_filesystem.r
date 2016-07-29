@@ -5,6 +5,23 @@
 #'
 #' @param path Directory in which to store cached items.
 #'
+#' @examples
+#'
+#' \dontrun{
+#' # Use with Dropbox
+#'
+#' db <- cache_filesystem("~/Dropbox/.rcache")
+#'
+#' mem_runif <- memoise(runif, cache = db)
+#'
+#' # Use with Google Drive
+#'
+#' gd <- cache_filesystem("~/Google Drive/.rcache")
+#'
+#' mem_runif <- memoise(runif, cache = gd)
+#'
+#' }
+#'
 #' @export
 
 cache_filesystem <- function(path) {

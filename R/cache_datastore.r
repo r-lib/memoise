@@ -4,6 +4,11 @@
 #' @param project Google Cloud project
 #' @param cache_name datastore kind to use for storing cache entities.
 #'
+#' @examples
+#' \dontrun{
+#' ds <- cache_datastore(project = "<project-id>", cache_name = "rcache")
+#' mem_memoise(runif, cache = ds)
+#' }
 #'
 #' @seealso \url{https://cloud.google.com/}
 #' @seealso \url{https://cloud.google.com/datastore/docs/concepts/overview}

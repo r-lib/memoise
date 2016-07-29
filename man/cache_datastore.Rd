@@ -14,6 +14,13 @@ cache_datastore(project, cache_name = "rcache")
 \description{
 Initiate a Google Datastore cache.
 }
+\examples{
+\dontrun{
+ds <- cache_datastore(project = "<project-id>", cache_name = "rcache")
+mem_memoise(runif, cache = ds)
+}
+
+}
 \seealso{
 \url{https://cloud.google.com/}
 

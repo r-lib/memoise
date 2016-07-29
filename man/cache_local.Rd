@@ -9,6 +9,6 @@ cache_local()
 \description{
 Initiate an in memory cache.
 
-cache_local() stores cached items in memory.
+cache_local() stores cached items in memory. It is the default cache.
 }
 

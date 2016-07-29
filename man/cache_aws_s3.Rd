@@ -12,4 +12,18 @@ cache_aws_s3(cache_name)
 \description{
 Initiate an Amazon Web Services Cache
 }
+\examples{
+
+\dontrun{
+# Set AWS credentials.
+Sys.setenv("AWS_ACCESS_KEY_ID" = "<access key>",
+           "AWS_SECRET_ACCESS_KEY" = "<access secret>")
+
+# Set up a unique bucket name.
+s3 <- cache_aws_s3("unique-bucket-name")
+mem_runif <- memoise(runif, cache = s3)
+}
+
+
+}
 

@@ -12,4 +12,22 @@ cache_filesystem(path)
 \description{
 Initiate a filesystem cache.
 }
+\examples{
+
+\dontrun{
+# Use with Dropbox
+
+db <- cache_filesystem("~/Dropbox/.rcache")
+
+mem_runif <- memoise(runif, cache = db)
+
+# Use with Google Drive
+
+gd <- cache_filesystem("~/Google Drive/.rcache")
+
+mem_runif <- memoise(runif, cache = gd)
+
+}
+
+}
 
