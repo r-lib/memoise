@@ -1,4 +1,4 @@
-# xmemoise 
+# memoise 
 
 Forked from [hadley/memoise](https://github.com/hadley/memoise)
 
