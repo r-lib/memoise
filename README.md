@@ -68,4 +68,18 @@ mrunif(10) # Loads cache, results should be identical
 
 ## Filesystem
 
-`cache_filesystem`
+`cache_filesystem` can be used to cache between computers using Google Drive or Dropbox.
+
+```
+dbc <- cache_filesystem("~/Dropbox/.rcache")
+mrunif <- memoise(runif, cache = dbc)
+mrunif(20) # Results stored in Dropbox .rcache folder will be synced between computers.
+```
+
+```
+gdc <- cache_filesystem("~/Google Drive/.rcache")
+mrunif <- memoise(runif, cache = dbc)
+mrunif(20) # Results stored in Google Drive .rcache folder will be synced between computers.
+```
+
+
