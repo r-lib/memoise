@@ -5,7 +5,7 @@ Forked from [hadley/memoise](https://github.com/hadley/memoise)
 # Installation
 
 ```
-devtools::install_github("danielecook/xmemoise")
+devtools::install_github("danielecook/memoise")
 ```
 
 # Memoization
