@@ -13,7 +13,7 @@ devtools::install_github("danielecook/memoise")
 If a function is called multiple times with the same input, you can
 often speed things up by keeping a cache of known answers that it can
 retrieve. This is called memoisation <http://en.wikipedia.org/wiki/Memoization>.
-The `xmemoise` package is built upon [hadley/memoise](https://github.com/hadley/memoise), which provides a simple syntax 
+This is a fork of the  `memoise` package built by Hadley Wickham: [hadley/memoise](https://github.com/hadley/memoise), which provides a simple syntax 
 
     mf <- memoise(f)
 
@@ -28,17 +28,11 @@ cache with
     is.memoised(f)  # FALSE
 
 
-`xmemoise` extends upon `memoise` by adding in additional types of caches. Items can be cached using the original cache implemented in `memoise` in addition to other options:
+`memoise` extends upon `memoise` by adding in additional types of caches. Items can be cached using the original cache implemented in `memoise` in addition to other options:
 
 * [x] Google Datastore
-* [ ] Dropbox
-* [ ] Google Storage
+* [x] cache_filesystem allows caching using dropbox/google drive.
 * [X] AWS
-
-### To Do
-
-* [x] Switch to using GoogleAuthR
-
 
 # Caches
 
@@ -71,3 +65,7 @@ mrunif(10) # First run, saves cache
 mrunif(10) # Loads cache, results should be identical
 
 ```
+
+## Filesystem
+
+`cache_filesystem`
