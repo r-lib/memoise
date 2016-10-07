@@ -119,7 +119,16 @@ memoise <- memoize <- function(f, ..., envir = environment(f), cache = cache_mem
 
   memo_f <- eval(
     bquote(function(...) {
-      hash <- `_digest`(c(.(list_call),
+      called_args <- list()
+      formal_args <- formals()
+      for (i in seq_along(formal_args)) {
+        arg <- names(formal_args)[[i]]
+        if (identical(arg, "...")) { called_args <- append(called_args, list(...)); next}
+        is_missing <- eval(substitute(missing(arg)))
+        has_default <- !identical(formal_args[[i]], quote(expr=))
+        if (!is_missing || has_default) called_args <- append(called_args, eval(as.symbol(arg), environment()))
+      }
+      hash <- `_digest`(c(called_args,
           lapply(`_additional`, function(x) eval(x[[2L]], environment(x)))),
         algo = "sha512")
 
@@ -262,7 +271,7 @@ has_cache <- function(f, ...) {
   # Modify the function body of the function to simply return TRUE and FALSE
   # rather than get or set the results of the cache
   body <- body(f)
-  body[[3]] <- quote(if (`_cache`$has_key(hash)) return(TRUE) else return(FALSE))
+  body[[6]] <- quote(if (`_cache`$has_key(hash)) return(TRUE) else return(FALSE))
   body(f) <- body
 
   f

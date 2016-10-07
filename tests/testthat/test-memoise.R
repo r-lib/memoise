@@ -259,3 +259,24 @@ test_that("it stays the same if not enough time has passed", {
 
   expect_true(first != timeout(duration, 100))
 })
+
+context("missing")
+test_that("it works with missing arguments", {
+  fn <- function(x, y) {
+    i <<- i + 1
+    if (missing(y)) {
+      y <- 1
+    }
+    x + y
+  }
+  fnm <- memoise(fn)
+  i <- 0
+
+  expect_equal(fn(1), fnm(1))
+  expect_equal(fn(1, 2), fnm(1, 2))
+  expect_equal(i, 4)
+  fnm(1)
+  expect_equal(i, 4)
+  fnm(1, 2)
+  expect_equal(i, 4)
+})
