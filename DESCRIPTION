@@ -20,6 +20,7 @@ Suggests:
     httr,
     covr
 Remotes:
-    cloudyr/aws.s3
+    cloudyr/aws.s3,
+    jimhester/covr
 License: MIT + file LICENSE
 RoxygenNote: 5.0.1
