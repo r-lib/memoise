@@ -12,12 +12,12 @@ Description: Cache the results of a function so that when you call it
 URL: https://github.com/hadley/memoise
 BugReports: https://github.com/hadley/memoise/issues
 Imports:
-    digest (>= 0.6.3),
-    base64enc
+    digest (>= 0.6.3)
 Suggests:
     testthat,
     googleAuthR,
-    aws.s3
+    aws.s3,
+    httr
 Remotes:
     cloudyr/aws.s3
 License: MIT + file LICENSE

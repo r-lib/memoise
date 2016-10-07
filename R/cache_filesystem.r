@@ -1,7 +1,6 @@
-#' @name cache_filesystem
-#' @title Filesystem Cache
-#' @description
-#' Initiate a filesystem cache.
+#' Filesystem Cache
+#'
+#' Use a cache on the local filesystem that will persist between R sessions.
 #'
 #' @param path Directory in which to store cached items.
 #'
@@ -23,7 +22,6 @@
 #' }
 #'
 #' @export
-
 cache_filesystem <- function(path) {
 
   if (!dir.exists(path)) {

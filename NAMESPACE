@@ -2,9 +2,8 @@
 
 S3method(print,memoised)
 export(cache_aws_s3)
-export(cache_datastore)
 export(cache_filesystem)
-export(cache_local)
+export(cache_memory)
 export(forget)
 export(has_cache)
 export(is.memoised)

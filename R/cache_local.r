@@ -1,12 +1,8 @@
-#' @name cache_local
-#' @title In Memory Cache
-#' @description Initiate an in memory cache.
+#' In Memory Cache
 #'
-#' cache_local() stores cached items in memory. It is the default cache.
-#'
+#' A cache in memory, that lasts only in the current R session.
 #' @export
-
-cache_local <- function() {
+cache_memory <- function() {
 
   cache <- NULL
   cache_reset <- function() {

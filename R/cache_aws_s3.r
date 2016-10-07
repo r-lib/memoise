@@ -1,6 +1,5 @@
-#' @name cache_aws_s3
-#' @title Amazon Web Services S3 Cache
-#' @description Initiate an Amazon Web Services Cache
+#' Amazon Web Services S3 Cache
+#' Amazon Web Services S3 backed cache, for remote caching.
 #'
 #' @examples
 #'
@@ -20,31 +19,33 @@
 
 cache_aws_s3 <- function(cache_name) {
 
-  # Can't get this check to pass...
-  # if (!("aws.s3" %in% installed.packages()[,"Package"])) { stop("aws.s3 required for datastore cache.") }
+  if (!(requireNamespace("aws.s3"))) { stop("Package `aws.s3` must be installed for `cache_aws_s3()`.") } # nocov
 
   if (!(aws.s3::bucket_exists(cache_name))) {
-    aws.s3::put_bucket(cache_name)
-    if (!(aws.s3::bucket_exists(cache_name))) {
-      stop("Cache name must use unique bucket name")
-    }
+    aws.s3::put_bucket(cache_name) # nocov
   }
 
-  cache <- NULL
+  path <- tempfile("memoise-")
+  dir.create(path)
+
   cache_reset <- function() {
-    aws.s3::delete_bucket(cache_name)
-    aws.s3::put_bucket(cache_name)
+    keys <- cache_keys()
+    lapply(keys, aws.s3::delete_bucket, bucket = cache_name)
   }
 
   cache_set <- function(key, value) {
-    tfile = tempfile()
-    save(value, file = tfile)
-    aws.s3::put_object(tfile, object = key, bucket = cache_name)
+    temp_file <- file.path(path, key)
+    on.exit(unlink(temp_file))
+    saveRDS(value, file = temp_file)
+    aws.s3::put_object(temp_file, object = key, bucket = cache_name)
   }
 
   cache_get <- function(key) {
-    suppressWarnings(aws.s3::s3load(object = key, bucket = cache_name))
-    base::get(ls()[ls() != "key"][[1]])
+    temp_file <- file.path(path, key)
+    httr::with_config(httr::write_disk(temp_file, overwrite = TRUE), {
+      aws.s3::get_object(object = key, bucket = cache_name)
+    })
+    readRDS(temp_file)
   }
 
   cache_has_key <- function(key) {
@@ -52,13 +53,7 @@ cache_aws_s3 <- function(cache_name) {
   }
 
   cache_keys <- function() {
-    items <- lapply(aws.s3::get_bucket(bucket = cache_name), function(x) {
-      if ("Key" %in% names(x)) {
-        return(x$Key)
-      } else {
-        return(NULL)
-      }
-    })
+    items <- lapply(aws.s3::get_bucket(bucket = cache_name), `[[`, "Key")
     unlist(Filter(Negate(is.null), items))
   }
 

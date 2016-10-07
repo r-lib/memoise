@@ -2,7 +2,8 @@
 % Please edit documentation in R/cache_aws_s3.r
 \name{cache_aws_s3}
 \alias{cache_aws_s3}
-\title{Amazon Web Services S3 Cache}
+\title{Amazon Web Services S3 Cache
+Amazon Web Services S3 backed cache, for remote caching.}
 \usage{
 cache_aws_s3(cache_name)
 }
@@ -10,7 +11,8 @@ cache_aws_s3(cache_name)
 \item{cache_name}{Bucket name for storing cache files.}
 }
 \description{
-Initiate an Amazon Web Services Cache
+Amazon Web Services S3 Cache
+Amazon Web Services S3 backed cache, for remote caching.
 }
 \examples{
 

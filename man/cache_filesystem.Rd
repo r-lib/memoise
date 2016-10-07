@@ -10,7 +10,7 @@ cache_filesystem(path)
 \item{path}{Directory in which to store cached items.}
 }
 \description{
-Initiate a filesystem cache.
+Use a cache on the local filesystem that will persist between R sessions.
 }
 \examples{
 
