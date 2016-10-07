@@ -15,7 +15,6 @@ Imports:
     digest (>= 0.6.3)
 Suggests:
     testthat,
-    googleAuthR,
     aws.s3,
     httr,
     covr
