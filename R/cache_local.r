@@ -1,4 +1,12 @@
-new_cache <- function() {
+#' @name cache_local
+#' @title In Memory Cache
+#' @description Initiate an in memory cache.
+#'
+#' cache_local() stores cached items in memory. It is the default cache.
+#'
+#' @export
+
+cache_local <- function() {
 
   cache <- NULL
   cache_reset <- function() {
