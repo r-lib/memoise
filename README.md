@@ -1,12 +1,5 @@
-# memoise 
-
-Forked from [hadley/memoise](https://github.com/hadley/memoise)
-
-# Installation
-
-```
-devtools::install_github("danielecook/memoise")
-```
+# memoise
+[![Travis-CI Build Status](https://travis-ci.org/hadley/memoise.svg?branch=master)](https://travis-ci.org/hadley/memoise) [![Coverage Status](https://img.shields.io/codecov/c/github/hadley/memoise/master.svg)](https://codecov.io/github/hadley/memoise?branch=master)
 
 # Memoization
 
@@ -28,38 +21,33 @@ cache with
     is.memoised(f)  # FALSE
 
 
-`memoise` extends upon `memoise` by adding in additional types of caches. Items can be cached using the original cache implemented in `memoise` in addition to other options:
+# Installation
 
-* [x] Google Datastore
-* [x] cache_filesystem allows caching using dropbox/google drive.
-* [X] AWS
-
-# Caches
-
-## Google Datastore
-
-Use `cache_datastore` to set up a cache on google datastore. Requires you to set a `project` and `cache_name`. The `cache_name` 
-is used to set the kind for each entity stored on google datastore.
-
-```r
-library(xmemoise)
-
-# Generate a memoised function.
-mrunif <- memoise(runif, cache = cache_datastore("<project id here>", "rcache"))
-
-mrunif(10) # First run, saves cache
-mrunif(10) # Loads cache, results should be identical
 ```
+devtools::install_github("hadley/memoise")
+```
+
+# External Caches
+
+`memoise` also support external caching in addition to the default in-memory caches.
+
+* `cache_filesystem()` allows caching using files on a local filesystem. You
+  can point this to a shared file such as dropbox or google drive to share
+  caches between systems.
+* `cache_aws_s3()` allows caching on [Amazon S3](https://aws.amazon.com/s3/)
+
 
 ## AWS S3
 
-Use `cache_s3` to cache objects using s3 storage. Requires you to specify a bucket using `cache_name`. When creating buckets, they must be unique among all s3 users when created.
+Use `cache_aws_s3()` to cache objects using s3 storage. Requires you to specify
+a bucket using `cache_name`. When creating buckets, they must be unique among
+all s3 users when created.
 
 ```r
 Sys.setenv("AWS_ACCESS_KEY_ID" = "<access key>",
            "AWS_SECRET_ACCESS_KEY" = "<access secret>")
 
-mrunif <- memoise(runif, cache = cache_s3("<unique bucket name>"))
+mrunif <- memoise(runif, cache = cache_aws_s3("<unique bucket name>"))
 
 mrunif(10) # First run, saves cache
 mrunif(10) # Loads cache, results should be identical
@@ -68,7 +56,9 @@ mrunif(10) # Loads cache, results should be identical
 
 ## Filesystem
 
-`cache_filesystem` can be used to cache between computers using Google Drive or Dropbox.
+`cache_filesystem` can be used for a file system cache. This is useful for
+preserving the cache between R sessions as well as sharing between systems
+when using a shared or synced files system such as Dropbox or Google Drive.
 
 ```
 dbc <- cache_filesystem("~/Dropbox/.rcache")
@@ -81,5 +71,3 @@ gdc <- cache_filesystem("~/Google Drive/.rcache")
 mrunif <- memoise(runif, cache = dbc)
 mrunif(20) # Results stored in Google Drive .rcache folder will be synced between computers.
 ```
-
-
