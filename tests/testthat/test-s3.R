@@ -1,11 +1,11 @@
-context("aws_s3")
+context("s3")
 
-test_that("using a aws_s3 cache works", {
+test_that("using a s3 cache works", {
   skip_on_cran()
   skip_on_travis_pr()
   skip_without_aws_credetials()
 
-  aws <- cache_aws_s3("memoise-tests")
+  aws <- cache_s3("memoise-tests")
   i <- 0
   fn <- function() { i <<- i + 1; i }
   fnm <- memoise(fn, cache = aws)

@@ -39,12 +39,12 @@ devtools::install_github("hadley/memoise")
 * `cache_filesystem()` allows caching using files on a local filesystem. You
   can point this to a shared file such as dropbox or google drive to share
   caches between systems.
-* `cache_aws_s3()` allows caching on [Amazon S3](https://aws.amazon.com/s3/)
+* `cache_s3()` allows caching on [Amazon S3](https://aws.amazon.com/s3/)
 
 
 ## AWS S3
 
-Use `cache_aws_s3()` to cache objects using s3 storage. Requires you to specify
+Use `cache_s3()` to cache objects using s3 storage. Requires you to specify
 a bucket using `cache_name`. When creating buckets, they must be unique among
 all s3 users when created.
 
@@ -52,7 +52,7 @@ all s3 users when created.
 Sys.setenv("AWS_ACCESS_KEY_ID" = "<access key>",
            "AWS_SECRET_ACCESS_KEY" = "<access secret>")
 
-mrunif <- memoise(runif, cache = cache_aws_s3("<unique bucket name>"))
+mrunif <- memoise(runif, cache = cache_s3("<unique bucket name>"))
 
 mrunif(10) # First run, saves cache
 mrunif(10) # Loads cache, results should be identical

@@ -9,7 +9,7 @@
 #'            "AWS_SECRET_ACCESS_KEY" = "<access secret>")
 #'
 #' # Set up a unique bucket name.
-#' s3 <- cache_aws_s3("unique-bucket-name")
+#' s3 <- cache_s3("unique-bucket-name")
 #' mem_runif <- memoise(runif, cache = s3)
 #' }
 #'
@@ -17,9 +17,9 @@
 #' @param cache_name Bucket name for storing cache files.
 #' @export
 
-cache_aws_s3 <- function(cache_name) {
+cache_s3 <- function(cache_name) {
 
-  if (!(requireNamespace("aws.s3"))) { stop("Package `aws.s3` must be installed for `cache_aws_s3()`.") } # nocov
+  if (!(requireNamespace("aws.s3"))) { stop("Package `aws.s3` must be installed for `cache_s3()`.") } # nocov
 
   if (!(aws.s3::bucket_exists(cache_name))) {
     aws.s3::put_bucket(cache_name) # nocov
