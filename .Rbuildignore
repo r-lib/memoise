@@ -3,3 +3,4 @@
 ^\.Rproj\.user$
 ^revdep$
 ^cran-comments\.md$
+^\.httr-oauth$

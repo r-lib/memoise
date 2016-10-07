@@ -1,4 +1,8 @@
-new_cache <- function() {
+#' In Memory Cache
+#'
+#' A cache in memory, that lasts only in the current R session.
+#' @export
+cache_memory <- function() {
 
   cache <- NULL
   cache_reset <- function() {

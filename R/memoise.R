@@ -38,6 +38,7 @@
 #' @param ... optional variables specified as formulas with no RHS to use as
 #' additional restrictions on caching. See Examples for usage.
 #' @param envir Environment of the returned function.
+#' @param cache Cache function.
 #' @seealso \code{\link{forget}}, \code{\link{is.memoised}},
 #'   \code{\link{timeout}}, \url{http://en.wikipedia.org/wiki/Memoization}
 #' @aliases memoise memoize
@@ -97,7 +98,7 @@
 #' memA4 <- memoise(a, ~timeout(10))
 #' memA4(2)
 #' @importFrom stats setNames
-memoise <- memoize <- function(f, ..., envir = environment(f)) {
+memoise <- memoize <- function(f, ..., envir = environment(f), cache = cache_memory()) {
   f_formals <- formals(args(f))
   if(is.memoised(f)) {
     stop("`f` must not be memoised.", call. = FALSE)
@@ -112,8 +113,6 @@ memoise <- memoize <- function(f, ..., envir = environment(f)) {
   # memoised_function(...)
   init_call_args <- setNames(f_formal_name_list, f_formal_names)
   init_call <- make_call(quote(`_f`), init_call_args)
-
-  cache <- new_cache()
 
   validate_formulas(...)
   additional <- list(...)
@@ -224,7 +223,7 @@ forget <- function(f) {
   }
 
   env <- environment(f)
-  if (!exists("_cache", env, inherits = FALSE)) return(FALSE)
+  if (!exists("_cache", env, inherits = FALSE)) return(FALSE) # nocovr
 
   cache <- get("_cache", env)
   cache$reset()

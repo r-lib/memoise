@@ -1,18 +1,8 @@
-# Sample .travis.yml for R projects
+secure: "QrhNWrS/nyBZKsydo2exbMSp2huBaCkRBAt0hWTYoY+9pSfbbNa9OD2elsRWUi1RztK9oiubxK3KoHOGOP3L6N4CiRJ2zIX4Z25OkDagphdeAXTAtAPG6as3+ucz/Ujl8shEvHuhrUeeuKvtNsVJQ0b0DHIDRXkzizDg7yWJiNk="
 
 language: r
-warnings_are_errors: true
-sudo: required
-r_binary_packages:
-  - jsonlite
-  - devtools
-  - httr
-  - crayon
-  - htmltools
-  - lazyeval
-  - testthat
-r_packages:
-  - covr
+sudo: false
+cache: packages
 
 after_success:
   - Rscript -e 'covr::codecov()'
