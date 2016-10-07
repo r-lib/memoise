@@ -6,20 +6,25 @@
 If a function is called multiple times with the same input, you can
 often speed things up by keeping a cache of known answers that it can
 retrieve. This is called memoisation <http://en.wikipedia.org/wiki/Memoization>.
-This is a fork of the  `memoise` package built by Hadley Wickham: [hadley/memoise](https://github.com/hadley/memoise), which provides a simple syntax 
+The `memoise` package provides a simple syntax
 
-    mf <- memoise(f)
+```r
+mf <- memoise(f)
+```
 
 to create `mf()`, a memoised wrapper around `f()`. You can clear `mf`'s
-cache with 
+cache with
 
-    forget(mf)
+```r
+forget(mf)
+```
 
-, and you can test whether a function is memoised with
+and you can test whether a function is memoised with
 
-    is.memoised(mf) # TRUE
-    is.memoised(f)  # FALSE
-
+```r
+is.memoised(mf) # TRUE
+is.memoised(f)  # FALSE
+```
 
 # Installation
 
@@ -29,7 +34,7 @@ devtools::install_github("hadley/memoise")
 
 # External Caches
 
-`memoise` also support external caching in addition to the default in-memory caches.
+`memoise` also supports external caching in addition to the default in-memory caches.
 
 * `cache_filesystem()` allows caching using files on a local filesystem. You
   can point this to a shared file such as dropbox or google drive to share
@@ -60,14 +65,16 @@ mrunif(10) # Loads cache, results should be identical
 preserving the cache between R sessions as well as sharing between systems
 when using a shared or synced files system such as Dropbox or Google Drive.
 
-```
+```r
+fc <- cache_filesystem("~/.cache")
+mrunif <- memoise(runif, cache = dbc)
+mrunif(20) # Results stored in local file
+
 dbc <- cache_filesystem("~/Dropbox/.rcache")
 mrunif <- memoise(runif, cache = dbc)
-mrunif(20) # Results stored in Dropbox .rcache folder will be synced between computers.
-```
+mrunif(20) # Results stored in Dropbox .rcache folder which will be synced between computers.
 
-```
 gdc <- cache_filesystem("~/Google Drive/.rcache")
 mrunif <- memoise(runif, cache = dbc)
-mrunif(20) # Results stored in Google Drive .rcache folder will be synced between computers.
+mrunif(20) # Results stored in Google Drive .rcache folder which will be synced between computers.
 ```
