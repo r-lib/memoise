@@ -26,33 +26,25 @@
 
 cache_filesystem <- function(path) {
 
-  dir.create(file.path(path), showWarnings = FALSE)
+  if (!dir.exists(path)) {
+    dir.create(path, showWarnings = FALSE)
+  }
 
   cache_reset <- function() {
     cache_files <- list.files(path, full.names = TRUE)
-    # Use an environment for loaded items.
-    cache <- new.env(TRUE, emptyenv())
-    if (length(cache_files) > 0) {
-      rm_status <- file.remove(list.files(path, full.names = TRUE))
-      if (rm_status) {
-        message("Cached files removed.")
-      }
-    } else {
-        message("No files in Cache.")
-    }
+    file.remove(cache_files)
   }
 
   cache_set <- function(key, value) {
-    save(value, file = paste(path, key, sep="/"))
+    saveRDS(value, file = file.path(path, key))
   }
 
   cache_get <- function(key) {
-    load(file = paste(path, key, sep="/"))
-    value
+    readRDS(file = file.path(path, key))
   }
 
   cache_has_key <- function(key) {
-    file.exists(paste(path, key, sep="/"))
+    file.exists(file.path(path, key))
   }
 
   list(
