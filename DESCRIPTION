@@ -17,7 +17,8 @@ Suggests:
     testthat,
     googleAuthR,
     aws.s3,
-    httr
+    httr,
+    covr
 Remotes:
     cloudyr/aws.s3
 License: MIT + file LICENSE
