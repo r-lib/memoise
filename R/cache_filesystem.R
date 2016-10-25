@@ -22,7 +22,8 @@
 #' }
 #'
 #' @export
-cache_filesystem <- function(path) {
+#' @inheritParams cache_memory
+cache_filesystem <- function(path, algo = "xxhash64") {
 
   if (!dir.exists(path)) {
     dir.create(path, showWarnings = FALSE)
@@ -46,6 +47,7 @@ cache_filesystem <- function(path) {
   }
 
   list(
+    digest = function(...) digest::digest(..., algo = algo),
     reset = cache_reset,
     set = cache_set,
     get = cache_get,

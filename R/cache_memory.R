@@ -1,8 +1,10 @@
 #' In Memory Cache
 #'
 #' A cache in memory, that lasts only in the current R session.
+#' @param algo The hashing algorithm used for the cache, see
+#' \code{\link[digest]{digest}} for available algorithms.
 #' @export
-cache_memory <- function() {
+cache_memory <- function(algo = "sha512") {
 
   cache <- NULL
   cache_reset <- function() {
@@ -23,6 +25,7 @@ cache_memory <- function() {
 
   cache_reset()
   list(
+    digest = function(...) digest::digest(..., algo = algo),
     reset = cache_reset,
     set = cache_set,
     get = cache_get,

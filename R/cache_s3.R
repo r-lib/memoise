@@ -15,9 +15,10 @@
 #'
 #'
 #' @param cache_name Bucket name for storing cache files.
+#' @inheritParams cache_memory
 #' @export
 
-cache_s3 <- function(cache_name) {
+cache_s3 <- function(cache_name, algo = "sha512") {
 
   if (!(requireNamespace("aws.s3"))) { stop("Package `aws.s3` must be installed for `cache_s3()`.") } # nocov
 
@@ -58,6 +59,7 @@ cache_s3 <- function(cache_name) {
   }
 
   list(
+    digest = function(...) digest::digest(..., algo = algo),
     reset = cache_reset,
     set = cache_set,
     get = cache_get,

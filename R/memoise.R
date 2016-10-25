@@ -128,9 +128,8 @@ memoise <- memoize <- function(f, ..., envir = environment(f), cache = cache_mem
         has_default <- !identical(formal_args[[i]], quote(expr=))
         if (!is_missing || has_default) called_args <- append(called_args, eval(as.symbol(arg), environment()))
       }
-      hash <- `_digest`(c(called_args,
-          lapply(`_additional`, function(x) eval(x[[2L]], environment(x)))),
-        algo = "sha512")
+      hash <- `_cache`$digest(c(called_args,
+          lapply(`_additional`, function(x) eval(x[[2L]], environment(x)))))
 
       if (`_cache`$has_key(hash)) {
         res <- `_cache`$get(hash)
@@ -158,7 +157,6 @@ memoise <- memoize <- function(f, ..., envir = environment(f), cache = cache_mem
   memo_f_env <- new.env(parent = envir)
   memo_f_env$`_cache` <- cache
   memo_f_env$`_f` <- f
-  memo_f_env$`_digest` <- digest
   memo_f_env$`_additional` <- additional
   environment(memo_f) <- memo_f_env
 
