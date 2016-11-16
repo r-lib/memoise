@@ -57,6 +57,7 @@ test_that("dot arguments are used for hash", {
   expect_equal(fnm(1), 2)
   expect_equal(fnm(1, 2), 3)
   expect_equal(fnm(1), 2)
+  expect_equal(fnm(1, 2), 3)
   expect_equal(fnm(), 4)
 
   expect_true(forget(fnm))
