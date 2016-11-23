@@ -220,6 +220,19 @@ test_that("it does have namespace clashes with internal memoise symbols", {
   expect_equal(fun(10), fun_mem(10))
 })
 
+test_that("arguments are evaluated before hashing", {
+  i <- 1
+
+  f <- memoise(function(x, y = 2, z = 3) { x + y + z})
+  f2 <- function(x, y) f(x, y)
+
+  expect_equal(f2(1, 1), 5)
+
+  expect_equal(f2(1, 1), 5)
+
+  expect_equal(f2(2, 2), 7)
+})
+
 context("has_cache")
 test_that("it works as expected with memoised functions", {
   mem_sum <- memoise(sum)

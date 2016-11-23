@@ -127,10 +127,10 @@ memoise <- memoize <- function(f, ..., envir = environment(f), cache = cache_mem
       # That has not been called
       default_args <- default_args[setdiff(names(default_args), names(called_args))]
 
-      # Evaluate the remaining args
-      default_args <- lapply(default_args, eval, envir = environment())
+      # Evaluate all the arguments
+      args <- lapply(c(called_args, default_args), eval, envir = environment())
 
-      hash <- `_cache`$digest(c(called_args, default_args,
+      hash <- `_cache`$digest(c(args,
           lapply(`_additional`, function(x) eval(x[[2L]], environment(x)))))
 
       if (`_cache`$has_key(hash)) {
