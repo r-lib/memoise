@@ -128,7 +128,8 @@ memoise <- memoize <- function(f, ..., envir = environment(f), cache = cache_mem
       default_args <- default_args[setdiff(names(default_args), names(called_args))]
 
       # Evaluate all the arguments
-      args <- lapply(c(called_args, default_args), eval, envir = environment())
+      args <- c(lapply(called_args, eval, parent.frame()),
+        lapply(default_args, eval, envir = environment()))
 
       hash <- `_cache`$digest(c(args,
           lapply(`_additional`, function(x) eval(x[[2L]], environment(x)))))

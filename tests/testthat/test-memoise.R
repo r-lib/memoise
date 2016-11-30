@@ -223,7 +223,7 @@ test_that("it does have namespace clashes with internal memoise symbols", {
 test_that("arguments are evaluated before hashing", {
   i <- 1
 
-  f <- memoise(function(x, y = 2, z = 3) { x + y + z})
+  f <- memoise(function(x, y, z = 3) { x + y + z})
   f2 <- function(x, y) f(x, y)
 
   expect_equal(f2(1, 1), 5)
