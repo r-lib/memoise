@@ -67,7 +67,7 @@ when using a shared or synced files system such as Dropbox or Google Drive.
 
 ```r
 fc <- cache_filesystem("~/.cache")
-mrunif <- memoise(runif, cache = dbc)
+mrunif <- memoise(runif, cache = fc)
 mrunif(20) # Results stored in local file
 
 dbc <- cache_filesystem("~/Dropbox/.rcache")
@@ -75,6 +75,6 @@ mrunif <- memoise(runif, cache = dbc)
 mrunif(20) # Results stored in Dropbox .rcache folder which will be synced between computers.
 
 gdc <- cache_filesystem("~/Google Drive/.rcache")
-mrunif <- memoise(runif, cache = dbc)
+mrunif <- memoise(runif, cache = gdc)
 mrunif(20) # Results stored in Google Drive .rcache folder which will be synced between computers.
 ```
