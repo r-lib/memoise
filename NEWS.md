@@ -1,5 +1,7 @@
 # Version 1.0.0
 
+* Caches now hash the function body along with the arguments, to ensure
+  functions with identical arguments use a separate file-system cache. (#38)
 * Handle missing arguments in memoised functions for simple cases not using
   non-standard-evaluation (#19).
 * `memoise()` gains a `cache=` argument to specify an external cache. Two types

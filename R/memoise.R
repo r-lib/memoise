@@ -131,7 +131,7 @@ memoise <- memoize <- function(f, ..., envir = environment(f), cache = cache_mem
       args <- c(lapply(called_args, eval, parent.frame()),
         lapply(default_args, eval, envir = environment()))
 
-      hash <- `_cache`$digest(c(args,
+      hash <- `_cache`$digest(c(body(`_f`), args,
           lapply(`_additional`, function(x) eval(x[[2L]], environment(x)))))
 
       if (`_cache`$has_key(hash)) {
