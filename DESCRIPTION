@@ -1,7 +1,7 @@
 Encoding: UTF-8
 Package: memoise
 Title: Memoisation of Functions
-Version: 1.0.0.9001
+Version: 1.1.0
 Authors@R: c(
     person("Hadley", "Wickham", , "hadley@rstudio.com", role = "aut"),
     person("Jim", "Hester", , "jim.hester@rstudio.com", role = c("aut", "cre")),
@@ -18,8 +18,6 @@ Suggests:
     aws.s3,
     httr,
     covr
-Remotes:
-    cloudyr/aws.s3,
-    jimhester/covr
+Additional_repositories: http://cloudyr.github.io/drat
 License: MIT + file LICENSE
 RoxygenNote: 5.0.1
