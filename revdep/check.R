@@ -1,5 +1,5 @@
 library("devtools")
 
-res <- revdep_check(bioconductor = TRUE, threads = 4)
-revdep_check_save_summary(res)
-revdep_check_save_logs(res)
+revdep_check_resume(bioconductor = TRUE)
+revdep_check_save_summary()
+revdep_check_print_problems()
