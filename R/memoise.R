@@ -107,9 +107,6 @@ memoise <- memoize <- function(f, ..., envir = environment(f), cache = cache_mem
   f_formal_names <- names(f_formals)
   f_formal_name_list <- lapply(f_formal_names, as.name)
 
-  # list(...)
-  list_call <- make_call(quote(list), f_formal_name_list)
-
   # memoised_function(...)
   init_call_args <- setNames(f_formal_name_list, f_formal_names)
   init_call <- make_call(quote(`_f`), init_call_args)
@@ -147,7 +144,7 @@ memoise <- memoize <- function(f, ..., envir = environment(f), cache = cache_mem
         invisible(res$value)
       }
     },
-    as.environment(list(list_call = list_call, init_call = init_call)))
+    as.environment(list(init_call = init_call)))
   )
   formals(memo_f) <- f_formals
   attr(memo_f, "memoised") <- TRUE
