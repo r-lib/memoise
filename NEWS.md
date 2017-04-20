@@ -1,5 +1,4 @@
-# Version 1.0.0
-
+# Version 1.1.0
 * Caches now hash the function body along with the arguments, to ensure
   functions with identical arguments use a separate file-system cache. (#38)
 * Handle missing arguments in memoised functions for simple cases not using
@@ -7,6 +6,8 @@
 * `memoise()` gains a `cache=` argument to specify an external cache. Two types
   of caches are available, `cache_s3()` for amazon S3 and
   `cache_filesystem()` for a file system cache (#25, @danielecook).
+
+# Version 1.0.0
 * `memoise()` now signals an error if an already memoised function is used as
   input (#4, @richierocks).
 * `has_cache()` function added which returns a boolean depending on if the
