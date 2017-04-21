@@ -20,4 +20,4 @@ Suggests:
     covr
 Additional_repositories: http://cloudyr.github.io/drat
 License: MIT + file LICENSE
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1

@@ -13,4 +13,3 @@ cache_memory(algo = "sha512")
 \description{
 A cache in memory, that lasts only in the current R session.
 }
-

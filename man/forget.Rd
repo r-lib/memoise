@@ -25,4 +25,3 @@ system.time(print(memX()))
 \seealso{
 \code{\link{memoise}}, \code{\link{is.memoised}}
 }
-

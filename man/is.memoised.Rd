@@ -25,4 +25,3 @@ is.memoised(mem_lm) # TRUE
 \seealso{
 \code{\link{memoise}}, \code{\link{forget}}
 }
-

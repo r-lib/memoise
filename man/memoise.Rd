@@ -111,4 +111,3 @@ memA4(2)
 \code{\link{forget}}, \code{\link{is.memoised}},
   \code{\link{timeout}}, \url{http://en.wikipedia.org/wiki/Memoization}
 }
-

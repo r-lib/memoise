@@ -31,4 +31,3 @@ mem_runif <- memoise(runif, cache = s3)
 
 
 }
-
