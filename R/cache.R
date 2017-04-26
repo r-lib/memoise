@@ -13,6 +13,6 @@ cache <- function(code, ..., envir = parent.frame(), cache = cache_memory()) {
     f <- function() NULL
     body(f) <- expr
     environment(f) <- envir
-    (memoise(f, envir = envir, ..., cache = cache))()
+    cache$set(key, f())
   }
 }
