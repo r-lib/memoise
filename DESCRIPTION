@@ -18,6 +18,5 @@ Suggests:
     aws.s3,
     httr,
     covr
-Additional_repositories: http://cloudyr.github.io/drat
 License: MIT + file LICENSE
 RoxygenNote: 6.0.1
