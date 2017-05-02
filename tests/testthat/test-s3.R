@@ -3,7 +3,7 @@ context("s3")
 test_that("using a s3 cache works", {
   skip_on_cran()
   skip_on_travis_pr()
-  skip_without_aws_credetials()
+  skip_without_aws_credentials()
 
   aws <- cache_s3("memoise-tests")
   i <- 0
