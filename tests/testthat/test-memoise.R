@@ -233,6 +233,32 @@ test_that("arguments are evaluated before hashing", {
   expect_equal(f2(2, 2), 7)
 })
 
+test_that("argument names don't clash with names in memoised function body", {
+  f <- function(`_f`, `_cache`) "correct function called"
+  f_mem <- memoise(f)
+
+  oops <- function(...) {
+    message("incorrect function called")
+    list(value = "Oops!")
+  }
+  fake_cache <- as.list(setNames(
+    # Names of return value of cache_memory()
+    nm = c("digest", "reset", "set", "get", "has_key", "keys")
+  ))
+  fake_cache[] <- list(oops)
+
+  out_f <- f(oops, fake_cache)
+  out_oops <- oops()
+
+  # Verify that the output of f is distinguished from output of the fake cache
+  expect_false(identical(out_f, out_oops))  # Output of f itself is distinguis
+  # Verify that the memoised value is not hijacked by the fake cache
+  expect_identical(f_mem(oops, fake_cache), out_f)
+
+  # If no message captured, we know that the fake cache wasn't called
+  expect_message(f_mem(oops, fake_cache), NA)
+})
+
 context("has_cache")
 test_that("it works as expected with memoised functions", {
   mem_sum <- memoise(sum)
