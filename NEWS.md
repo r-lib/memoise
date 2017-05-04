@@ -1,3 +1,7 @@
+# Version 1.1.0.9000
+* Name clashes between function arguments and variables defined when memoising
+  no longer occur (#43, @egnha).
+
 # Version 1.1.0
 * Caches now hash the function body along with the arguments, to ensure
   functions with identical arguments use a separate file-system cache. (#38)
