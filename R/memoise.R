@@ -109,13 +109,14 @@ memoise <- memoize <- function(f, ..., envir = environment(f), cache = cache_mem
 
   # memoised_function(...)
   init_call_args <- setNames(f_formal_name_list, f_formal_names)
-  init_call <- make_call(quote(`_f`), init_call_args)
+  init_call <- make_call(quote(encl$`_f`), init_call_args)
 
   validate_formulas(...)
   additional <- list(...)
 
   memo_f <- eval(
     bquote(function(...) {
+      encl <- parent.env(environment())
       called_args <- as.list(match.call())[-1]
 
       # Formals with a default
@@ -128,14 +129,14 @@ memoise <- memoize <- function(f, ..., envir = environment(f), cache = cache_mem
       args <- c(lapply(called_args, eval, parent.frame()),
         lapply(default_args, eval, envir = environment()))
 
-      hash <- `_cache`$digest(c(body(`_f`), args,
+      hash <- encl$`_cache`$digest(c(body(`_f`), args,
           lapply(`_additional`, function(x) eval(x[[2L]], environment(x)))))
 
-      if (`_cache`$has_key(hash)) {
-        res <- `_cache`$get(hash)
+      if (encl$`_cache`$has_key(hash)) {
+        res <- encl$`_cache`$get(hash)
       } else {
         res <- withVisible(.(init_call))
-        `_cache`$set(hash, res)
+        encl$`_cache`$set(hash, res)
       }
 
       if (res$visible) {
@@ -166,7 +167,7 @@ memoise <- memoize <- function(f, ..., envir = environment(f), cache = cache_mem
 }
 
 make_call <- function(name, args) {
-  stopifnot(is.name(name), is.list(args))
+  stopifnot(is.list(args))
   as.call(c(list(name), args))
 }
 
@@ -269,7 +270,7 @@ has_cache <- function(f, ...) {
   # Modify the function body of the function to simply return TRUE and FALSE
   # rather than get or set the results of the cache
   body <- body(f)
-  body[[7]] <- quote(if (`_cache`$has_key(hash)) return(TRUE) else return(FALSE))
+  body[[8]] <- quote(if (encl$`_cache`$has_key(hash)) return(TRUE) else return(FALSE))
   body(f) <- body
 
   f
