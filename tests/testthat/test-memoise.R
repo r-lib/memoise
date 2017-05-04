@@ -234,11 +234,20 @@ test_that("arguments are evaluated before hashing", {
 })
 
 test_that("argument names don't clash with names in memoised function body", {
-  f <- function(`_f`, `_cache`) "correct function called"
+  f <- function(
+    # Names in enclosing environment of memoising function
+    `_f`, `_cache`, `_additional`,
+    # Names in body of memoising function
+    mc, encl, called_args, default_args, args, hash, res
+  ) "Correct function called"
   f_mem <- memoise(f)
 
+  complain <- function(...) {
+    message("Clash with internal function name!")
+    invisible(NULL)
+  }
   oops <- function(...) {
-    message("incorrect function called")
+    complain()
     list(value = "Oops!")
   }
   fake_cache <- as.list(setNames(
@@ -246,17 +255,34 @@ test_that("argument names don't clash with names in memoised function body", {
     nm = c("digest", "reset", "set", "get", "has_key", "keys")
   ))
   fake_cache[] <- list(oops)
+  # digest() method should force its arguments, in an attempt to invoke
+  # a value of `_additional` hijacked by an argument of that name
+  fake_cache$digest <- function(...) {
+    list(...)
+    complain()
+  }
 
-  out_f <- f(oops, fake_cache)
+  out_f <- f(`_f` = oops, `_cache` = fake_cache, `_additional` = complain,
+             complain, complain, complain, complain, complain, complain, complain)
   out_oops <- oops()
 
   # Verify that the output of f is distinguished from output of the fake cache
-  expect_false(identical(out_f, out_oops))  # Output of f itself is distinguis
-  # Verify that the memoised value is not hijacked by the fake cache
-  expect_identical(f_mem(oops, fake_cache), out_f)
+  expect_false(identical(out_f, out_oops))
 
-  # If no message captured, we know that the fake cache wasn't called
-  expect_message(f_mem(oops, fake_cache), NA)
+  # Verify that the memoised return value is not hijacked by the fake cache
+  expect_identical(
+    f_mem(`_f` = oops, `_cache` = fake_cache, `_additional` = complain,
+          complain, complain, complain, complain, complain, complain, complain),
+    out_f
+  )
+
+  # If no message is captured, we can infer that neither the fake cache
+  # nor the function arguments were invoked in the memoisation procedure
+  expect_message(
+    f_mem(`_f` = oops, `_cache` = fake_cache, `_additional` = complain,
+          complain, complain, complain, complain, complain, complain, complain),
+    NA
+  )
 })
 
 context("has_cache")
