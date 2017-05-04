@@ -104,49 +104,42 @@ memoise <- memoize <- function(f, ..., envir = environment(f), cache = cache_mem
     stop("`f` must not be memoised.", call. = FALSE)
   }
 
-  f_formal_names <- names(f_formals)
-  f_formal_name_list <- lapply(f_formal_names, as.name)
-
-  # memoised_function(...)
-  init_call_args <- setNames(f_formal_name_list, f_formal_names)
-  init_call <- make_call(quote(encl$`_f`), init_call_args)
-
   validate_formulas(...)
   additional <- list(...)
 
-  memo_f <- eval(
-    bquote(function(...) {
-      encl <- parent.env(environment())
-      called_args <- as.list(match.call())[-1]
+  memo_f <- function(...) {
+    mc <- match.call()
+    encl <- parent.env(environment())
+    called_args <- as.list(mc)[-1]
 
-      # Formals with a default
-      default_args <- Filter(function(x) !identical(x, quote(expr = )), as.list(formals()))
+    # Formals with a default
+    default_args <- Filter(function(x) !identical(x, quote(expr = )), as.list(formals()))
 
-      # That has not been called
-      default_args <- default_args[setdiff(names(default_args), names(called_args))]
+    # That has not been called
+    default_args <- default_args[setdiff(names(default_args), names(called_args))]
 
-      # Evaluate all the arguments
-      args <- c(lapply(called_args, eval, parent.frame()),
-        lapply(default_args, eval, envir = environment()))
+    # Evaluate all the arguments
+    args <- c(lapply(called_args, eval, parent.frame()),
+              lapply(default_args, eval, envir = environment()))
 
-      hash <- encl$`_cache`$digest(c(body(`_f`), args,
-          lapply(`_additional`, function(x) eval(x[[2L]], environment(x)))))
+    hash <- encl$`_cache`$digest(
+      c(body(encl$`_f`), args,
+        lapply(encl$`_additional`, function(x) eval(x[[2L]], environment(x))))
+    )
 
-      if (encl$`_cache`$has_key(hash)) {
-        res <- encl$`_cache`$get(hash)
-      } else {
-        res <- withVisible(.(init_call))
-        encl$`_cache`$set(hash, res)
-      }
+    if (encl$`_cache`$has_key(hash)) {
+      res <- encl$`_cache`$get(hash)
+    } else {
+      res <- withVisible(eval.parent(`[[<-`(mc, 1L, encl$`_f`)))
+      encl$`_cache`$set(hash, res)
+    }
 
-      if (res$visible) {
-        res$value
-      } else {
-        invisible(res$value)
-      }
-    },
-    as.environment(list(init_call = init_call)))
-  )
+    if (res$visible) {
+      res$value
+    } else {
+      invisible(res$value)
+    }
+  }
   formals(memo_f) <- f_formals
   attr(memo_f, "memoised") <- TRUE
 
@@ -270,7 +263,7 @@ has_cache <- function(f, ...) {
   # Modify the function body of the function to simply return TRUE and FALSE
   # rather than get or set the results of the cache
   body <- body(f)
-  body[[8]] <- quote(if (encl$`_cache`$has_key(hash)) return(TRUE) else return(FALSE))
+  body[[9]] <- quote(if (encl$`_cache`$has_key(hash)) return(TRUE) else return(FALSE))
   body(f) <- body
 
   f
