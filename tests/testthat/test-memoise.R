@@ -233,6 +233,58 @@ test_that("arguments are evaluated before hashing", {
   expect_equal(f2(2, 2), 7)
 })
 
+test_that("argument names don't clash with names in memoised function body", {
+  f <- function(
+    # Names in enclosing environment of memoising function
+    `_f`, `_cache`, `_additional`,
+    # Names in body of memoising function
+    mc, encl, called_args, default_args, args, hash, res
+  ) "Correct function called"
+  f_mem <- memoise(f)
+
+  complain <- function(...) {
+    message("Clash with internal function name!")
+    invisible(NULL)
+  }
+  oops <- function(...) {
+    complain()
+    list(value = "Oops!")
+  }
+  fake_cache <- as.list(setNames(
+    # Names of return value of cache_memory()
+    nm = c("digest", "reset", "set", "get", "has_key", "keys")
+  ))
+  fake_cache[] <- list(oops)
+  # digest() method should force its arguments, in an attempt to invoke
+  # a value of `_additional` hijacked by an argument of that name
+  fake_cache$digest <- function(...) {
+    list(...)
+    complain()
+  }
+
+  out_f <- f(`_f` = oops, `_cache` = fake_cache, `_additional` = complain,
+             complain, complain, complain, complain, complain, complain, complain)
+  out_oops <- oops()
+
+  # Verify that the output of f is distinguished from output of the fake cache
+  expect_false(identical(out_f, out_oops))
+
+  # Verify that the memoised return value is not hijacked by the fake cache
+  expect_identical(
+    f_mem(`_f` = oops, `_cache` = fake_cache, `_additional` = complain,
+          complain, complain, complain, complain, complain, complain, complain),
+    out_f
+  )
+
+  # If no message is captured, we can infer that neither the fake cache
+  # nor the function arguments were invoked in the memoisation procedure
+  expect_message(
+    f_mem(`_f` = oops, `_cache` = fake_cache, `_additional` = complain,
+          complain, complain, complain, complain, complain, complain, complain),
+    NA
+  )
+})
+
 context("has_cache")
 test_that("it works as expected with memoised functions", {
   mem_sum <- memoise(sum)
