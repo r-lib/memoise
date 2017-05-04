@@ -130,7 +130,9 @@ memoise <- memoize <- function(f, ..., envir = environment(f), cache = cache_mem
     if (encl$`_cache`$has_key(hash)) {
       res <- encl$`_cache`$get(hash)
     } else {
-      res <- withVisible(eval.parent(`[[<-`(mc, 1L, encl$`_f`)))
+      # modify the call to use the original function and evaluate it
+      mc[[1L]] <- encl$`_f`
+      res <- withVisible(eval(mc, parent.frame()))
       encl$`_cache`$set(hash, res)
     }
 
