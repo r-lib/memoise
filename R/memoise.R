@@ -161,11 +161,6 @@ memoise <- memoize <- function(f, ..., envir = environment(f), cache = cache_mem
   memo_f
 }
 
-make_call <- function(name, args) {
-  stopifnot(is.list(args))
-  as.call(c(list(name), args))
-}
-
 #' Return a new number after a given number of seconds
 #'
 #' This function will return a number corresponding to the system time and
