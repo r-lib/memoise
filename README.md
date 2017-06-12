@@ -1,6 +1,6 @@
 # memoise
-[![Travis-CI Build Status](https://travis-ci.org/hadley/memoise.svg?branch=master)](https://travis-ci.org/hadley/memoise)
-[![Coverage Status](https://img.shields.io/codecov/c/github/hadley/memoise/master.svg)](https://codecov.io/github/hadley/memoise?branch=master)
+[![Travis-CI Build Status](https://travis-ci.org/r-lib/memoise.svg?branch=master)](https://travis-ci.org/r-lib/memoise)
+[![Coverage Status](https://img.shields.io/codecov/c/github/r-lib/memoise/master.svg)](https://codecov.io/github/r-lib/memoise?branch=master)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/memoise)](https://cran.r-project.org/package=memoise)
 
 # Memoization
