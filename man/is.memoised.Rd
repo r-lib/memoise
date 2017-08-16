@@ -5,7 +5,7 @@
 \alias{is.memoized}
 \title{Test whether a function is a memoised copy.
 Memoised copies of functions carry an attribute
-\code{memoised = TRUE}, which is.memoised() tests for.}
+\code{memoised = TRUE}, which is what \code{is.memoised()} tests for.}
 \usage{
 is.memoised(f)
 }
@@ -15,7 +15,7 @@ is.memoised(f)
 \description{
 Test whether a function is a memoised copy.
 Memoised copies of functions carry an attribute
-\code{memoised = TRUE}, which is.memoised() tests for.
+\code{memoised = TRUE}, which is what \code{is.memoised()} tests for.
 }
 \examples{
 mem_lm <- memoise(lm)
