@@ -80,3 +80,19 @@ gdc <- cache_filesystem("~/Google Drive/.rcache")
 mrunif <- memoise(runif, cache = gdc)
 mrunif(20) # Results stored in Google Drive .rcache folder which will be synced between computers.
 ```
+
+## Google Cloud Storage
+
+`cache_gcs` saves the cache to Google Cloud Storage.  It requires you to authenticate by downloading a JSON authentication file, and specifying a pre-made bucket:
+
+```r
+library(googleCloudStorageR)
+# Set GCS credentials.
+Sys.setenv("GCS_AUTH_FILE"="<google-service-json>",
+           "GCS_DEFAULT_BUCKET"="unique-bucket-name")
+
+gcs <- cache_gcs()
+mrunif <- memoise(runif, cache = gcs)
+mrunif(10) # First run, saves cache
+mrunif(10) # Loads cache, results should be identical
+```
