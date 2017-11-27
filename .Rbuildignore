@@ -4,3 +4,4 @@
 ^revdep$
 ^cran-comments\.md$
 ^\.httr-oauth$
+^gcs\.oauth$
