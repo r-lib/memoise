@@ -123,7 +123,7 @@ memoise <- memoize <- function(f, ..., envir = environment(f), cache = cache_mem
               lapply(default_args, eval, envir = environment()))
 
     hash <- encl$`_cache`$digest(
-      c(body(encl$`_f`), args,
+      c(as.character(body(encl$`_f`)), args,
         lapply(encl$`_additional`, function(x) eval(x[[2L]], environment(x))))
     )
 
