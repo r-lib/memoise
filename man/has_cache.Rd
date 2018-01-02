@@ -4,12 +4,14 @@
 \alias{has_cache}
 \title{Test whether a memoised function has been cached for particular arguments.}
 \usage{
-has_cache(f, ...)
+has_cache(f)
 }
 \arguments{
 \item{f}{Function to test.}
-
-\item{...}{arguments to function.}
+}
+\value{
+A function, with the same arguments as \code{f}, that can be called to test
+  if \code{f} has cached results.
 }
 \description{
 Test whether a memoised function has been cached for particular arguments.

@@ -246,7 +246,8 @@ is.memoised <- is.memoized <- function(f) {
 
 #' Test whether a memoised function has been cached for particular arguments.
 #' @param f Function to test.
-#' @param ... arguments to function.
+#' @return A function, with the same arguments as \code{f}, that can be called to test
+#'   if \code{f} has cached results.
 #' @seealso \code{\link{is.memoised}}, \code{\link{memoise}}
 #' @export
 #' @examples
@@ -254,7 +255,7 @@ is.memoised <- is.memoized <- function(f) {
 #' has_cache(mem_sum)(1, 2, 3) # FALSE
 #' mem_sum(1, 2, 3)
 #' has_cache(mem_sum)(1, 2, 3) # TRUE
-has_cache <- function(f, ...) {
+has_cache <- function(f) {
   if(!is.memoised(f)) stop("`f` is not a memoised function!", call. = FALSE)
 
   # Modify the function body of the function to simply return TRUE and FALSE

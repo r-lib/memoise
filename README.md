@@ -31,7 +31,7 @@ is.memoised(f)  # FALSE
 # Installation
 
 ```
-devtools::install_github("hadley/memoise")
+devtools::install_github("r-lib/memoise")
 ```
 
 # External Caches
