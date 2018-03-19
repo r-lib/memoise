@@ -231,7 +231,7 @@ forget <- function(f) {
 
 #' Test whether a function is a memoised copy.
 #' Memoised copies of functions carry an attribute
-#' \code{memoised = TRUE}, which is.memoised() tests for.
+#' \code{memoised = TRUE}, which is what \code{is.memoised()} tests for.
 #' @param f Function to test.
 #' @seealso \code{\link{memoise}}, \code{\link{forget}}
 #' @export is.memoised is.memoized
