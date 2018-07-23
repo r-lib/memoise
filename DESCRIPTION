@@ -19,6 +19,7 @@ Suggests:
     aws.s3,
     httr,
     covr,
-    googleCloudStorageR
+    googleCloudStorageR,
+    storr
 License: MIT + file LICENSE
 RoxygenNote: 6.0.1
