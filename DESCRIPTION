@@ -20,6 +20,6 @@ Suggests:
     httr,
     covr,
     googleCloudStorageR,
-    storr
+    redux
 License: MIT + file LICENSE
 RoxygenNote: 6.0.1
