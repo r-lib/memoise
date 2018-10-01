@@ -13,7 +13,7 @@ cache_s3(cache_name, algo = "sha512", compress = FALSE)
 \item{algo}{The hashing algorithm used for the cache, see
 \code{\link[digest]{digest}} for available algorithms.}
 
-\item{compress}{Argument passed to \code{readRDS}. One of FALSE, "gzip",
+\item{compress}{Argument passed to \code{saveRDS}. One of FALSE, "gzip",
 "bzip2" or "xz". Default: FALSE.}
 }
 \description{
