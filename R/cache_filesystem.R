@@ -3,6 +3,8 @@
 #' Use a cache on the local filesystem that will persist between R sessions.
 #'
 #' @param path Directory in which to store cached items.
+#' @param compress Argument passed to \code{saveRDS}. One of FALSE, "gzip",
+#' "bzip2" or "xz". Default: FALSE.
 #'
 #' @examples
 #'
@@ -23,7 +25,7 @@
 #'
 #' @export
 #' @inheritParams cache_memory
-cache_filesystem <- function(path, algo = "xxhash64") {
+cache_filesystem <- function(path, algo = "xxhash64", compress = FALSE) {
 
   if (!dir.exists(path)) {
     dir.create(path, showWarnings = FALSE)
@@ -35,7 +37,7 @@ cache_filesystem <- function(path, algo = "xxhash64") {
   }
 
   cache_set <- function(key, value) {
-    saveRDS(value, file = file.path(path, key))
+    saveRDS(value, file = file.path(path, key), compress = compress)
   }
 
   cache_get <- function(key) {

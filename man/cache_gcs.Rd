@@ -6,13 +6,16 @@
 Google Cloud Storage backed cache, for remote caching.}
 \usage{
 cache_gcs(cache_name = googleCloudStorageR::gcs_get_global_bucket(),
-  algo = "sha512")
+  algo = "sha512", compress = FALSE)
 }
 \arguments{
 \item{cache_name}{Bucket name for storing cache files.}
 
 \item{algo}{The hashing algorithm used for the cache, see
 \code{\link[digest]{digest}} for available algorithms.}
+
+\item{compress}{Argument passed to \code{saveRDS}. One of FALSE, "gzip",
+"bzip2" or "xz". Default: FALSE.}
 }
 \description{
 Google Cloud Storage Cache

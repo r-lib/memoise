@@ -5,13 +5,16 @@
 \title{Amazon Web Services S3 Cache
 Amazon Web Services S3 backed cache, for remote caching.}
 \usage{
-cache_s3(cache_name, algo = "sha512")
+cache_s3(cache_name, algo = "sha512", compress = FALSE)
 }
 \arguments{
 \item{cache_name}{Bucket name for storing cache files.}
 
 \item{algo}{The hashing algorithm used for the cache, see
 \code{\link[digest]{digest}} for available algorithms.}
+
+\item{compress}{Argument passed to \code{saveRDS}. One of FALSE, "gzip",
+"bzip2" or "xz". Default: FALSE.}
 }
 \description{
 Amazon Web Services S3 Cache
