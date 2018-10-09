@@ -25,7 +25,7 @@
 #'
 #' @export
 #' @inheritParams cache_memory
-cache_filesystem <- function(path, algo = "xxhash64", compress=FALSE) {
+cache_filesystem <- function(path, algo = "xxhash64", compress = FALSE) {
 
   if (!dir.exists(path)) {
     dir.create(path, showWarnings = FALSE)
@@ -37,7 +37,7 @@ cache_filesystem <- function(path, algo = "xxhash64", compress=FALSE) {
   }
 
   cache_set <- function(key, value) {
-    saveRDS(value, file = file.path(path, key), compress=compress)
+    saveRDS(value, file = file.path(path, key), compress = compress)
   }
 
   cache_get <- function(key) {

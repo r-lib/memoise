@@ -20,7 +20,7 @@
 #' @inheritParams cache_memory
 #' @export
 
-cache_s3 <- function(cache_name, algo = "sha512", compress=FALSE) {
+cache_s3 <- function(cache_name, algo = "sha512", compress = FALSE) {
 
   if (!(requireNamespace("aws.s3"))) { stop("Package `aws.s3` must be installed for `cache_s3()`.") } # nocov
 
@@ -39,7 +39,7 @@ cache_s3 <- function(cache_name, algo = "sha512", compress=FALSE) {
   cache_set <- function(key, value) {
     temp_file <- file.path(path, key)
     on.exit(unlink(temp_file))
-    saveRDS(value, file = temp_file, compress=compress)
+    saveRDS(value, file = temp_file, compress = compress)
     aws.s3::put_object(temp_file, object = key, bucket = cache_name)
   }
 

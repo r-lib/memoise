@@ -20,7 +20,7 @@
 #' @inheritParams cache_memory
 #' @export
 cache_gcs <- function(cache_name = googleCloudStorageR::gcs_get_global_bucket(),
-                      algo = "sha512", compress=FALSE) {
+                      algo = "sha512", compress = FALSE) {
 
   if (!(requireNamespace("googleCloudStorageR"))) { stop("Package `googleCloudStorageR` must be installed for `cache_gcs()`.") } # nocov
 
@@ -35,7 +35,7 @@ cache_gcs <- function(cache_name = googleCloudStorageR::gcs_get_global_bucket(),
   cache_set <- function(key, value) {
     temp_file <- file.path(path, key)
     on.exit(unlink(temp_file))
-    saveRDS(value, file = temp_file, compress=compress)
+    saveRDS(value, file = temp_file, compress = compress)
     suppressMessages(
       googleCloudStorageR::gcs_upload(temp_file, name = key, bucket = cache_name)
     )
