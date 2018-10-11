@@ -31,6 +31,9 @@ cache_filesystem <- function(path, algo = "xxhash64", compress = FALSE) {
     dir.create(path, showWarnings = FALSE)
   }
 
+  # convert to absolute path so it will work with user working directory changes
+  path <- normalizePath(path)
+
   cache_reset <- function() {
     cache_files <- list.files(path, full.names = TRUE)
     file.remove(cache_files)
