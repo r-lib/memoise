@@ -3,6 +3,8 @@
   no longer occur (#43, @egnha).
 * Add Google Cloud Storage support via `cache_gcs()` (#59 - @MarkEdmondson1234)
 * Add `compress` option for non-memory caches (#71 - @coolbutuseless)
+* Use absolute path in cache file system backend, so user can change working 
+directory after using relative path (#51, #65 - @xhdong-umd)
 
 # Version 1.1.0
 * Caches now hash the function body along with the arguments, to ensure
