@@ -5,7 +5,8 @@
 \alias{memoize}
 \title{Memoise a function.}
 \usage{
-memoise(f, ..., envir = environment(f), cache = cache_memory())
+memoise(f, ..., envir = environment(f), cache = cache_memory(),
+  ignore_args = c())
 }
 \arguments{
 \item{f}{Function of which to create a memoised copy.}
@@ -16,6 +17,8 @@ additional restrictions on caching. See Examples for usage.}
 \item{envir}{Environment of the returned function.}
 
 \item{cache}{Cache function.}
+
+\item{ignore_args}{Names of arguments to ignore when calculating hash.}
 }
 \description{
 \code{mf <- memoise(f)} creates \code{mf}, a memoised copy of
