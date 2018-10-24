@@ -263,6 +263,30 @@ test_that("it errors with an un-memoised function", {
   expect_error(has_cache(sum)(1, 2, 3), "`f` is not a memoised function.")
 })
 
+context("drop_cache")
+test_that("it works as expected with memoised functions", {
+  mem_sum <- memoise(sum)
+  expect_false(drop_cache(mem_sum)(1, 2, 3))
+
+  mem_sum(1, 2, 3)
+  mem_sum(2, 3, 4)
+
+  expect_true(has_cache(mem_sum)(1, 2, 3))
+  expect_true(has_cache(mem_sum)(2, 3, 4))
+
+  expect_true(drop_cache(mem_sum)(1, 2, 3))
+
+  expect_false(has_cache(mem_sum)(1, 2, 3))
+  expect_true(has_cache(mem_sum)(2, 3, 4))
+
+  mem_sum <- memoise(sum)
+  expect_false(drop_cache(mem_sum)(1, 2, 3))
+})
+
+test_that("it errors with an un-memoised function", {
+  expect_error(drop_cache(sum)(1, 2, 3), "`f` is not a memoised function.")
+})
+
 context("timeout")
 test_that("it stays the same if not enough time has passed", {
   duration <- 10
