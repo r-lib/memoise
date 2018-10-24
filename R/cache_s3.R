@@ -55,6 +55,10 @@ cache_s3 <- function(cache_name, algo = "sha512", compress = FALSE) {
     aws.s3::head_object(object = key, bucket = cache_name)
   }
 
+  cache_drop_key <- function(key) {
+    aws.s3::delete_bucket(key, bucket = cache_name)
+  }
+
   cache_keys <- function() {
     items <- lapply(aws.s3::get_bucket(bucket = cache_name), `[[`, "Key")
     unlist(Filter(Negate(is.null), items))
@@ -66,6 +70,7 @@ cache_s3 <- function(cache_name, algo = "sha512", compress = FALSE) {
     set = cache_set,
     get = cache_get,
     has_key = cache_has_key,
+    drop_key = cache_drop_key,
     keys = cache_keys
   )
 }

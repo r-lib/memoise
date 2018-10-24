@@ -67,6 +67,10 @@ cache_gcs <- function(cache_name = googleCloudStorageR::gcs_get_global_bucket(),
     is_here
   }
 
+  cache_drop_key <- function(key) {
+    googleCloudStorageR::gcs_delete_object(key, bucket = cache_name)
+  }
+
   cache_keys <- function() {
     items <- googleCloudStorageR::gcs_list_objects(bucket = cache_name)
     items$name
@@ -78,6 +82,7 @@ cache_gcs <- function(cache_name = googleCloudStorageR::gcs_get_global_bucket(),
     set = cache_set,
     get = cache_get,
     has_key = cache_has_key,
+    drop_key = cache_drop_key,
     keys = cache_keys
   )
 }

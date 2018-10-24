@@ -51,12 +51,17 @@ cache_filesystem <- function(path, algo = "xxhash64", compress = FALSE) {
     file.exists(file.path(path, key))
   }
 
+  cache_drop_key <- function(key) {
+    file.remove(file.path(path, key))
+  }
+
   list(
     digest = function(...) digest::digest(..., algo = algo),
     reset = cache_reset,
     set = cache_set,
     get = cache_get,
     has_key = cache_has_key,
+    drop_key = cache_drop_key,
     keys = function() list.files(path)
   )
 }

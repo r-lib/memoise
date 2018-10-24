@@ -23,6 +23,10 @@ cache_memory <- function(algo = "sha512") {
     exists(key, envir = cache, inherits = FALSE)
   }
 
+  cache_drop_key <- function(key) {
+    rm(list = key, envir = cache, inherits = FALSE)
+  }
+
   cache_reset()
   list(
     digest = function(...) digest::digest(..., algo = algo),
@@ -30,6 +34,7 @@ cache_memory <- function(algo = "sha512") {
     set = cache_set,
     get = cache_get,
     has_key = cache_has_key,
+    drop_key = cache_drop_key,
     keys = function() ls(cache)
   )
 }
