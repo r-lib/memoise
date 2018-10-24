@@ -266,3 +266,35 @@ has_cache <- function(f) {
 
   f
 }
+
+#' Drops the cache of a memoised function for particular arguments.
+#' @param f Memoised function.
+#' @return A function, with the same arguments as \code{f}, that can be called to drop
+#'   the cached results of \code{f}.
+#' @seealso \code{\link{has_cache}}, \code{\link{memoise}}
+#' @export
+#' @examples
+#' mem_sum <- memoise(sum)
+#' mem_sum(1, 2, 3)
+#' mem_sum(2, 3, 4)
+#' has_cache(mem_sum)(1, 2, 3) # TRUE
+#' has_cache(mem_sum)(2, 3, 4) # TRUE
+#' drop_cache(mem_sum)(1, 2, 3) # TRUE
+#' has_cache(mem_sum)(1, 2, 3) # FALSE
+#' has_cache(mem_sum)(2, 3, 4) # TRUE
+drop_cache <- function(f) {
+  if(!is.memoised(f)) stop("`f` is not a memoised function!", call. = FALSE)
+
+  # Modify the function body of the function to simply drop the key
+  # and return TRUE if successfully removed
+  body <- body(f)
+  body[[9]] <- quote(if (encl$`_cache`$has_key(hash)) {
+    encl$`_cache`$drop_key(hash)
+    return(TRUE)
+  } else {
+    return(FALSE)
+  })
+  body(f) <- body
+
+  f
+}
