@@ -5,7 +5,7 @@
 * Add `compress` option for non-memory caches (#71 - @coolbutuseless)
 * Use absolute path in cache file system backend, so user can change working 
 directory after using relative path (#51, #65 - @xhdong-umd)
-* Add `drop_cache()` to drop the cached result for particular arguments (#66 -
+* Add `drop_cache()` to drop the cached result for particular arguments (#78 -
   richardkunze)
 
 # Version 1.1.0
