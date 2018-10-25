@@ -22,6 +22,9 @@ test_that("using a s3 cache works", {
   expect_true(forget(fnm))
   expect_equal(fnm(), 5)
 
+  expect_true(drop_cache(fnm)())
+  expect_equal(fnm(), 6)
+
   expect_true(is.memoised(fnm))
   expect_false(is.memoised(fn))
 })
