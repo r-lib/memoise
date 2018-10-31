@@ -293,7 +293,7 @@ drop_cache <- function(f) {
   # Modify the function body of the function to simply drop the key
   # and return TRUE if successfully removed
   body <- body(f)
-  body[[9]] <- quote(if (encl$`_cache`$has_key(hash)) {
+  body[[10]] <- quote(if (encl$`_cache`$has_key(hash)) {
     encl$`_cache`$drop_key(hash)
     return(TRUE)
   } else {
