@@ -39,7 +39,7 @@
 #' additional restrictions on caching. See Examples for usage.
 #' @param envir Environment of the returned function.
 #' @param cache Cache function.
-#' @param ignore_args Names of arguments to ignore when calculating hash.
+#' @param omit_args Names of arguments to ignore when calculating hash.
 #' @seealso \code{\link{forget}}, \code{\link{is.memoised}},
 #'   \code{\link{timeout}}, \url{http://en.wikipedia.org/wiki/Memoization}
 #' @aliases memoise memoize
@@ -99,7 +99,7 @@
 #' memA4 <- memoise(a, ~timeout(10))
 #' memA4(2)
 #' @importFrom stats setNames
-memoise <- memoize <- function(f, ..., envir = environment(f), cache = cache_memory(), ignore_args = c()) {
+memoise <- memoize <- function(f, ..., envir = environment(f), cache = cache_memory(), omit_args = c()) {
   f_formals <- formals(args(f))
   if(is.memoised(f)) {
     stop("`f` must not be memoised.", call. = FALSE)
@@ -120,7 +120,7 @@ memoise <- memoize <- function(f, ..., envir = environment(f), cache = cache_mem
     default_args <- default_args[setdiff(names(default_args), names(called_args))]
 
     # Ignored specified arguments when hashing
-    called_args[encl$`_ignore_args`] <- NULL
+    called_args[encl$`_omit_args`] <- NULL
 
     # Evaluate all the arguments
     args <- c(lapply(called_args, eval, parent.frame()),
@@ -158,7 +158,7 @@ memoise <- memoize <- function(f, ..., envir = environment(f), cache = cache_mem
   memo_f_env$`_cache` <- cache
   memo_f_env$`_f` <- f
   memo_f_env$`_additional` <- additional
-  memo_f_env$`_ignore_args` <- ignore_args
+  memo_f_env$`_omit_args` <- omit_args
   environment(memo_f) <- memo_f_env
 
   class(memo_f) <- c("memoised", "function")

@@ -246,9 +246,9 @@ test_that("argument names don't clash with names in memoised function body", {
   expect_identical(f(1, 2, 3, 4, 5, 6, 7, 8, 9, 10), f_mem(1, 2, 3, 4, 5, 6, 7, 8, 9, 10))
 })
 
-test_that("ignore_args respected", {
+test_that("omit_args respected", {
   # If no arguments ignored, these 2 rnorm() calls should have different results
-  mem_rnorm <- memoise(rnorm, ignore_args = c())
+  mem_rnorm <- memoise(rnorm, omit_args = c())
 
   res1 <- mem_rnorm(10, mean = -100)
   res2 <- mem_rnorm(10, mean = +100)
@@ -257,7 +257,7 @@ test_that("ignore_args respected", {
 
 
   # If 'mean' ignored when hashing, these 2 rnorm() calls will have identical results
-  mem_rnorm <- memoise(rnorm, ignore_args = c('mean'))
+  mem_rnorm <- memoise(rnorm, omit_args = c('mean'))
 
   res1 <- mem_rnorm(10, mean = -100)
   res2 <- mem_rnorm(10, mean = +100)
