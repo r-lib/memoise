@@ -13,12 +13,14 @@ Description: Cache the results of a function so that when you call it
 URL: https://github.com/r-lib/memoise
 BugReports: https://github.com/r-lib/memoise/issues
 Imports:
-    digest (>= 0.6.3)
+    digest (>= 0.6.3),
+    readr (>= 1.0.0)
 Suggests:
     testthat,
     aws.s3,
     httr,
     covr,
-    googleCloudStorageR
+    googleCloudStorageR,
+    RPostgreSQL
 License: MIT + file LICENSE
 RoxygenNote: 6.1.0
