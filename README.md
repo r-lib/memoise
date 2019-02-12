@@ -41,7 +41,12 @@ devtools::install_github("r-lib/memoise")
 * `cache_filesystem()` allows caching using files on a local filesystem. You
   can point this to a shared file such as dropbox or google drive to share
   caches between systems.
-* `cache_s3()` allows caching on [Amazon S3](https://aws.amazon.com/s3/)
+* `cache_s3()`, `cache_gcs()`, and `cache_postgresql()` allows caching on remote
+  services, accessible from multiple app instances. Note that the implementation of
+  `forget()` on these systems will forget values for all functions in
+  the cache. You can use multiple caches to avoid this.
+* `cache_s3()`, `cache_gcs()`, and `cache_postgresql()` do not create separate caches
+  if you memoise the same function.
 
 
 ## AWS S3
@@ -93,6 +98,21 @@ Sys.setenv("GCS_AUTH_FILE"="<google-service-json>",
 
 gcs <- cache_gcs()
 mrunif <- memoise(runif, cache = gcs)
+mrunif(10) # First run, saves cache
+mrunif(10) # Loads cache, results should be identical
+```
+
+## PostgreSQL
+
+`cache_postgresql` saves the cache to postgres table.  It requires you to create an `RPostgreSQL` connection , and specify a pre-made table:
+
+```r
+library(RPostgreSQL)
+# Create Postgres connection
+pg_con <- dbConnect(PostgreSQL())
+
+pg <- cache_postgresql(pg_con, "cache_table")
+mrunif <- memoise(runif, cache = pg)
 mrunif(10) # First run, saves cache
 mrunif(10) # Loads cache, results should be identical
 ```

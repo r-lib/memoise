@@ -19,6 +19,8 @@ Suggests:
     aws.s3,
     httr,
     covr,
-    googleCloudStorageR
+    googleCloudStorageR,
+    RPostgreSQL,
+    DBI
 License: MIT + file LICENSE
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
