@@ -87,13 +87,7 @@ cache_postgresql <- function(pg_con, table_name, algo = "sha512", compress = FAL
         key = key
       )
     )
-    is_here <- nrow(rs) == 1
-    # if not result is logical(0)
-    if(identical(is_here, logical(0))){
-      is_here <- FALSE
-    }
-
-    is_here
+    if (!is.null(rs) && nrow(rs) == 1) TRUE else FALSE
   }
 
   cache_drop_key <- function(key) {
