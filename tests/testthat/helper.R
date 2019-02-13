@@ -16,6 +16,19 @@ skip_without_aws_credentials <- function() {
   testthat::skip("No AWS Credentials")
 }
 
+skip_without_postgres_credentials <- function() {
+  # -# Sys.setenv("MEMOISE_PG_USER" = "<username>", "MEMOISE_PG_PASSWORD" = "<password>")
+  # -# Sys.setenv("MEMOISE_PG_DBNAME" = "<dbname>", "MEMOISE_PG_HOST" = "<host>")
+  # -# Sys.setenv("MEMOISE_PG_TABLE" = "<schemaname>.<tablename>")
+  if (nzchar(Sys.getenv("MEMOISE_PG_USER")) && nzchar(Sys.getenv("MEMOISE_PG_PASSWORD")) &&
+      nzchar(Sys.getenv("MEMOISE_PG_DBNAME")) && nzchar(Sys.getenv("MEMOISE_PG_HOST")) &&
+      nzchar(Sys.getenv("MEMOISE_PG_TABLE"))) {
+    return(invisible(TRUE))
+  }
+
+  testthat::skip("No PostgreSQL Credentials")
+}
+
 skip_on_travis_pr <- function() {
   if (identical(Sys.getenv("TRAVIS"), "true") && !identical(Sys.getenv("TRAVIS_PULL_REQUEST", "false"), "false")) {
     return(testthat::skip("On Travis PR"))

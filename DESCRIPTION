@@ -14,13 +14,14 @@ URL: https://github.com/r-lib/memoise
 BugReports: https://github.com/r-lib/memoise/issues
 Imports:
     digest (>= 0.6.3),
-    readr (>= 1.0.0)
 Suggests:
     testthat,
     aws.s3,
     httr,
     covr,
     googleCloudStorageR,
-    RPostgreSQL
+    RPostgreSQL,
+    readr (>= 1.0.0),
+    DBI
 License: MIT + file LICENSE
 RoxygenNote: 6.1.0

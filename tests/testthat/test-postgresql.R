@@ -1,20 +1,25 @@
 context("postgresql")
-library(RPostgreSQL)
 
-test_that("using a postgresql cache works", {
-
+setup_cache <- function() {
   pg_con <- dbConnect(
     PostgreSQL(),
-    user = Sys.getenv("MEMOIZE_PG_USER")
-    password = Sys.getenv("MEMOIZE_PG_PASSWORD"),
-    dbname = Sys.getenv("MEMOIZE_PG_DBNAME"),
-    host = Sys.getenv("MEMOIZE_PG_HOST")
+    user = Sys.getenv("MEMOISE_PG_USER"),
+    password = Sys.getenv("MEMOISE_PG_PASSWORD"),
+    dbname = Sys.getenv("MEMOISE_PG_DBNAME"),
+    host = Sys.getenv("MEMOISE_PG_HOST")
   )
 
-  fs <- cache_postgresql(pg_con, Sys.getenv("MEMOIZE_PG_TABLE"))
+  cache_postgresql(pg_con, Sys.getenv("MEMOISE_PG_TABLE"))
+}
+
+test_that("using a postgresql cache works", {
+  skip_without_postgres_credentials()
+
+  pg <- setup_cache()
+
   i <- 0
   fn <- function() { i <<- i + 1; i }
-  fnm <- memoise(fn, cache = fs)
+  fnm <- memoise(fn, cache = pg)
   on.exit(forget(fnm))
 
   expect_equal(fn(), 1)
@@ -37,15 +42,15 @@ test_that("using a postgresql cache works", {
 })
 
 test_that("two functions with the same arguments produce different caches (#38)", {
+  skip_without_postgres_credentials()
 
-  temp <- tempfile()
-  fs <- cache_filesystem(temp)
+  pg <- setup_cache()
 
-  f1 <- memoise(function() 1, cache = fs)
-  f2 <- memoise(function() 2, cache = fs)
+  f1 <- memoise(function() 1, cache = pg)
+  f2 <- memoise(function() 2, cache = pg)
 
   expect_equal(f1(), 1)
   expect_equal(f2(), 2)
-
-  expect_equal(length(list.files(temp)), 2)
+  drop_cache(f1)()
+  drop_cache(f2)()
 })
