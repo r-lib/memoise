@@ -22,7 +22,6 @@
 #' "bzip2" or "xz". Default: FALSE.
 #' @inheritParams cache_memory
 #' @export
-
 cache_postgresql <- function(pg_con, table_name, algo = "sha512", compress = FALSE) {
 
   path <- tempfile("memoise-")
@@ -46,7 +45,7 @@ cache_postgresql <- function(pg_con, table_name, algo = "sha512", compress = FAL
     encoded <- readr::read_file(temp_file)
     DBI::dbSendQuery(
       pg_con,
-      sqlInterpolate(
+      DBI::sqlInterpolate(
         pg_con,
         paste0(
           "INSERT INTO ", table_name,
@@ -63,7 +62,7 @@ cache_postgresql <- function(pg_con, table_name, algo = "sha512", compress = FAL
     on.exit(unlink(temp_file))
     rs <- DBI::dbGetQuery(
       pg_con,
-      sqlInterpolate(
+      DBI::sqlInterpolate(
         pg_con,
         paste0(
           "SELECT val FROM ", table_name,
@@ -80,7 +79,7 @@ cache_postgresql <- function(pg_con, table_name, algo = "sha512", compress = FAL
   cache_has_key <- function(key) {
     rs <- DBI::dbGetQuery(
       pg_con,
-      sqlInterpolate(
+      DBI::sqlInterpolate(
         pg_con,
         paste0(
           "SELECT 1 FROM ", table_name,
@@ -101,7 +100,7 @@ cache_postgresql <- function(pg_con, table_name, algo = "sha512", compress = FAL
   cache_drop_key <- function(key) {
     DBI::dbSendQuery(
       pg_con,
-      sqlInterpolate(
+      DBI::sqlInterpolate(
         pg_con,
         paste0(
           "DELETE FROM ", table_name,
@@ -115,7 +114,7 @@ cache_postgresql <- function(pg_con, table_name, algo = "sha512", compress = FAL
   cache_keys <- function() {
     rs <- DBI::dbGetQuery(
       pg_con,
-      sqlInterpolate(
+      DBI::sqlInterpolate(
         pg_con,
         paste0(
           "SELECT key FROM ", table_name,
