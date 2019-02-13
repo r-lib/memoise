@@ -28,7 +28,6 @@ cache_postgresql <- function(pg_con, table_name, algo = "sha512", compress = FAL
 
   if (!(requireNamespace("RPostgreSQL"))) { stop("Package `RPostgreSQL` must be installed for `cache_postgresql()`.") } # nocov
   if (!(requireNamespace("DBI"))) { stop("Package `DBI` must be installed for `cache_postgresql()`.") } # nocov
-  if (!(requireNamespace("readr"))) { stop("Package `readr` must be installed for `cache_postgresql()`.") } # nocov
 
   cache_reset <- function() {
     DBI::dbSendQuery(
@@ -41,7 +40,8 @@ cache_postgresql <- function(pg_con, table_name, algo = "sha512", compress = FAL
     temp_file <- file.path(path, key)
     on.exit(unlink(temp_file))
     saveRDS(value, file = temp_file, compress = compress, ascii = TRUE)
-    encoded <- readr::read_file(temp_file)
+    size <- file.info(temp_file)$size
+    encoded <- readChar(temp_file, size, useBytes = TRUE)
     DBI::dbSendQuery(
       pg_con,
       DBI::sqlInterpolate(
@@ -70,7 +70,7 @@ cache_postgresql <- function(pg_con, table_name, algo = "sha512", compress = FAL
         key = key
       )
     )
-    readr::write_file(rs[1][[1]], temp_file)
+    writeChar(rs[1][[1]], temp_file)
 
     readRDS(temp_file)
   }
