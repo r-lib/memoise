@@ -1,10 +1,17 @@
 env:
   global:
     - secure: "QrhNWrS/nyBZKsydo2exbMSp2huBaCkRBAt0hWTYoY+9pSfbbNa9OD2elsRWUi1RztK9oiubxK3KoHOGOP3L6N4CiRJ2zIX4Z25OkDagphdeAXTAtAPG6as3+ucz/Ujl8shEvHuhrUeeuKvtNsVJQ0b0DHIDRXkzizDg7yWJiNk="
+    - MEMOISE_PG_USER: postgres
+    - MEMOISE_PG_TABLE: cache
 
 language: r
 sudo: false
 cache: packages
+services:
+  - postgres
+
+before_script:
+  - psql -U postgres "CREATE TABLE cache (key varchar(255) PRIMARY KEY, val text);"
 
 after_success:
   - Rscript -e 'covr::codecov()'
