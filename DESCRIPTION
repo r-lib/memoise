@@ -24,4 +24,4 @@ Suggests:
     readr (>= 1.0.0),
     DBI
 License: MIT + file LICENSE
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1

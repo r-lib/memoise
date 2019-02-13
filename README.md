@@ -45,6 +45,8 @@ devtools::install_github("r-lib/memoise")
   services, accessible from multiple app instances. Note that the implementation of
   `forget()` on these systems will forget values for all functions in
   the cache. You can use multiple caches to avoid this.
+* `cache_s3()`, `cache_gcs()`, and `cache_postgresql()` do not create separate caches
+  if you memoise the same function.
 
 
 ## AWS S3

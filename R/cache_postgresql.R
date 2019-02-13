@@ -1,8 +1,7 @@
 #' PostgreSQL Cache
 #' PostgreSQL-backed cache, for remote caching.
 #'
-#' Create a table with key and val columns. Note that if a single table is used for multiple functions,
-#' resetting any function will reset the entire cache.
+#' Create a table with key and val columns.
 #' CREATE TABLE r_cache (
 #'   key VARCHAR(128) PRIMARY KEY,
 #'   val TEXT
@@ -112,15 +111,13 @@ cache_postgresql <- function(pg_con, table_name, algo = "sha512", compress = FAL
   }
 
   cache_keys <- function() {
-    rs <- DBI::dbGetQuery(
+    items <- DBI::dbGetQuery(
       pg_con,
       DBI::sqlInterpolate(
         pg_con,
         paste0(
-          "SELECT key FROM ", table_name,
-          " WHERE key = ?key"
-        ),
-        key = key
+          "SELECT key FROM ", table_name
+        )
       )
     )
     items$key
