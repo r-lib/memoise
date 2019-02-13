@@ -1,8 +1,8 @@
 context("postgresql")
 
 setup_cache <- function() {
-  pg_con <- dbConnect(
-    PostgreSQL(),
+  pg_con <- DBI::dbConnect(
+    RPostgreSQL::PostgreSQL(),
     user = Sys.getenv("MEMOISE_PG_USER"),
     password = Sys.getenv("MEMOISE_PG_PASSWORD"),
     dbname = Sys.getenv("MEMOISE_PG_DBNAME"),
@@ -41,7 +41,7 @@ test_that("using a postgresql cache works", {
   drop_cache(fnm)()
 })
 
-test_that("two functions with the same arguments produce different caches (#38)", {
+test_that("two functions with the same arguments produce different caches", {
   skip_without_postgres_credentials()
 
   pg <- setup_cache()
@@ -52,5 +52,4 @@ test_that("two functions with the same arguments produce different caches (#38)"
   expect_equal(f1(), 1)
   expect_equal(f2(), 2)
   drop_cache(f1)()
-  drop_cache(f2)()
 })

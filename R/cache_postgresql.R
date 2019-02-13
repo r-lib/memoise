@@ -1,10 +1,11 @@
 #' PostgreSQL Cache
 #' PostgreSQL-backed cache, for remote caching.
 #'
-#' Create a table with key and val columns
+#' Create a table with key and val columns. Note that if a single table is used for multiple functions,
+#' resetting any function will reset the entire cache.
 #' CREATE TABLE r_cache (
-#'   key varchar(128),
-#'   val text
+#'   key VARCHAR(128) PRIMARY KEY,
+#'   val TEXT
 #' )
 #'
 #' @examples
@@ -32,7 +33,7 @@ cache_postgresql <- function(pg_con, table_name, algo = "sha512", compress = FAL
   if (!(requireNamespace("readr"))) { stop("Package `readr` must be installed for `cache_postgresql()`.") } # nocov
 
   cache_reset <- function() {
-    dbSendQuery(
+    DBI::dbSendQuery(
       pg_con,
       paste0("DELETE FROM ", table_name)
     )
@@ -43,7 +44,7 @@ cache_postgresql <- function(pg_con, table_name, algo = "sha512", compress = FAL
     on.exit(unlink(temp_file))
     saveRDS(value, file = temp_file, compress = compress, ascii = TRUE)
     encoded <- readr::read_file(temp_file)
-    dbSendQuery(
+    DBI::dbSendQuery(
       pg_con,
       sqlInterpolate(
         pg_con,
@@ -60,7 +61,7 @@ cache_postgresql <- function(pg_con, table_name, algo = "sha512", compress = FAL
   cache_get <- function(key) {
     temp_file <- file.path(path, key)
     on.exit(unlink(temp_file))
-    rs <- dbGetQuery(
+    rs <- DBI::dbGetQuery(
       pg_con,
       sqlInterpolate(
         pg_con,
@@ -77,7 +78,7 @@ cache_postgresql <- function(pg_con, table_name, algo = "sha512", compress = FAL
   }
 
   cache_has_key <- function(key) {
-    rs <- dbGetQuery(
+    rs <- DBI::dbGetQuery(
       pg_con,
       sqlInterpolate(
         pg_con,
@@ -98,7 +99,7 @@ cache_postgresql <- function(pg_con, table_name, algo = "sha512", compress = FAL
   }
 
   cache_drop_key <- function(key) {
-    dbSendQuery(
+    DBI::dbSendQuery(
       pg_con,
       sqlInterpolate(
         pg_con,
@@ -112,7 +113,7 @@ cache_postgresql <- function(pg_con, table_name, algo = "sha512", compress = FAL
   }
 
   cache_keys <- function() {
-    rs <- dbGetQuery(
+    rs <- DBI::dbGetQuery(
       pg_con,
       sqlInterpolate(
         pg_con,
