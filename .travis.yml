@@ -3,7 +3,7 @@ env:
     - secure: "QrhNWrS/nyBZKsydo2exbMSp2huBaCkRBAt0hWTYoY+9pSfbbNa9OD2elsRWUi1RztK9oiubxK3KoHOGOP3L6N4CiRJ2zIX4Z25OkDagphdeAXTAtAPG6as3+ucz/Ujl8shEvHuhrUeeuKvtNsVJQ0b0DHIDRXkzizDg7yWJiNk="
     - MEMOISE_PG_USER: postgres
     - MEMOISE_PG_TABLE: cache
-    - MEMOISE_PG_DATABASE: cache
+    - MEMOISE_PG_DBNAME: cache
 
 language: r
 sudo: false
