@@ -42,18 +42,20 @@ cache_postgresql <- function(pg_con, table_name, algo = "sha512", compress = FAL
     saveRDS(value, file = temp_file, compress = compress, ascii = TRUE)
     size <- file.info(temp_file)$size
     encoded <- readChar(temp_file, size, useBytes = TRUE)
-    DBI::dbSendQuery(
-      pg_con,
-      DBI::sqlInterpolate(
+    try({
+      DBI::dbSendQuery(
         pg_con,
-        paste0(
-          "INSERT INTO ", table_name,
-          " VALUES (?key, ?encoded)"
-        ),
-        key = key,
-        encoded = encoded
+        DBI::sqlInterpolate(
+          pg_con,
+          paste0(
+            "INSERT INTO ", table_name,
+            " VALUES (?key, ?encoded)"
+          ),
+          key = key,
+          encoded = encoded
+        )
       )
-    )
+    })
   }
 
   cache_get <- function(key) {
@@ -76,17 +78,20 @@ cache_postgresql <- function(pg_con, table_name, algo = "sha512", compress = FAL
   }
 
   cache_has_key <- function(key) {
-    rs <- DBI::dbGetQuery(
-      pg_con,
-      DBI::sqlInterpolate(
+    rs <- NULL
+    try({
+      rs <- DBI::dbGetQuery(
         pg_con,
-        paste0(
-          "SELECT 1 FROM ", table_name,
-          " WHERE key = ?key"
-        ),
-        key = key
+        DBI::sqlInterpolate(
+          pg_con,
+          paste0(
+            "SELECT 1 FROM ", table_name,
+            " WHERE key = ?key"
+          ),
+          key = key
+        )
       )
-    )
+    })
     if (!is.null(rs) && nrow(rs) == 1) TRUE else FALSE
   }
 
