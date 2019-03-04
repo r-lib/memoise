@@ -12,6 +12,11 @@ setup_cache <- function() {
   cache_postgresql(pg_con, Sys.getenv("MEMOISE_PG_TABLE"))
 }
 
+setup_missing_cache <- function() {
+  pg_con <- NA
+  cache_postgresql(pg_con, Sys.getenv("MEMOISE_PG_TABLE"))
+}
+
 test_that("using a postgresql cache works", {
   skip_without_postgres_credentials()
 
@@ -20,6 +25,7 @@ test_that("using a postgresql cache works", {
   i <- 0
   fn <- function() { i <<- i + 1; i }
   fnm <- memoise(fn, cache = pg)
+  on.exit(forget(fn))
   on.exit(forget(fnm))
 
   expect_equal(fn(), 1)
@@ -40,6 +46,12 @@ test_that("using a postgresql cache works", {
   expect_false(is.memoised(fn))
   drop_cache(fnm)()
 })
+
+test_that("A missing postgresql cache fails gracefully", {
+  fn <- function() { 5 }
+  expect_equal(fn(), 5)
+}
+
 
 test_that("two functions with the same arguments produce different caches", {
   skip_without_postgres_credentials()
