@@ -44,7 +44,6 @@
 #' @aliases memoise memoize
 #' @export memoise memoize
 #' @importFrom digest digest
-#' @importFrom utils removeSource
 #' @examples
 #' # a() is evaluated anew each time. memA() is only re-evaluated
 #' # when you call it with a new set of parameters.
@@ -124,7 +123,7 @@ memoise <- memoize <- function(f, ..., envir = environment(f), cache = cache_mem
               lapply(default_args, eval, envir = environment()))
 
     hash <- encl$`_cache`$digest(
-      c(removeSource(encl$`_f`), args,
+      c(utils::removeSource(encl$`_f`), args,
         lapply(encl$`_additional`, function(x) eval(x[[2L]], environment(x))))
     )
 
