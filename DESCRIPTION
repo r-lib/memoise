@@ -20,6 +20,7 @@ Suggests:
     aws.s3,
     httr,
     covr,
+    googleAuthR,
     googleCloudStorageR
 License: MIT + file LICENSE
 RoxygenNote: 6.1.1
