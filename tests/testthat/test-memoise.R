@@ -95,6 +95,18 @@ test_that("default arguments are evaluated correctly", {
   expect_equal(fnm(), 2)
 })
 
+test_that("whether default values pass explicitly or implicitly doesn't matter", {
+  fn <- function(x = 1, y = 1) { i <<- i + 1; i }
+  i <- 0
+  fm <- memoise(fn)
+
+  expect_equal(fn(), 1)
+  expect_equal(fm(y = 1), 2)
+  expect_equal(fm(), 2)
+  expect_equal(fm(x = 1), 2)
+  expect_equal(fm(x = 1, y = 1), 2)
+})
+
 test_that("symbol collision", {
   cache <- function(j = 1) { i <<- i + 1; i }
   i <- 0
