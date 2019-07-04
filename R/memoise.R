@@ -36,7 +36,7 @@
 #' but when the package is loaded. The simplest way to do this is within
 #' \code{.onLoad()} with, for example
 #'
-#' \code{
+#'
 #' \preformatted{
 #' # file.R
 #' fun <- function() {
@@ -48,7 +48,6 @@
 #'  fun <<- memoise::memoise(fun)
 #' }
 #' }
-#'}
 #' @name memoise
 #' @title Memoise a function.
 #' @param f     Function of which to create a memoised copy.

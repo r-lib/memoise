@@ -57,7 +57,6 @@ It is recommended that functions in a package are not memoised at build-time,
 but when the package is loaded. The simplest way to do this is within
 \code{.onLoad()} with, for example
 
-\code{
 \preformatted{
 # file.R
 fun <- function() {
@@ -67,7 +66,6 @@ fun <- function() {
 # zzz.R
 .onLoad <- function(pkgname, libname) {
  fun <<- memoise::memoise(fun)
-}
 }
 }
 }
