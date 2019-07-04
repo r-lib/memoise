@@ -32,6 +32,24 @@
 #'     repeated.
 #' }
 #'
+#' It is recommended that functions in a package are not memoised at build-time,
+#' but when the package is loaded. The simplest way to do this is within
+#' \code{.onLoad()} with, for example
+#'
+#' \cr
+#' \code{
+#' # file.R
+#' \cr
+#' fun <- function() { \cr
+#'  some_expensive_process() \cr
+#' } \cr
+#' \cr
+#' # zzz.R
+#' \cr .onLoad <- function(pkgname, libname) { \cr
+#'  fun <<- memoise::memoise(fun) \cr
+#' } \cr
+#' }
+#'
 #' @name memoise
 #' @title Memoise a function.
 #' @param f     Function of which to create a memoised copy.
