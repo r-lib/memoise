@@ -52,7 +52,7 @@ cache_s3 <- function(cache_name, algo = "sha512", compress = FALSE) {
   }
 
   cache_has_key <- function(key) {
-    aws.s3::head_object(object = key, bucket = cache_name)
+    suppressMessages(aws.s3::head_object(object = key, bucket = cache_name))
   }
 
   cache_drop_key <- function(key) {
