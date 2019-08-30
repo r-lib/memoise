@@ -7,6 +7,8 @@
 directory after using relative path (#51, #65 - @xhdong-umd)
 * Add `drop_cache()` to drop the cached result for particular arguments (#78 -
   richardkunze)
+* Suppress messages of `aws.s3::head_object` within `cache_s3`'s `cache_has_key`
+  to avoid printing of 404 messages for new keys (#96, @stelsemeyer).
 
 # Version 1.1.0
 * Caches now hash the function body along with the arguments, to ensure
