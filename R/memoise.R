@@ -314,3 +314,23 @@ drop_cache <- function(f) {
 
   f
 }
+
+#' @importFrom qs qsave
+cache_set_fs <- function(value, path, key, compress) {
+  temp_file <- file.path(path, key)
+  if(compress %in% c("qs_fast", "qs_balanced")){
+    qsave(value, file = temp_file, preset = c("qs_fast" = "fast", "qs_balanced" = "balanced")[compress])
+  }else{
+    saveRDS(value, file = temp_file, compress = compress)
+  }
+}
+
+#' @importFrom qs qread
+cache_get_fs <- function(path, key, compress) {
+  temp_file <- file.path(path, key)
+  if(compress %in% c("qs_fast", "qs_balanced")){
+    return(qread(temp_file, strict = TRUE))
+  }else{
+    return(readRDS(temp_file))
+  }
+}

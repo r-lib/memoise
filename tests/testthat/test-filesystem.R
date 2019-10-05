@@ -39,3 +39,22 @@ test_that("two functions with the same arguments produce different caches (#38)"
 
   expect_equal(length(list.files(temp)), 2)
 })
+
+test_that("different compression arguments work for filesystem cache", {
+
+  for(i in list(FALSE, TRUE, "gzip", "xz", "qs_fast", "qs_balanced")){
+    temp <- tempfile()
+    fs <- cache_filesystem(temp, compress = i)
+
+    f1 <- memoise(function() 1, cache = fs)
+    f2 <- memoise(function() 2, cache = fs)
+
+    expect_equal(f1(), 1)
+    expect_equal(f2(), 2)
+
+    expect_equal(length(list.files(temp)), 2)
+
+    forget(f1)
+    forget(f2)
+  }
+})

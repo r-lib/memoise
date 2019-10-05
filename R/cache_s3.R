@@ -39,7 +39,7 @@ cache_s3 <- function(cache_name, algo = "sha512", compress = FALSE) {
   cache_set <- function(key, value) {
     temp_file <- file.path(path, key)
     on.exit(unlink(temp_file))
-    saveRDS(value, file = temp_file, compress = compress)
+    cache_set_fs(value, path, key, compress)
     aws.s3::put_object(temp_file, object = key, bucket = cache_name)
   }
 
@@ -48,7 +48,7 @@ cache_s3 <- function(cache_name, algo = "sha512", compress = FALSE) {
     httr::with_config(httr::write_disk(temp_file, overwrite = TRUE), {
       aws.s3::get_object(object = key, bucket = cache_name)
     })
-    readRDS(temp_file)
+    cache_get_fs(path, key, compress)
   }
 
   cache_has_key <- function(key) {

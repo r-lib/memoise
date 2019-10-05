@@ -35,7 +35,7 @@ cache_gcs <- function(cache_name = googleCloudStorageR::gcs_get_global_bucket(),
   cache_set <- function(key, value) {
     temp_file <- file.path(path, key)
     on.exit(unlink(temp_file))
-    saveRDS(value, file = temp_file, compress = compress)
+    cache_set_fs(value, path, key, compress)
     suppressMessages(
       googleCloudStorageR::gcs_upload(temp_file, name = key, bucket = cache_name)
     )
@@ -50,8 +50,7 @@ cache_gcs <- function(cache_name = googleCloudStorageR::gcs_get_global_bucket(),
                                           saveToDisk = temp_file,
                                           overwrite = TRUE)
     )
-
-    readRDS(temp_file)
+    cache_get_fs(path, key, compress)
   }
 
   cache_has_key <- function(key) {
