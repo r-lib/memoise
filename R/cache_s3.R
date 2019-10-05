@@ -15,8 +15,8 @@
 #'
 #'
 #' @param cache_name Bucket name for storing cache files.
-#' @param compress Argument passed to \code{saveRDS}. One of FALSE, "gzip",
-#' "bzip2" or "xz". Default: FALSE.
+#' @param compress Argument passed to \code{saveRDS} or \code{qs::qsave}. One of FALSE, "gzip",
+#' "bzip2", "xz", "qs_fast" or "qs_balanced". Default: FALSE.
 #' @inheritParams cache_memory
 #' @export
 

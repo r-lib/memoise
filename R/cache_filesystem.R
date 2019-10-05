@@ -3,8 +3,8 @@
 #' Use a cache on the local filesystem that will persist between R sessions.
 #'
 #' @param path Directory in which to store cached items.
-#' @param compress Argument passed to \code{saveRDS}. One of FALSE, "gzip",
-#' "bzip2" or "xz". Default: FALSE.
+#' @param compress Argument passed to \code{saveRDS} or \code{qs::qsave}. One of FALSE, "gzip",
+#' "bzip2", "xz", "qs_fast" or "qs_balanced". Default: FALSE.
 #'
 #' @examples
 #'
