@@ -49,10 +49,13 @@ test_that("different compression arguments work for filesystem cache", {
     f1 <- memoise(function() 1, cache = fs)
     f2 <- memoise(function() 2, cache = fs)
 
+    # Setting cache
     expect_equal(f1(), 1)
     expect_equal(f2(), 2)
 
-    expect_equal(length(list.files(temp)), 2)
+    # Getting cache
+    expect_equal(f1(), 1)
+    expect_equal(f2(), 2)
 
     forget(f1)
     forget(f2)
