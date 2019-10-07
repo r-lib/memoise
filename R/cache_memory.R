@@ -11,6 +11,9 @@
 #' @export
 cache_memory <- function(algo = "sha512", compress = FALSE) {
 
+  if(identical(compress, TRUE)){
+    compress <- "qs_fast"
+  }
   if(compress %in% c("qs_fast", "qs_balanced")){
     if (!(requireNamespace("qs"))) { stop("Package `qs` must be installed for \"qs_fast\" or \"qs_balanced\" compression options") } #nocov
   }
