@@ -9,6 +9,7 @@ directory after using relative path (#51, #65 - @xhdong-umd)
   richardkunze)
 * Suppress messages of `aws.s3::head_object` within `cache_s3`'s `cache_has_key`
   to avoid printing of 404 messages for new keys (#96, @stelsemeyer).
+* Improved compressions options via [`qs`](https://github.com/traversc/qs). Optional impacts to the memory cache (uses less memory) and all filesystem caches (faster and uses less space) (#100 - @rhjp)
 
 # Version 1.1.0
 * Caches now hash the function body along with the arguments, to ensure
