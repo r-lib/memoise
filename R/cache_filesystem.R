@@ -27,6 +27,10 @@
 #' @inheritParams cache_memory
 cache_filesystem <- function(path, algo = "xxhash64", compress = FALSE) {
 
+  if(compress %in% c("qs_fast", "qs_balanced")){
+    if (!(requireNamespace("qs"))) { stop("Package `qs` must be installed for \"qs_fast\" or \"qs_balanced\" compression options") } #nocov
+  }
+
   if (!dir.exists(path)) {
     dir.create(path, showWarnings = FALSE)
   }

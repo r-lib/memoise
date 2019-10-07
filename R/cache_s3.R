@@ -23,6 +23,9 @@
 cache_s3 <- function(cache_name, algo = "sha512", compress = FALSE) {
 
   if (!(requireNamespace("aws.s3"))) { stop("Package `aws.s3` must be installed for `cache_s3()`.") } # nocov
+  if(compress %in% c("qs_fast", "qs_balanced")){
+    if (!(requireNamespace("qs"))) { stop("Package `qs` must be installed for \"qs_fast\" or \"qs_balanced\" compression options") } #nocov
+  }
 
   if (!(aws.s3::bucket_exists(cache_name))) {
     aws.s3::put_bucket(cache_name) # nocov
