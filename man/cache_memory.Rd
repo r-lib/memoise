@@ -4,11 +4,17 @@
 \alias{cache_memory}
 \title{In Memory Cache}
 \usage{
-cache_memory(algo = "sha512")
+cache_memory(algo = "sha512", compress = FALSE)
 }
 \arguments{
 \item{algo}{The hashing algorithm used for the cache, see
 \code{\link[digest]{digest}} for available algorithms.}
+
+\item{compress}{Default FALSE, otherwise "qs_fast" or
+"qs_balanced" will be passed to \code{qs::qserialise}.
+Compression will always be slower than none, but it can
+substantially reduce the memory usage, and hence allow
+a effectively larger cache size.}
 }
 \description{
 A cache in memory, that lasts only in the current R session.

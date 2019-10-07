@@ -3,8 +3,17 @@
 #' A cache in memory, that lasts only in the current R session.
 #' @param algo The hashing algorithm used for the cache, see
 #' \code{\link[digest]{digest}} for available algorithms.
+#' @param compress Default FALSE, otherwise "qs_fast" or
+#' "qs_balanced" will be passed to \code{qs::qserialise}.
+#' Compression will always be slower than none, but it can
+#' substantially reduce the memory usage, and hence allow
+#' a effectively larger cache size.
 #' @export
-cache_memory <- function(algo = "sha512") {
+cache_memory <- function(algo = "sha512", compress = FALSE) {
+
+  if(compress %in% c("qs_fast", "qs_balanced")){
+    if (!(requireNamespace("qs"))) { stop("Package `qs` must be installed for \"qs_fast\" or \"qs_balanced\" compression options") } #nocov
+  }
 
   cache <- NULL
   cache_reset <- function() {
@@ -12,11 +21,20 @@ cache_memory <- function(algo = "sha512") {
   }
 
   cache_set <- function(key, value) {
-    assign(key, value, envir = cache)
+    if(compress %in% c("qs_fast", "qs_balanced")){
+      assign(key, qs::qserialize(value, preset = c("qs_fast" = "fast", "qs_balanced" = "balanced")[compress]), envir = cache)
+    }else{
+      assign(key, value, envir = cache)
+    }
+
   }
 
   cache_get <- function(key) {
-    get(key, envir = cache, inherits = FALSE)
+    if(compress %in% c("qs_fast", "qs_balanced")){
+      qs::qdeserialize(get(key, envir = cache, inherits = FALSE), strict = TRUE)
+    }else{
+      get(key, envir = cache, inherits = FALSE)
+    }
   }
 
   cache_has_key <- function(key) {

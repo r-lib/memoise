@@ -331,3 +331,32 @@ test_that("it works with missing arguments", {
   fnm(1, 2)
   expect_equal(i, 4)
 })
+
+test_that("memory compression works", {
+
+  for(i in list(FALSE, "qs_fast", "qs_balanced")){
+    if(("qs" %in% installed.packages()[,"Package"]) || !(i %in% c("qs_fast", "qs_balanced"))){
+
+      compressed_cache = cache_memory(compress = i)
+
+      fn <- function() { i <<- i + 1; i }
+      i <- 0
+
+      expect_warning(fnm <- memoise(fn, cache = compressed_cache), NA)
+      expect_equal(fn(), 1)
+      expect_equal(fn(), 2)
+      expect_equal(fnm(), 3)
+      expect_equal(fnm(), 3)
+      expect_equal(fn(), 4)
+      expect_equal(fnm(), 3)
+
+      expect_false(forget(fn))
+      expect_true(forget(fnm))
+      expect_true(forget(fnm))
+      expect_equal(fnm(), 5)
+
+      expect_true(is.memoised(fnm))
+      expect_false(is.memoised(fn))
+    }
+  }
+})
