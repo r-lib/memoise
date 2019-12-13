@@ -44,7 +44,7 @@
 #' }
 #'
 #' # zzz.R
-#' .onLoad <- function(pkgname, libname) {
+#' .onLoad <- function(libname, pkgname) {
 #'  fun <<- memoise::memoise(fun)
 #' }
 #' }
