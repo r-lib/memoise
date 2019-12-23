@@ -114,11 +114,14 @@
 #' memA4 <- memoise(a, ~timeout(10))
 #' memA4(2)
 #' @importFrom stats setNames
+#' @importFrom utils removeSource
 memoise <- memoize <- function(f, ..., envir = environment(f), cache = cache_memory()) {
   f_formals <- formals(args(f))
   if(is.memoised(f)) {
     stop("`f` must not be memoised.", call. = FALSE)
   }
+
+  f <- removeSource(f)  # srcrefs cause trouble
 
   validate_formulas(...)
   additional <- list(...)
