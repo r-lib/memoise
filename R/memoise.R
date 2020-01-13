@@ -138,6 +138,9 @@ memoise <- memoize <- function(f, ..., envir = environment(f), cache = cache_mem
     args <- c(lapply(called_args, eval, parent.frame()),
               lapply(default_args, eval, envir = environment()))
 
+    # Replace memoised functions in arguments with their original bodies
+    args <- lapply(args, function(x) if (memoise::is.memoised(x)) as.character(body(environment(x)$`_f`)) else x)
+
     hash <- encl$`_cache`$digest(
       c(as.character(body(encl$`_f`)), args,
         lapply(encl$`_additional`, function(x) eval(x[[2L]], environment(x))))
@@ -163,7 +166,7 @@ memoise <- memoize <- function(f, ..., envir = environment(f), cache = cache_mem
 
   # This should only happen for primitive functions
   if (is.null(envir)) {
-     envir <- baseenv()
+    envir <- baseenv()
   }
 
   memo_f_env <- new.env(parent = envir)
@@ -277,7 +280,7 @@ has_cache <- function(f) {
   # Modify the function body of the function to simply return TRUE and FALSE
   # rather than get or set the results of the cache
   body <- body(f)
-  body[[9]] <- quote(if (encl$`_cache`$has_key(hash)) return(TRUE) else return(FALSE))
+  body[[10]] <- quote(if (encl$`_cache`$has_key(hash)) return(TRUE) else return(FALSE))
   body(f) <- body
 
   f
@@ -304,7 +307,7 @@ drop_cache <- function(f) {
   # Modify the function body of the function to simply drop the key
   # and return TRUE if successfully removed
   body <- body(f)
-  body[[9]] <- quote(if (encl$`_cache`$has_key(hash)) {
+  body[[10]] <- quote(if (encl$`_cache`$has_key(hash)) {
     encl$`_cache`$drop_key(hash)
     return(TRUE)
   } else {
