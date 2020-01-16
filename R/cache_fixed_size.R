@@ -74,7 +74,7 @@ evict_lru <- function() {
 
 #' Fixed Size Cache
 #'
-#' A fixed cache which drops key/values when it gets too large. Uses any
+#' A fixed size cache which drops key/values when it gets too large. Uses any
 #' underlying cache (by default, \code{\link{cache_memory}}), and evicts
 #' according to a specified rule (by default, first-in, first-out).
 #'
