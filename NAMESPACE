@@ -2,10 +2,13 @@
 
 S3method(print,memoised)
 export(cache_filesystem)
+export(cache_fixed_size)
 export(cache_gcs)
 export(cache_memory)
 export(cache_s3)
 export(drop_cache)
+export(evict_fifo)
+export(evict_lru)
 export(forget)
 export(has_cache)
 export(is.memoised)
