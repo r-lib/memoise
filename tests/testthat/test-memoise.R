@@ -246,6 +246,39 @@ test_that("argument names don't clash with names in memoised function body", {
   expect_identical(f(1, 2, 3, 4, 5, 6, 7, 8, 9, 10), f_mem(1, 2, 3, 4, 5, 6, 7, 8, 9, 10))
 })
 
+test_that("default values dont't clash with names in memoised function body", {
+  f <- function(extra = list(`_f`, `_cache`, `_additional`,
+                             mc, encl, called_args, default_args)) {
+    i <<- i + 1; i
+  }
+  `_f` <- `_cache` <- `_additional` <- mc <- encl <- called_args <- default_args <- 0
+  i <- 0
+
+  fm <- memoise(f)
+
+  expect_equal(f(), 1)
+  expect_equal(fm(), 2)
+  expect_equal(fm(), 2)
+
+  `_f` <- `_cache` <- `_additional` <- mc <- encl <- called_args <- default_args <- 1
+  expect_equal(fm(), 3)
+})
+
+test_that("other memoised function passed as arguments", {
+  f <- function(x) x
+  g <- function(fn) {i <<- fn(i) + 1; i}
+  i <- 0
+
+  fm <- memoise(f)
+  gm <- memoise(g)
+
+  expect_equal(g(fm), 1)
+  expect_equal(gm(fm), 2)
+  expect_equal(gm(fm), 2)
+  expect_equal(g(fm), 3)
+  expect_equal(gm(fm), 2)
+})
+
 context("has_cache")
 test_that("it works as expected with memoised functions", {
   mem_sum <- memoise(sum)

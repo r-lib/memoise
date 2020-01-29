@@ -134,9 +134,21 @@ memoise <- memoize <- function(f, ..., envir = environment(f), cache = cache_mem
     # That has not been called
     default_args <- default_args[setdiff(names(default_args), names(called_args))]
 
-    # Evaluate all the arguments
-    args <- c(lapply(called_args, eval, parent.frame()),
-              lapply(default_args, eval, envir = environment()))
+    # Evaluate called arguments
+    called_args <- lapply(called_args, eval, parent.frame())
+
+    # Emulate how R evaluate default arguments
+    emu_env <- new.env(parent = if (is.null(environment(encl$`_f`))) baseenv() else environment(encl$`_f`))
+    for (n in setdiff(names(called_args), "")) assign(n, called_args[[n]], envir = emu_env)
+    for (n in names(default_args)) eval(bquote(delayedAssign(n, .(expr), eval.env= emu_env , assign.env = emu_env),
+                                               list(expr = default_args[[n]])))
+    default_args <- sapply(names(default_args), get, envir = emu_env, simplify = FALSE)
+
+    # All arguments
+    args <- c(called_args, default_args)
+
+    # Replace memoised functions in arguments with their original bodies
+    args <- lapply(args, function(x) if (memoise::is.memoised(x)) as.character(body(environment(x)$`_f`)) else x)
 
     hash <- encl$`_cache`$digest(
       c(as.character(body(encl$`_f`)), args,
@@ -163,7 +175,7 @@ memoise <- memoize <- function(f, ..., envir = environment(f), cache = cache_mem
 
   # This should only happen for primitive functions
   if (is.null(envir)) {
-     envir <- baseenv()
+    envir <- baseenv()
   }
 
   memo_f_env <- new.env(parent = envir)
@@ -277,7 +289,7 @@ has_cache <- function(f) {
   # Modify the function body of the function to simply return TRUE and FALSE
   # rather than get or set the results of the cache
   body <- body(f)
-  body[[9]] <- quote(if (encl$`_cache`$has_key(hash)) return(TRUE) else return(FALSE))
+  body[[15]] <- quote(if (encl$`_cache`$has_key(hash)) return(TRUE) else return(FALSE))
   body(f) <- body
 
   f
@@ -304,7 +316,7 @@ drop_cache <- function(f) {
   # Modify the function body of the function to simply drop the key
   # and return TRUE if successfully removed
   body <- body(f)
-  body[[9]] <- quote(if (encl$`_cache`$has_key(hash)) {
+  body[[15]] <- quote(if (encl$`_cache`$has_key(hash)) {
     encl$`_cache`$drop_key(hash)
     return(TRUE)
   } else {
