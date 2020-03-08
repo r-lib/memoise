@@ -95,6 +95,18 @@ test_that("default arguments are evaluated correctly", {
   expect_equal(fnm(), 2)
 })
 
+test_that("whether default values pass explicitly or implicitly doesn't matter", {
+  fn <- function(x = 1, y = 1) { i <<- i + 1; i }
+  i <- 0
+  fm <- memoise(fn)
+
+  expect_equal(fn(), 1)
+  expect_equal(fm(y = 1), 2)
+  expect_equal(fm(), 2)
+  expect_equal(fm(x = 1), 2)
+  expect_equal(fm(x = 1, y = 1), 2)
+})
+
 test_that("symbol collision", {
   cache <- function(j = 1) { i <<- i + 1; i }
   i <- 0
@@ -244,6 +256,39 @@ test_that("argument names don't clash with names in memoised function body", {
 
   expect_error(f_mem(1, 2, 3, 4, 5, 6, 7, 8, 9, 10), NA)
   expect_identical(f(1, 2, 3, 4, 5, 6, 7, 8, 9, 10), f_mem(1, 2, 3, 4, 5, 6, 7, 8, 9, 10))
+})
+
+test_that("default values dont't clash with names in memoised function body", {
+  f <- function(extra = list(`_f`, `_cache`, `_additional`,
+                             mc, encl, called_args, default_args)) {
+    i <<- i + 1; i
+  }
+  `_f` <- `_cache` <- `_additional` <- mc <- encl <- called_args <- default_args <- 0
+  i <- 0
+
+  fm <- memoise(f)
+
+  expect_equal(f(), 1)
+  expect_equal(fm(), 2)
+  expect_equal(fm(), 2)
+
+  `_f` <- `_cache` <- `_additional` <- mc <- encl <- called_args <- default_args <- 1
+  expect_equal(fm(), 3)
+})
+
+test_that("other memoised function passed as arguments", {
+  f <- function(x) x
+  g <- function(fn) {i <<- fn(i) + 1; i}
+  i <- 0
+
+  fm <- memoise(f)
+  gm <- memoise(g)
+
+  expect_equal(g(fm), 1)
+  expect_equal(gm(fm), 2)
+  expect_equal(gm(fm), 2)
+  expect_equal(g(fm), 3)
+  expect_equal(gm(fm), 2)
 })
 
 context("has_cache")
