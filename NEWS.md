@@ -1,4 +1,5 @@
 # Version 1.1.0.9000
+* Add postgres support via `cache_postgresql()` (#? - @mattyb)
 * Name clashes between function arguments and variables defined when memoising
   no longer occur (#43, @egnha).
 * Add Google Cloud Storage support via `cache_gcs()` (#59 - @MarkEdmondson1234)
