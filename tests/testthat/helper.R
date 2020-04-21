@@ -23,3 +23,23 @@ skip_on_travis_pr <- function() {
 
   invisible(TRUE)
 }
+
+
+skip_without_mongodb <- function() {
+  # docker run -p 27017:27017 -d --name mongo mongo:3.4
+  if (requireNamespace("mongolite")){
+
+    con <- try({
+      mongolite::gridfs(
+        db = "testmemoise"
+      )
+    }, silent = TRUE)
+
+    if (!inherits(con, "try-error")){
+      return(invisible(TRUE))
+    }
+
+  }
+
+  testthat::skip("No Mongodb Backend available")
+}
