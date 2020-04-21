@@ -21,6 +21,7 @@ Suggests:
     httr,
     covr,
     googleCloudStorageR, 
-    mongolite
+    mongolite, 
+    googleAuthR
 License: MIT + file LICENSE
 RoxygenNote: 7.1.0
