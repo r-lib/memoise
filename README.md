@@ -42,6 +42,8 @@ devtools::install_github("r-lib/memoise")
   can point this to a shared file such as dropbox or google drive to share
   caches between systems.
 * `cache_s3()` allows caching on [Amazon S3](https://aws.amazon.com/s3/)
+* `cache_gcs()` allows caching on [Google Cloud Storage](https://cloud.google.com/storage)
+* `cache_mongo()` allows caching on [MongoDB GridFS](https://docs.mongodb.com/manual/core/gridfs/)
 
 
 ## AWS S3
@@ -93,6 +95,25 @@ Sys.setenv("GCS_AUTH_FILE"="<google-service-json>",
 
 gcs <- cache_gcs()
 mrunif <- memoise(runif, cache = gcs)
+mrunif(10) # First run, saves cache
+mrunif(10) # Loads cache, results should be identical
+```
+
+## Mongo GridFS
+
+`cache_mongo()` allows to store cache on a MongoDB back-end, using the GridFS API. 
+You will first need to create a connection using `mongolite::gridfs()`
+
+```r
+library(mongolite)
+mongo_grid <- gridfs(
+  db = "memoize",
+  prefix = "memoize"
+)
+
+mong <- cache_mongo(mongo_grid)
+mem_runif <- memoise(runif, cache = mong)
+
 mrunif(10) # First run, saves cache
 mrunif(10) # Loads cache, results should be identical
 ```
