@@ -51,8 +51,8 @@
 #' @name memoise
 #' @title Memoise a function.
 #' @param f     Function of which to create a memoised copy.
-#' @param ... optional variables specified as formulas with no RHS to use as
-#' additional restrictions on caching. See Examples for usage.
+#' @param ... optional variables to use as additional restrictions on
+#'   caching, specified as one-sided formulas (no LHS). See Examples for usage.
 #' @param envir Environment of the returned function.
 #' @param cache Cache function.
 #' @param omit_args Names of arguments to ignore when calculating hash.
