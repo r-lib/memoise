@@ -5,12 +5,12 @@
 
 <!-- badges: start -->
 
-[![Travis-CI Build
-Status](https://travis-ci.org/r-lib/memoise.svg?branch=master)](https://travis-ci.org/r-lib/memoise)
-[![Coverage
-Status](https://img.shields.io/codecov/c/github/r-lib/memoise/master.svg)](https://codecov.io/github/r-lib/memoise?branch=master)
-[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/memoise)](https://cran.r-project.org/package=memoise)
-
+[![CRAN
+status](https://www.r-pkg.org/badges/version/memoise)](https://CRAN.R-project.org/package=memoise)
+[![R build
+status](https://github.com/hadley/memoise/workflows/R-CMD-check/badge.svg)](https://github.com/hadley/memoise/actions)
+[![Codecov test
+coverage](https://codecov.io/gh/hadley/memoise/branch/master/graph/badge.svg)](https://codecov.io/gh/hadley/memoise?branch=master)
 <!-- badges: end -->
 
 The memoise package makes it easy to memoise R functions.
@@ -40,10 +40,10 @@ mf <- memoise(f)
 
 system.time(mf(1:10))
 #>    user  system elapsed 
-#>   0.001   0.000   1.002
+#>   0.000   0.000   1.003
 system.time(mf(1:10))
 #>    user  system elapsed 
-#>   0.032   0.002   0.033
+#>   0.031   0.001   0.032
 ```
 
 You can clear `mf`’s cache with:

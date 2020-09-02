@@ -6,3 +6,5 @@
 ^\.httr-oauth$
 ^gcs\.oauth$
 ^README\.Rmd$
+^codecov\.yml$
+^\.github$
