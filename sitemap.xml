@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://memoise.r-lib.org/index.html</loc>
+  </url>
+  <url>
+    <loc>https://memoise.r-lib.org/reference/cache_filesystem.html</loc>
+  </url>
+  <url>
+    <loc>https://memoise.r-lib.org/reference/cache_gcs.html</loc>
+  </url>
+  <url>
+    <loc>https://memoise.r-lib.org/reference/cache_memory.html</loc>
+  </url>
+  <url>
+    <loc>https://memoise.r-lib.org/reference/cache_s3.html</loc>
+  </url>
+  <url>
+    <loc>https://memoise.r-lib.org/reference/drop_cache.html</loc>
+  </url>
+  <url>
+    <loc>https://memoise.r-lib.org/reference/forget.html</loc>
+  </url>
+  <url>
+    <loc>https://memoise.r-lib.org/reference/has_cache.html</loc>
+  </url>
+  <url>
+    <loc>https://memoise.r-lib.org/reference/is.memoised.html</loc>
+  </url>
+  <url>
+    <loc>https://memoise.r-lib.org/reference/memoise.html</loc>
+  </url>
+  <url>
+    <loc>https://memoise.r-lib.org/reference/timeout.html</loc>
+  </url>
+</urlset>
