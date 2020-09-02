@@ -21,4 +21,4 @@ Suggests:
     covr,
     googleCloudStorageR
 License: MIT + file LICENSE
-RoxygenNote: 6.1.0
+RoxygenNote: 7.1.1
