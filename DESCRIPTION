@@ -33,6 +33,7 @@ Imports:
 Suggests:
     aws.s3,
     covr,
+    googleAuthR,
     googleCloudStorageR,
     httr,
     testthat
