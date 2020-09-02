@@ -7,7 +7,7 @@ Authors@R: c(
     person("Jim", "Hester", , "jim.hester@rstudio.com", role = c("aut", "cre")),
     person("Kirill", "Müller", , "krlmlr+r@mailbox.org", role = "aut"),
     person("Daniel", "Cook", , "danielecook@gmail.com", role = "aut"),
-    person("Mark", "Edmondson", "r@sunholo.com", role = "ctb"))
+    person("Mark", "Edmondson", ,"r@sunholo.com", role = "ctb"))
 Description: Cache the results of a function so that when you call it
     again with the same arguments it returns the pre-computed value.
 URL: https://github.com/r-lib/memoise
