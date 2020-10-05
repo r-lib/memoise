@@ -9,7 +9,7 @@ memoise(
   f,
   ...,
   envir = environment(f),
-  cache = cache_memory(),
+  cache = cache::memoryCache(),
   omit_args = c()
 )
 }

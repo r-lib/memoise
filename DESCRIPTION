@@ -1,7 +1,7 @@
 Package: memoise
 Title: Memoisation of Functions
 Version: 1.1.0.9000
-Authors@R: 
+Authors@R:
     c(person(given = "Hadley",
              family = "Wickham",
              role = "aut",
@@ -29,7 +29,8 @@ License: MIT + file LICENSE
 URL: https://github.com/r-lib/memoise
 BugReports: https://github.com/r-lib/memoise/issues
 Imports:
-    digest (>= 0.6.3)
+    digest (>= 0.6.3),
+    cache
 Suggests:
     aws.s3,
     covr,
@@ -37,5 +38,7 @@ Suggests:
     googleCloudStorageR,
     httr,
     testthat
+Remotes:
+    wch/cache
 Encoding: UTF-8
 RoxygenNote: 7.1.1

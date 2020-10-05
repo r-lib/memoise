@@ -115,7 +115,14 @@
 #' memA4 <- memoise(a, ~timeout(10))
 #' memA4(2)
 #' @importFrom stats setNames
-memoise <- memoize <- function(f, ..., envir = environment(f), cache = cache_memory(), omit_args = c()) {
+#' @import cache
+memoise <- memoize <- function(
+  f,
+  ...,
+  envir = environment(f),
+  cache = cache::memoryCache(),
+  omit_args = c())
+{
   f_formals <- formals(args(f))
   if(is.memoised(f)) {
     stop("`f` must not be memoised.", call. = FALSE)
@@ -142,14 +149,17 @@ memoise <- memoize <- function(f, ..., envir = environment(f), cache = cache_mem
     args <- c(lapply(called_args, eval, parent.frame()),
               lapply(default_args, eval, envir = environment()))
 
-    hash <- encl$`_cache`$digest(
-      c(as.character(body(encl$`_f`)), args,
-        lapply(encl$`_additional`, function(x) eval(x[[2L]], environment(x))))
+    hash <- digest::digest(
+      c(
+        as.character(body(encl$`_f`)),
+        args,
+        lapply(encl$`_additional`, function(x) eval(x[[2L]], environment(x)))
+      ),
+      algo = "xxhash64"
     )
 
-    if (encl$`_cache`$has_key(hash)) {
-      res <- encl$`_cache`$get(hash)
-    } else {
+    res <- encl$`_cache`$get(hash)
+    if (cache::is.key_missing(res)) {
       # modify the call to use the original function and evaluate it
       mc[[1L]] <- encl$`_f`
       res <- withVisible(eval(mc, parent.frame()))
