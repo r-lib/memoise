@@ -180,6 +180,11 @@ memoise <- memoize <- function(
      envir <- baseenv()
   }
 
+  # Handle old-style memoise cache objects
+  if (is_old_cache(cache)) {
+    cache <- wrap_old_cache(cache)
+  }
+
   memo_f_env <- new.env(parent = envir)
   memo_f_env$`_cache` <- cache
   memo_f_env$`_f` <- f
@@ -292,7 +297,7 @@ has_cache <- function(f) {
   # Modify the function body of the function to simply return TRUE and FALSE
   # rather than get or set the results of the cache
   body <- body(f)
-  body[[10]] <- quote(if (encl$`_cache`$has_key(hash)) return(TRUE) else return(FALSE))
+  body[[11]] <- quote(return(encl$`_cache`$exists(hash)))
   body(f) <- body
 
   f
@@ -319,8 +324,8 @@ drop_cache <- function(f) {
   # Modify the function body of the function to simply drop the key
   # and return TRUE if successfully removed
   body <- body(f)
-  body[[10]] <- quote(if (encl$`_cache`$has_key(hash)) {
-    encl$`_cache`$drop_key(hash)
+  body[[11]] <- quote(if (encl$`_cache`$exists(hash)) {
+    encl$`_cache`$remove(hash)
     return(TRUE)
   } else {
     return(FALSE)
