@@ -10,7 +10,8 @@ memoise(
   ...,
   envir = environment(f),
   cache = cache::memoryCache(),
-  omit_args = c()
+  omit_args = c(),
+  algo = "spookyhash"
 )
 }
 \arguments{

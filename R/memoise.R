@@ -121,7 +121,8 @@ memoise <- memoize <- function(
   ...,
   envir = environment(f),
   cache = cache::memoryCache(),
-  omit_args = c())
+  omit_args = c(),
+  algo = "spookyhash")
 {
   f_formals <- formals(args(f))
   if(is.memoised(f)) {
@@ -155,7 +156,7 @@ memoise <- memoize <- function(
         args,
         lapply(encl$`_additional`, function(x) eval(x[[2L]], environment(x)))
       ),
-      algo = "xxhash64"
+      algo = encl$`_algo`
     )
 
     res <- encl$`_cache`$get(hash)
@@ -182,7 +183,14 @@ memoise <- memoize <- function(
 
   # Handle old-style memoise cache objects
   if (is_old_cache(cache)) {
+    algo <- cache
     cache <- wrap_old_cache(cache)
+    # Old-style caches include their own digest algorithm, so rewrite
+    #   digest::digest(xx, algo = encl$`_algo`)
+    # to:
+    #   encl$`_cache`$digest(xx)
+    body(memo_f)[[9]][[3]][[1]] <- quote(encl$`_cache`$digest)
+    body(memo_f)[[9]][[3]][[3]] <- NULL
   }
 
   memo_f_env <- new.env(parent = envir)
@@ -191,6 +199,7 @@ memoise <- memoize <- function(
   memo_f_env$`_f_hash` <- digest(f, algo = "sha512")
   memo_f_env$`_additional` <- additional
   memo_f_env$`_omit_args` <- omit_args
+  memo_f_env$`_algo` <- algo
   environment(memo_f) <- memo_f_env
 
   class(memo_f) <- c("memoised", "function")

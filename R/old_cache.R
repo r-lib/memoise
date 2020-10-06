@@ -6,6 +6,7 @@ wrap_old_cache <- function(x) {
   }
 
   list(
+    digest = x$digest,
     reset = x$reset,
     set = x$set,
     get = function(key) {
