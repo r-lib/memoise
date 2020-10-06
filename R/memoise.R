@@ -151,7 +151,7 @@ memoise <- memoize <- function(
 
     hash <- digest::digest(
       c(
-        as.character(body(encl$`_f`)),
+        encl$`_f_hash`,
         args,
         lapply(encl$`_additional`, function(x) eval(x[[2L]], environment(x)))
       ),
@@ -188,6 +188,7 @@ memoise <- memoize <- function(
   memo_f_env <- new.env(parent = envir)
   memo_f_env$`_cache` <- cache
   memo_f_env$`_f` <- f
+  memo_f_env$`_f_hash` <- digest(f, algo = "sha512")
   memo_f_env$`_additional` <- additional
   memo_f_env$`_omit_args` <- omit_args
   environment(memo_f) <- memo_f_env
