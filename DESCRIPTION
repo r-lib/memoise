@@ -35,7 +35,7 @@ Suggests:
     covr,
     googleAuthR,
     googleCloudStorageR,
-    qs
+    qs,
     httr,
     testthat
 Encoding: UTF-8
