@@ -5,8 +5,11 @@
 \title{Google Cloud Storage Cache
 Google Cloud Storage backed cache, for remote caching.}
 \usage{
-cache_gcs(cache_name = googleCloudStorageR::gcs_get_global_bucket(),
-  algo = "sha512", compress = FALSE)
+cache_gcs(
+  cache_name = googleCloudStorageR::gcs_get_global_bucket(),
+  algo = "sha512",
+  compress = FALSE
+)
 }
 \arguments{
 \item{cache_name}{Bucket name for storing cache files.}

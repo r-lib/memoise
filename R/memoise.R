@@ -44,17 +44,18 @@
 #' }
 #'
 #' # zzz.R
-#' .onLoad <- function(pkgname, libname) {
+#' .onLoad <- function(libname, pkgname) {
 #'  fun <<- memoise::memoise(fun)
 #' }
 #' }
 #' @name memoise
 #' @title Memoise a function.
 #' @param f     Function of which to create a memoised copy.
-#' @param ... optional variables specified as formulas with no RHS to use as
-#' additional restrictions on caching. See Examples for usage.
+#' @param ... optional variables to use as additional restrictions on
+#'   caching, specified as one-sided formulas (no LHS). See Examples for usage.
 #' @param envir Environment of the returned function.
 #' @param cache Cache function.
+#' @param omit_args Names of arguments to ignore when calculating hash.
 #' @seealso \code{\link{forget}}, \code{\link{is.memoised}},
 #'   \code{\link{timeout}}, \url{http://en.wikipedia.org/wiki/Memoization}
 #' @aliases memoise memoize
@@ -114,7 +115,7 @@
 #' memA4 <- memoise(a, ~timeout(10))
 #' memA4(2)
 #' @importFrom stats setNames
-memoise <- memoize <- function(f, ..., envir = environment(f), cache = cache_memory()) {
+memoise <- memoize <- function(f, ..., envir = environment(f), cache = cache_memory(), omit_args = c()) {
   f_formals <- formals(args(f))
   if(is.memoised(f)) {
     stop("`f` must not be memoised.", call. = FALSE)
@@ -133,6 +134,9 @@ memoise <- memoize <- function(f, ..., envir = environment(f), cache = cache_mem
 
     # That has not been called
     default_args <- default_args[setdiff(names(default_args), names(called_args))]
+
+    # Ignored specified arguments when hashing
+    called_args[encl$`_omit_args`] <- NULL
 
     # Evaluate all the arguments
     args <- c(lapply(called_args, eval, parent.frame()),
@@ -170,6 +174,7 @@ memoise <- memoize <- function(f, ..., envir = environment(f), cache = cache_mem
   memo_f_env$`_cache` <- cache
   memo_f_env$`_f` <- f
   memo_f_env$`_additional` <- additional
+  memo_f_env$`_omit_args` <- omit_args
   environment(memo_f) <- memo_f_env
 
   class(memo_f) <- c("memoised", "function")
@@ -277,7 +282,7 @@ has_cache <- function(f) {
   # Modify the function body of the function to simply return TRUE and FALSE
   # rather than get or set the results of the cache
   body <- body(f)
-  body[[9]] <- quote(if (encl$`_cache`$has_key(hash)) return(TRUE) else return(FALSE))
+  body[[10]] <- quote(if (encl$`_cache`$has_key(hash)) return(TRUE) else return(FALSE))
   body(f) <- body
 
   f
@@ -304,7 +309,7 @@ drop_cache <- function(f) {
   # Modify the function body of the function to simply drop the key
   # and return TRUE if successfully removed
   body <- body(f)
-  body[[9]] <- quote(if (encl$`_cache`$has_key(hash)) {
+  body[[10]] <- quote(if (encl$`_cache`$has_key(hash)) {
     encl$`_cache`$drop_key(hash)
     return(TRUE)
   } else {

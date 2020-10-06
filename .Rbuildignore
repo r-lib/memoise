@@ -5,3 +5,9 @@
 ^cran-comments\.md$
 ^\.httr-oauth$
 ^gcs\.oauth$
+^README\.Rmd$
+^codecov\.yml$
+^\.github$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$

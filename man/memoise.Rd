@@ -5,17 +5,25 @@
 \alias{memoize}
 \title{Memoise a function.}
 \usage{
-memoise(f, ..., envir = environment(f), cache = cache_memory())
+memoise(
+  f,
+  ...,
+  envir = environment(f),
+  cache = cache_memory(),
+  omit_args = c()
+)
 }
 \arguments{
 \item{f}{Function of which to create a memoised copy.}
 
-\item{...}{optional variables specified as formulas with no RHS to use as
-additional restrictions on caching. See Examples for usage.}
+\item{...}{optional variables to use as additional restrictions on
+caching, specified as one-sided formulas (no LHS). See Examples for usage.}
 
 \item{envir}{Environment of the returned function.}
 
 \item{cache}{Cache function.}
+
+\item{omit_args}{Names of arguments to ignore when calculating hash.}
 }
 \description{
 \code{mf <- memoise(f)} creates \code{mf}, a memoised copy of
@@ -57,6 +65,7 @@ It is recommended that functions in a package are not memoised at build-time,
 but when the package is loaded. The simplest way to do this is within
 \code{.onLoad()} with, for example
 
+
 \preformatted{
 # file.R
 fun <- function() {
@@ -64,7 +73,7 @@ fun <- function() {
 }
 
 # zzz.R
-.onLoad <- function(pkgname, libname) {
+.onLoad <- function(libname, pkgname) {
  fun <<- memoise::memoise(fun)
 }
 }
