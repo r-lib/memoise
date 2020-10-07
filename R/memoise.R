@@ -150,7 +150,8 @@ memoise <- memoize <- function(
     args <- c(lapply(called_args, eval, parent.frame()),
               lapply(default_args, eval, envir = environment()))
 
-    hash <- digest::digest(
+    # Use getNamespace() instead of `::`, because the latter is slow.
+    hash <- getNamespace("digest")$digest(
       c(
         encl$`_f_hash`,
         args,
@@ -160,7 +161,7 @@ memoise <- memoize <- function(
     )
 
     res <- encl$`_cache`$get(hash)
-    if (cache::is.key_missing(res)) {
+    if (inherits(res, "key_missing")) {
       # modify the call to use the original function and evaluate it
       mc[[1L]] <- encl$`_f`
       res <- withVisible(eval(mc, parent.frame()))
@@ -200,6 +201,7 @@ memoise <- memoize <- function(
   memo_f_env$`_additional` <- additional
   memo_f_env$`_omit_args` <- omit_args
   memo_f_env$`_algo` <- algo
+
   environment(memo_f) <- memo_f_env
 
   class(memo_f) <- c("memoised", "function")
