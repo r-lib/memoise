@@ -138,7 +138,7 @@ memoise <- memoize <- function(
     called_args <- as.list(mc)[-1]
 
     # Formals with a default
-    default_args <- Filter(function(x) !identical(x, quote(expr = )), as.list(formals()))
+    default_args <- encl$`_default_args`
 
     # That has not been called
     default_args <- default_args[setdiff(names(default_args), names(called_args))]
@@ -205,6 +205,8 @@ memoise <- memoize <- function(
   memo_f_env$`_additional` <- additional
   memo_f_env$`_omit_args` <- omit_args
   memo_f_env$`_algo` <- algo
+  # Formals with a default value
+  memo_f_env$`_default_args` <- Filter(function(x) !identical(x, quote(expr = )), f_formals)
 
   environment(memo_f) <- memo_f_env
 
