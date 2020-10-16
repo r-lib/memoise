@@ -16,7 +16,8 @@ wrap_old_cache <- function(x) {
       x$get(key)
     },
     exists = x$has_key,
-    remove = x$drop_key
+    remove = x$drop_key,
+    keys = x$keys
   )
 }
 
