@@ -61,7 +61,7 @@ cache_s3 <- function(cache_name, algo = "sha512", compress = FALSE) {
 
   cache_keys <- function() {
     items <- lapply(aws.s3::get_bucket(bucket = cache_name), `[[`, "Key")
-    unlist(Filter(Negate(is.null), items))
+    as.character(unlist(Filter(Negate(is.null), items)))
   }
 
   list(
