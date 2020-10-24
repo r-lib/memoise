@@ -9,7 +9,7 @@ memoise(
   f,
   ...,
   envir = environment(f),
-  cache = cache::memoryCache(),
+  cache = cache::cache_mem(),
   omit_args = c(),
   algo = "spookyhash"
 )
