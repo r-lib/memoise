@@ -3,13 +3,13 @@
 \name{memoise}
 \alias{memoise}
 \alias{memoize}
-\title{Memoise a function.}
+\title{Memoise a function}
 \usage{
 memoise(
   f,
   ...,
   envir = environment(f),
-  cache = cache::cache_mem(),
+  cache = cachem::cache_mem(max_size = 1024 * 1024^2),
   omit_args = c(),
   algo = "spookyhash"
 )
@@ -22,7 +22,8 @@ caching, specified as one-sided formulas (no LHS). See Examples for usage.}
 
 \item{envir}{Environment of the returned function.}
 
-\item{cache}{Cache function.}
+\item{cache}{Cache object. The default is a [cachem::cache_mem()] with a max
+size of 1 GB.}
 
 \item{omit_args}{Names of arguments to ignore when calculating hash.}
 }

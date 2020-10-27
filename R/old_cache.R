@@ -1,5 +1,7 @@
 # Wrap an old-style cache so that the external API is consistent with that from
 # the cache package.
+
+#' @importFrom cachem key_missing
 wrap_old_cache <- function(x) {
   if (!is_old_cache(x)) {
     stop("`x` must be an old-style cache.", call. = FALSE)

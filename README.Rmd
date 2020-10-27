@@ -1,5 +1,7 @@
 ---
 output: github_document
+editor_options:
+  chunk_output_type: console
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -57,7 +59,21 @@ And you can test whether a function is memoised with `is.memoised()`.
 
 ## Caches
 
-By default, memoise uses an in-memory cache. But you can customise this with the `cache` arugment and another built-in cache:
+By default, memoise uses an in-memory cache, using `cache_mem()` from the [cachem](https://github.com/wch/cachem) package.
+
+The `cache` argument can be used to pick a custom size:
+
+- `cachem::cache_disk()` allows caching using files on a local filesystem. This is useful for preserving the cache between R sessions as well as sharing between systems when using a shared or synced files system such as Dropbox or Google Drive.
+
+Both `cachem::cache_mem()` and `cachem::cache_disk()` support automatic pruning by default; this means that they will not keep growing past a certain size, and eventually older items will be removed from the cache.
+
+Before version 1.2, memoise used different caching objects, which did not have built-in limits, and had a slightly different API. These caching objects can still be used, but we recommend that
+
+
+
+
+As of
+
 
 -   `cache_filesystem()` allows caching using files on a local filesystem. This is useful for preserving the cache between R sessions as well as sharing between systems when using a shared or synced files system such as Dropbox or Google Drive.
 

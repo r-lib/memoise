@@ -1,3 +1,5 @@
+#' Memoise a function
+#'
 #' \code{mf <- memoise(f)} creates \code{mf}, a memoised copy of
 #' \code{f}. A memoised copy is basically a
 #' lazier version of the same function: it saves the answers of
@@ -49,12 +51,12 @@
 #' }
 #' }
 #' @name memoise
-#' @title Memoise a function.
 #' @param f     Function of which to create a memoised copy.
 #' @param ... optional variables to use as additional restrictions on
 #'   caching, specified as one-sided formulas (no LHS). See Examples for usage.
 #' @param envir Environment of the returned function.
-#' @param cache Cache function.
+#' @param cache Cache object. The default is a [cachem::cache_mem()] with a max
+#'   size of 1 GB.
 #' @param omit_args Names of arguments to ignore when calculating hash.
 #' @seealso \code{\link{forget}}, \code{\link{is.memoised}},
 #'   \code{\link{timeout}}, \url{http://en.wikipedia.org/wiki/Memoization}
@@ -115,12 +117,11 @@
 #' memA4 <- memoise(a, ~timeout(10))
 #' memA4(2)
 #' @importFrom stats setNames
-#' @import cache
 memoise <- memoize <- function(
   f,
   ...,
   envir = environment(f),
-  cache = cache::cache_mem(),
+  cache = cachem::cache_mem(max_size = 1024 * 1024^2),
   omit_args = c(),
   algo = "spookyhash")
 {
