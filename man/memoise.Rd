@@ -26,6 +26,9 @@ caching, specified as one-sided formulas (no LHS). See Examples for usage.}
 size of 512 MB.}
 
 \item{omit_args}{Names of arguments to ignore when calculating hash.}
+
+\item{algo}{Hashing algorithm to use for cache keys. This is passed to
+[digest::digest()].}
 }
 \description{
 \code{mf <- memoise(f)} creates \code{mf}, a memoised copy of

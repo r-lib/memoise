@@ -57,6 +57,8 @@
 #' @param envir Environment of the returned function.
 #' @param cache Cache object. The default is a [cachem::cache_mem()] with a max
 #'   size of 512 MB.
+#' @param algo Hashing algorithm to use for cache keys. This is passed to
+#'   [digest::digest()].
 #' @param omit_args Names of arguments to ignore when calculating hash.
 #' @seealso \code{\link{forget}}, \code{\link{is.memoised}},
 #'   \code{\link{timeout}}, \url{http://en.wikipedia.org/wiki/Memoization}
