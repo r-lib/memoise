@@ -56,7 +56,7 @@
 #'   caching, specified as one-sided formulas (no LHS). See Examples for usage.
 #' @param envir Environment of the returned function.
 #' @param cache Cache object. The default is a [cachem::cache_mem()] with a max
-#'   size of 1 GB.
+#'   size of 512 MB.
 #' @param omit_args Names of arguments to ignore when calculating hash.
 #' @seealso \code{\link{forget}}, \code{\link{is.memoised}},
 #'   \code{\link{timeout}}, \url{http://en.wikipedia.org/wiki/Memoization}
@@ -109,13 +109,10 @@
 #' memA(2)
 #' memA <- memoise(a)
 #' memA(2)
-#' # Making a memoized automatically time out after 10 seconds.
-#' memA3 <- memoise(a, ~{current <- as.numeric(Sys.time()); (current - current %% 10) %/% 10 })
-#' memA3(2)
 #'
-#' # The timeout function is an easy way to do the above.
-#' memA4 <- memoise(a, ~timeout(10))
-#' memA4(2)
+#' # Make a memoized result automatically time out after 10 seconds.
+#' memA3 <- memoise(a, cache = cachem::cache_mem(max_age = 10))
+#' memA3(2)
 #' @importFrom stats setNames
 memoise <- memoize <- function(
   f,
