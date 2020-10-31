@@ -39,6 +39,6 @@ Suggests:
     httr,
     testthat
 Remotes:
-    wch/cachem
+    r-lib/cachem
 Encoding: UTF-8
 RoxygenNote: 7.1.1
