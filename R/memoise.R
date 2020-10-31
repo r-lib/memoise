@@ -201,7 +201,8 @@ memoise <- memoize <- function(
   # Precompute hash of function. This saves work because when this is added to
   # the list of objects to hash, it doesn't need to serialize and hash the
   # entire function. This does not include the environment or source refs.
-  memo_f_env$`_f_hash` <- digest(list(formals(f), body(f)), algo = "sha256")
+  # The as.character() is there to ensure source refs are not included.
+  memo_f_env$`_f_hash` <- digest(list(formals(f), as.character(body(f))), algo = "sha256")
   memo_f_env$`_additional` <- additional
   memo_f_env$`_omit_args` <- omit_args
   memo_f_env$`_algo` <- algo
