@@ -103,6 +103,11 @@
 #' memA(2)  # Still the same outcome
 #' memA2(2) # Different cache, different outcome
 #'
+#' # Multiple memoized functions can share a cache.
+#' cm <- cachem::cache_mem(max_size = 50 * 1024^2)
+#' memA <- memoise(a, cache = cm)
+#' memB <- memoise(b, cache = cm)
+#'
 #' # Don't do the same memoisation assignment twice: a brand-new
 #' # memoised function also means a brand-new cache, and *that*
 #' # you could as easily and more legibly achieve using forget().
