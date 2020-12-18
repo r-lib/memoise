@@ -57,8 +57,8 @@
 #' @param envir Environment of the returned function.
 #' @param cache Cache object. The default is a [cachem::cache_mem()] with a max
 #'   size of 512 MB.
-#' @param algo Hashing algorithm to use for cache keys. This is passed to
-#'   [digest::digest()].
+#' @param hash A function which takes an R object as input and returns a string
+#'   which is used as a cache key.
 #' @param omit_args Names of arguments to ignore when calculating hash.
 #' @seealso \code{\link{forget}}, \code{\link{is.memoised}},
 #'   \code{\link{timeout}}, \url{http://en.wikipedia.org/wiki/Memoization}
@@ -127,7 +127,7 @@ memoise <- memoize <- function(
   envir = environment(f),
   cache = cachem::cache_mem(max_size = 1024 * 1024^2),
   omit_args = c(),
-  algo = "spookyhash")
+  hash = function(x) digest::digest(x, algo = "spookyhash"))
 {
   f_formals <- formals(args(f))
   if(is.memoised(f)) {
@@ -155,22 +155,20 @@ memoise <- memoize <- function(
     args <- c(lapply(called_args, eval, parent.frame()),
               lapply(default_args, eval, envir = environment()))
 
-    # Use getNamespace() instead of `::`, because the latter is slow.
-    hash <- getNamespace("digest")$digest(
+    key <- `_hash`(
       c(
         encl$`_f_hash`,
         args,
         lapply(encl$`_additional`, function(x) eval(x[[2L]], environment(x)))
-      ),
-      algo = encl$`_algo`
+      )
     )
 
-    res <- encl$`_cache`$get(hash)
+    res <- encl$`_cache`$get(key)
     if (inherits(res, "key_missing")) {
       # modify the call to use the original function and evaluate it
       mc[[1L]] <- encl$`_f`
       res <- withVisible(eval(mc, parent.frame()))
-      encl$`_cache`$set(hash, res)
+      encl$`_cache`$set(key, res)
     }
 
     if (res$visible) {
@@ -189,17 +187,14 @@ memoise <- memoize <- function(
 
   # Handle old-style memoise cache objects
   if (is_old_cache(cache)) {
-    algo <- cache
+    # Old-style caches include their own digest algorithm, so use that instead
+    # of whatever is passed in.
+    hash <- cache$digest
     cache <- wrap_old_cache(cache)
-    # Old-style caches include their own digest algorithm, so rewrite
-    #   digest::digest(xx, algo = encl$`_algo`)
-    # to:
-    #   encl$`_cache`$digest(xx)
-    body(memo_f)[[9]][[3]][[1]] <- quote(encl$`_cache`$digest)
-    body(memo_f)[[9]][[3]][[3]] <- NULL
   }
 
   memo_f_env <- new.env(parent = envir)
+  memo_f_env$`_hash` <- hash
   memo_f_env$`_cache` <- cache
   memo_f_env$`_f` <- f
   # Precompute hash of function. This saves work because when this is added to
@@ -209,7 +204,6 @@ memoise <- memoize <- function(
   memo_f_env$`_f_hash` <- digest(list(formals(f), as.character(body(f))), algo = "sha256")
   memo_f_env$`_additional` <- additional
   memo_f_env$`_omit_args` <- omit_args
-  memo_f_env$`_algo` <- algo
   # Formals with a default value
   memo_f_env$`_default_args` <- Filter(function(x) !identical(x, quote(expr = )), f_formals)
 
@@ -320,7 +314,7 @@ has_cache <- function(f) {
   # Modify the function body of the function to simply return TRUE and FALSE
   # rather than get or set the results of the cache
   body <- body(f)
-  body[[11]] <- quote(return(encl$`_cache`$exists(hash)))
+  body[[11]] <- quote(return(encl$`_cache`$exists(key)))
   body(f) <- body
 
   f
@@ -347,8 +341,8 @@ drop_cache <- function(f) {
   # Modify the function body of the function to simply drop the key
   # and return TRUE if successfully removed
   body <- body(f)
-  body[[11]] <- quote(if (encl$`_cache`$exists(hash)) {
-    encl$`_cache`$remove(hash)
+  body[[10]] <- quote(if (encl$`_cache`$exists(key)) {
+    encl$`_cache`$remove(key)
     return(TRUE)
   } else {
     return(FALSE)

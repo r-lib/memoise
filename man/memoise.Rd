@@ -11,7 +11,7 @@ memoise(
   envir = environment(f),
   cache = cachem::cache_mem(max_size = 1024 * 1024^2),
   omit_args = c(),
-  algo = "spookyhash"
+  hash = function(x) digest::digest(x, algo = "spookyhash")
 )
 }
 \arguments{
@@ -27,8 +27,8 @@ size of 512 MB.}
 
 \item{omit_args}{Names of arguments to ignore when calculating hash.}
 
-\item{algo}{Hashing algorithm to use for cache keys. This is passed to
-[digest::digest()].}
+\item{hash}{A function which takes an R object as input and returns a string
+which is used as a cache key.}
 }
 \description{
 \code{mf <- memoise(f)} creates \code{mf}, a memoised copy of
