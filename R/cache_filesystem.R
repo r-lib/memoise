@@ -26,13 +26,13 @@
 #' @export
 #' @inheritParams cache_memory
 cache_filesystem <- function(path, algo = "xxhash64", compress = FALSE) {
-
-  if (!dir.exists(path)) {
-    dir.create(path, showWarnings = FALSE)
-  }
-
+  
   # convert to absolute path so it will work with user working directory changes
   path <- normalizePath(path)
+  
+  if (!dir.exists(path)) {
+    dir.create(path, showWarnings = FALSE, recursive = TRUE)
+  }
 
   cache_reset <- function() {
     cache_files <- list.files(path, full.names = TRUE)
