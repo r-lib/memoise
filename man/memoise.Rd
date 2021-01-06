@@ -23,7 +23,7 @@ caching, specified as one-sided formulas (no LHS). See Examples for usage.}
 \item{envir}{Environment of the returned function.}
 
 \item{cache}{Cache object. The default is a [cachem::cache_mem()] with a max
-size of 512 MB.}
+size of 1024 MB.}
 
 \item{omit_args}{Names of arguments to ignore when calculating hash.}
 

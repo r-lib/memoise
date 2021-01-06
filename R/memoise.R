@@ -56,7 +56,7 @@
 #'   caching, specified as one-sided formulas (no LHS). See Examples for usage.
 #' @param envir Environment of the returned function.
 #' @param cache Cache object. The default is a [cachem::cache_mem()] with a max
-#'   size of 512 MB.
+#'   size of 1024 MB.
 #' @param hash A function which takes an R object as input and returns a string
 #'   which is used as a cache key.
 #' @param omit_args Names of arguments to ignore when calculating hash.
