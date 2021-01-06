@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Memoise a function. — memoise • memoise</title>
+<title>Memoise a function — memoise • memoise</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="Memoise a function. — memoise" />
+<meta property="og:title" content="Memoise a function — memoise" />
 <meta property="og:description" content="mf &amp;lt;- memoise(f) creates mf, a memoised copy of
 f. A memoised copy is basically a
 lazier version of the same function: it saves the answers of
@@ -76,7 +76,7 @@ circumstances, this can provide a very nice speedup indeed." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">memoise</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0.9001</span>
       </span>
     </div>
 
@@ -115,7 +115,7 @@ circumstances, this can provide a very nice speedup indeed." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Memoise a function.</h1>
+    <h1>Memoise a function</h1>
     <small class="dont-index">Source: <a href='https://github.com/r-lib/memoise/blob/master/R/memoise.R'><code>R/memoise.R</code></a></small>
     <div class="hidden name"><code>memoise.Rd</code></div>
     </div>
@@ -132,8 +132,9 @@ circumstances, this can provide a very nice speedup indeed.</p>
   <span class='va'>f</span>,
   <span class='va'>...</span>,
   envir <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/environment.html'>environment</a></span><span class='op'>(</span><span class='va'>f</span><span class='op'>)</span>,
-  cache <span class='op'>=</span> <span class='fu'><a href='cache_memory.html'>cache_memory</a></span><span class='op'>(</span><span class='op'>)</span>,
-  omit_args <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='op'>)</span>
+  cache <span class='op'>=</span> <span class='fu'>cachem</span><span class='fu'>::</span><span class='fu'><a href='https://r-lib.github.io/cachem/reference/cache_mem.html'>cache_mem</a></span><span class='op'>(</span>max_size <span class='op'>=</span> <span class='fl'>1024</span> <span class='op'>*</span> <span class='fl'>1024</span><span class='op'>^</span><span class='fl'>2</span><span class='op'>)</span>,
+  omit_args <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='op'>)</span>,
+  hash <span class='op'>=</span> <span class='fu'>rlang</span><span class='fu'>::</span><span class='va'><a href='https://rlang.r-lib.org/reference/hash.html'>hash</a></span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -154,11 +155,17 @@ caching, specified as one-sided formulas (no LHS). See Examples for usage.</p></
     </tr>
     <tr>
       <th>cache</th>
-      <td><p>Cache function.</p></td>
+      <td><p>Cache object. The default is a [cachem::cache_mem()] with a max
+size of 1024 MB.</p></td>
     </tr>
     <tr>
       <th>omit_args</th>
       <td><p>Names of arguments to ignore when calculating hash.</p></td>
+    </tr>
+    <tr>
+      <th>hash</th>
+      <td><p>A function which takes an R object as input and returns a string
+which is used as a cache key.</p></td>
     </tr>
     </table>
 
@@ -263,21 +270,23 @@ but when the package is loaded. The simplest way to do this is within
 <span class='fu'>memA</span><span class='op'>(</span><span class='fl'>2</span><span class='op'>)</span>  <span class='co'># Still the same outcome</span>
 </div><div class='output co'>#&gt; [1] 0.03424133 0.32038573</div><div class='input'><span class='fu'>memA2</span><span class='op'>(</span><span class='fl'>2</span><span class='op'>)</span> <span class='co'># Different cache, different outcome</span>
 </div><div class='output co'>#&gt; [1] 0.5302125 0.6958239</div><div class='input'>
+<span class='co'># Multiple memoized functions can share a cache.</span>
+<span class='va'>cm</span> <span class='op'>&lt;-</span> <span class='fu'>cachem</span><span class='fu'>::</span><span class='fu'><a href='https://r-lib.github.io/cachem/reference/cache_mem.html'>cache_mem</a></span><span class='op'>(</span>max_size <span class='op'>=</span> <span class='fl'>50</span> <span class='op'>*</span> <span class='fl'>1024</span><span class='op'>^</span><span class='fl'>2</span><span class='op'>)</span>
+<span class='va'>memA</span> <span class='op'>&lt;-</span> <span class='fu'>memoise</span><span class='op'>(</span><span class='va'>a</span>, cache <span class='op'>=</span> <span class='va'>cm</span><span class='op'>)</span>
+<span class='va'>memB</span> <span class='op'>&lt;-</span> <span class='fu'>memoise</span><span class='op'>(</span><span class='va'>b</span>, cache <span class='op'>=</span> <span class='va'>cm</span><span class='op'>)</span>
+
 <span class='co'># Don't do the same memoisation assignment twice: a brand-new</span>
 <span class='co'># memoised function also means a brand-new cache, and *that*</span>
 <span class='co'># you could as easily and more legibly achieve using forget().</span>
 <span class='co'># (If you're not sure whether you already memoised something,</span>
 <span class='co'>#  use is.memoised() to check.)</span>
 <span class='fu'>memA</span><span class='op'>(</span><span class='fl'>2</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] 0.03424133 0.32038573</div><div class='input'><span class='va'>memA</span> <span class='op'>&lt;-</span> <span class='fu'>memoise</span><span class='op'>(</span><span class='va'>a</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 0.68855600 0.03123033</div><div class='input'><span class='va'>memA</span> <span class='op'>&lt;-</span> <span class='fu'>memoise</span><span class='op'>(</span><span class='va'>a</span><span class='op'>)</span>
 <span class='fu'>memA</span><span class='op'>(</span><span class='fl'>2</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] 0.68855600 0.03123033</div><div class='input'><span class='co'># Making a memoized automatically time out after 10 seconds.</span>
-<span class='va'>memA3</span> <span class='op'>&lt;-</span> <span class='fu'>memoise</span><span class='op'>(</span><span class='va'>a</span>, <span class='op'>~</span><span class='op'>{</span><span class='va'>current</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>as.numeric</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.time</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>; <span class='op'>(</span><span class='va'>current</span> <span class='op'>-</span> <span class='va'>current</span> <span class='op'>%%</span> <span class='fl'>10</span><span class='op'>)</span> <span class='op'>%/%</span> <span class='fl'>10</span> <span class='op'>}</span><span class='op'>)</span>
-<span class='fu'>memA3</span><span class='op'>(</span><span class='fl'>2</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [1] 0.2255625 0.3008308</div><div class='input'>
-<span class='co'># The timeout function is an easy way to do the above.</span>
-<span class='va'>memA4</span> <span class='op'>&lt;-</span> <span class='fu'>memoise</span><span class='op'>(</span><span class='va'>a</span>, <span class='op'>~</span><span class='fu'><a href='timeout.html'>timeout</a></span><span class='op'>(</span><span class='fl'>10</span><span class='op'>)</span><span class='op'>)</span>
-<span class='fu'>memA4</span><span class='op'>(</span><span class='fl'>2</span><span class='op'>)</span>
+<span class='co'># Make a memoized result automatically time out after 10 seconds.</span>
+<span class='va'>memA3</span> <span class='op'>&lt;-</span> <span class='fu'>memoise</span><span class='op'>(</span><span class='va'>a</span>, cache <span class='op'>=</span> <span class='fu'>cachem</span><span class='fu'>::</span><span class='fu'><a href='https://r-lib.github.io/cachem/reference/cache_mem.html'>cache_mem</a></span><span class='op'>(</span>max_age <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'>memA3</span><span class='op'>(</span><span class='fl'>2</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [1] 0.6364656 0.4790245</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -290,7 +299,7 @@ but when the package is loaded. The simplest way to do this is within
 
       <footer>
       <div class="copyright">
-  <p>Developed by <a href='http://hadley.nz'>Hadley Wickham</a>, Jim Hester, Kirill Müller, Daniel Cook.</p>
+  <p>Developed by <a href='http://hadley.nz'>Hadley Wickham</a>, Jim Hester, Winston Chang, Kirill Müller, Daniel Cook.</p>
 </div>
 
 <div class="pkgdown">

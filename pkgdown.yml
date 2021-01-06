@@ -2,7 +2,7 @@ pandoc: 2.7.3
 pkgdown: 1.6.1
 pkgdown_sha: ~
 articles: {}
-last_built: 2021-01-06T15:27Z
+last_built: 2021-01-06T17:21Z
 urls:
   reference: https://memoise.r-lib.org/reference
   article: https://memoise.r-lib.org/articles
