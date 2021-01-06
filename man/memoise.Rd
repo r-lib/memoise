@@ -11,7 +11,7 @@ memoise(
   envir = environment(f),
   cache = cachem::cache_mem(max_size = 1024 * 1024^2),
   omit_args = c(),
-  hash = function(x) digest::digest(x, algo = "spookyhash")
+  hash = rlang::hash
 )
 }
 \arguments{

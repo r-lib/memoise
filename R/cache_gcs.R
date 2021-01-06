@@ -22,6 +22,7 @@
 cache_gcs <- function(cache_name = googleCloudStorageR::gcs_get_global_bucket(),
                       algo = "sha512", compress = FALSE) {
 
+  if (!(requireNamespace("digest"))) { stop("Package `digest` must be installed for `cache_gcs()`.") } # nocov
   if (!(requireNamespace("googleCloudStorageR"))) { stop("Package `googleCloudStorageR` must be installed for `cache_gcs()`.") } # nocov
 
   path <- tempfile("memoise-")

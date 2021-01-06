@@ -64,7 +64,6 @@
 #'   \code{\link{timeout}}, \url{http://en.wikipedia.org/wiki/Memoization}
 #' @aliases memoise memoize
 #' @export memoise memoize
-#' @importFrom digest digest
 #' @examples
 #' # a() is evaluated anew each time. memA() is only re-evaluated
 #' # when you call it with a new set of parameters.
@@ -127,7 +126,7 @@ memoise <- memoize <- function(
   envir = environment(f),
   cache = cachem::cache_mem(max_size = 1024 * 1024^2),
   omit_args = c(),
-  hash = function(x) digest::digest(x, algo = "spookyhash"))
+  hash = rlang::hash)
 {
   f_formals <- formals(args(f))
   if(is.memoised(f)) {
@@ -201,7 +200,7 @@ memoise <- memoize <- function(
   # the list of objects to hash, it doesn't need to serialize and hash the
   # entire function. This does not include the environment or source refs.
   # The as.character() is there to ensure source refs are not included.
-  memo_f_env$`_f_hash` <- digest(list(formals(f), as.character(body(f))), algo = "sha256")
+  memo_f_env$`_f_hash` <- rlang::hash(list(formals(f), as.character(body(f))))
   memo_f_env$`_additional` <- additional
   memo_f_env$`_omit_args` <- omit_args
   # Formals with a default value

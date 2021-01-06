@@ -26,6 +26,7 @@
 #' @export
 #' @inheritParams cache_memory
 cache_filesystem <- function(path, algo = "xxhash64", compress = FALSE) {
+  if (!(requireNamespace("digest"))) { stop("Package `digest` must be installed for `cache_filesystem()`.") } # nocov
 
   if (!dir.exists(path)) {
     dir.create(path, showWarnings = FALSE)

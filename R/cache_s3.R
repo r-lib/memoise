@@ -22,6 +22,7 @@
 
 cache_s3 <- function(cache_name, algo = "sha512", compress = FALSE) {
 
+  if (!(requireNamespace("digest"))) { stop("Package `digest` must be installed for `cache_s3()`.") } # nocov
   if (!(requireNamespace("aws.s3"))) { stop("Package `aws.s3` must be installed for `cache_s3()`.") } # nocov
 
   if (!(aws.s3::bucket_exists(cache_name))) {
