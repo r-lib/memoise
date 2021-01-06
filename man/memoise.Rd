@@ -3,14 +3,15 @@
 \name{memoise}
 \alias{memoise}
 \alias{memoize}
-\title{Memoise a function.}
+\title{Memoise a function}
 \usage{
 memoise(
   f,
   ...,
   envir = environment(f),
-  cache = cache_memory(),
-  omit_args = c()
+  cache = cachem::cache_mem(max_size = 1024 * 1024^2),
+  omit_args = c(),
+  hash = rlang::hash
 )
 }
 \arguments{
@@ -21,9 +22,13 @@ caching, specified as one-sided formulas (no LHS). See Examples for usage.}
 
 \item{envir}{Environment of the returned function.}
 
-\item{cache}{Cache function.}
+\item{cache}{Cache object. The default is a [cachem::cache_mem()] with a max
+size of 1024 MB.}
 
 \item{omit_args}{Names of arguments to ignore when calculating hash.}
+
+\item{hash}{A function which takes an R object as input and returns a string
+which is used as a cache key.}
 }
 \description{
 \code{mf <- memoise(f)} creates \code{mf}, a memoised copy of
@@ -116,6 +121,11 @@ memA2 <- memoise(a)
 memA(2)  # Still the same outcome
 memA2(2) # Different cache, different outcome
 
+# Multiple memoized functions can share a cache.
+cm <- cachem::cache_mem(max_size = 50 * 1024^2)
+memA <- memoise(a, cache = cm)
+memB <- memoise(b, cache = cm)
+
 # Don't do the same memoisation assignment twice: a brand-new
 # memoised function also means a brand-new cache, and *that*
 # you could as easily and more legibly achieve using forget().
@@ -124,13 +134,10 @@ memA2(2) # Different cache, different outcome
 memA(2)
 memA <- memoise(a)
 memA(2)
-# Making a memoized automatically time out after 10 seconds.
-memA3 <- memoise(a, ~{current <- as.numeric(Sys.time()); (current - current \%\% 10) \%/\% 10 })
-memA3(2)
 
-# The timeout function is an easy way to do the above.
-memA4 <- memoise(a, ~timeout(10))
-memA4(2)
+# Make a memoized result automatically time out after 10 seconds.
+memA3 <- memoise(a, cache = cachem::cache_mem(max_age = 10))
+memA3(2)
 }
 \seealso{
 \code{\link{forget}}, \code{\link{is.memoised}},

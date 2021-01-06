@@ -22,6 +22,7 @@
 
 cache_s3 <- function(cache_name, algo = "sha512", compress = FALSE) {
 
+  if (!(requireNamespace("digest"))) { stop("Package `digest` must be installed for `cache_s3()`.") } # nocov
   if (!(requireNamespace("aws.s3"))) { stop("Package `aws.s3` must be installed for `cache_s3()`.") } # nocov
 
   if (!(aws.s3::bucket_exists(cache_name))) {
@@ -61,7 +62,7 @@ cache_s3 <- function(cache_name, algo = "sha512", compress = FALSE) {
 
   cache_keys <- function() {
     items <- lapply(aws.s3::get_bucket(bucket = cache_name), `[[`, "Key")
-    unlist(Filter(Negate(is.null), items))
+    as.character(unlist(Filter(Negate(is.null), items)))
   }
 
   list(

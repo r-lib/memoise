@@ -1,3 +1,5 @@
+#' Memoise a function
+#'
 #' \code{mf <- memoise(f)} creates \code{mf}, a memoised copy of
 #' \code{f}. A memoised copy is basically a
 #' lazier version of the same function: it saves the answers of
@@ -49,18 +51,19 @@
 #' }
 #' }
 #' @name memoise
-#' @title Memoise a function.
 #' @param f     Function of which to create a memoised copy.
 #' @param ... optional variables to use as additional restrictions on
 #'   caching, specified as one-sided formulas (no LHS). See Examples for usage.
 #' @param envir Environment of the returned function.
-#' @param cache Cache function.
+#' @param cache Cache object. The default is a [cachem::cache_mem()] with a max
+#'   size of 1024 MB.
+#' @param hash A function which takes an R object as input and returns a string
+#'   which is used as a cache key.
 #' @param omit_args Names of arguments to ignore when calculating hash.
 #' @seealso \code{\link{forget}}, \code{\link{is.memoised}},
 #'   \code{\link{timeout}}, \url{http://en.wikipedia.org/wiki/Memoization}
 #' @aliases memoise memoize
 #' @export memoise memoize
-#' @importFrom digest digest
 #' @examples
 #' # a() is evaluated anew each time. memA() is only re-evaluated
 #' # when you call it with a new set of parameters.
@@ -99,6 +102,11 @@
 #' memA(2)  # Still the same outcome
 #' memA2(2) # Different cache, different outcome
 #'
+#' # Multiple memoized functions can share a cache.
+#' cm <- cachem::cache_mem(max_size = 50 * 1024^2)
+#' memA <- memoise(a, cache = cm)
+#' memB <- memoise(b, cache = cm)
+#'
 #' # Don't do the same memoisation assignment twice: a brand-new
 #' # memoised function also means a brand-new cache, and *that*
 #' # you could as easily and more legibly achieve using forget().
@@ -107,15 +115,19 @@
 #' memA(2)
 #' memA <- memoise(a)
 #' memA(2)
-#' # Making a memoized automatically time out after 10 seconds.
-#' memA3 <- memoise(a, ~{current <- as.numeric(Sys.time()); (current - current %% 10) %/% 10 })
-#' memA3(2)
 #'
-#' # The timeout function is an easy way to do the above.
-#' memA4 <- memoise(a, ~timeout(10))
-#' memA4(2)
+#' # Make a memoized result automatically time out after 10 seconds.
+#' memA3 <- memoise(a, cache = cachem::cache_mem(max_age = 10))
+#' memA3(2)
 #' @importFrom stats setNames
-memoise <- memoize <- function(f, ..., envir = environment(f), cache = cache_memory(), omit_args = c()) {
+memoise <- memoize <- function(
+  f,
+  ...,
+  envir = environment(f),
+  cache = cachem::cache_mem(max_size = 1024 * 1024^2),
+  omit_args = c(),
+  hash = rlang::hash)
+{
   f_formals <- formals(args(f))
   if(is.memoised(f)) {
     stop("`f` must not be memoised.", call. = FALSE)
@@ -130,7 +142,7 @@ memoise <- memoize <- function(f, ..., envir = environment(f), cache = cache_mem
     called_args <- as.list(mc)[-1]
 
     # Formals with a default
-    default_args <- Filter(function(x) !identical(x, quote(expr = )), as.list(formals()))
+    default_args <- encl$`_default_args`
 
     # That has not been called
     default_args <- default_args[setdiff(names(default_args), names(called_args))]
@@ -142,18 +154,20 @@ memoise <- memoize <- function(f, ..., envir = environment(f), cache = cache_mem
     args <- c(lapply(called_args, eval, parent.frame()),
               lapply(default_args, eval, envir = environment()))
 
-    hash <- encl$`_cache`$digest(
-      c(as.character(body(encl$`_f`)), args,
-        lapply(encl$`_additional`, function(x) eval(x[[2L]], environment(x))))
+    key <- `_hash`(
+      c(
+        encl$`_f_hash`,
+        args,
+        lapply(encl$`_additional`, function(x) eval(x[[2L]], environment(x)))
+      )
     )
 
-    if (encl$`_cache`$has_key(hash)) {
-      res <- encl$`_cache`$get(hash)
-    } else {
+    res <- encl$`_cache`$get(key)
+    if (inherits(res, "key_missing")) {
       # modify the call to use the original function and evaluate it
       mc[[1L]] <- encl$`_f`
       res <- withVisible(eval(mc, parent.frame()))
-      encl$`_cache`$set(hash, res)
+      encl$`_cache`$set(key, res)
     }
 
     if (res$visible) {
@@ -170,11 +184,28 @@ memoise <- memoize <- function(f, ..., envir = environment(f), cache = cache_mem
      envir <- baseenv()
   }
 
+  # Handle old-style memoise cache objects
+  if (is_old_cache(cache)) {
+    # Old-style caches include their own digest algorithm, so use that instead
+    # of whatever is passed in.
+    hash <- cache$digest
+    cache <- wrap_old_cache(cache)
+  }
+
   memo_f_env <- new.env(parent = envir)
+  memo_f_env$`_hash` <- hash
   memo_f_env$`_cache` <- cache
   memo_f_env$`_f` <- f
+  # Precompute hash of function. This saves work because when this is added to
+  # the list of objects to hash, it doesn't need to serialize and hash the
+  # entire function. This does not include the environment or source refs.
+  # The as.character() is there to ensure source refs are not included.
+  memo_f_env$`_f_hash` <- rlang::hash(list(formals(f), as.character(body(f))))
   memo_f_env$`_additional` <- additional
   memo_f_env$`_omit_args` <- omit_args
+  # Formals with a default value
+  memo_f_env$`_default_args` <- Filter(function(x) !identical(x, quote(expr = )), f_formals)
+
   environment(memo_f) <- memo_f_env
 
   class(memo_f) <- c("memoised", "function")
@@ -282,7 +313,7 @@ has_cache <- function(f) {
   # Modify the function body of the function to simply return TRUE and FALSE
   # rather than get or set the results of the cache
   body <- body(f)
-  body[[10]] <- quote(if (encl$`_cache`$has_key(hash)) return(TRUE) else return(FALSE))
+  body[[11]] <- quote(return(encl$`_cache`$exists(key)))
   body(f) <- body
 
   f
@@ -309,8 +340,8 @@ drop_cache <- function(f) {
   # Modify the function body of the function to simply drop the key
   # and return TRUE if successfully removed
   body <- body(f)
-  body[[10]] <- quote(if (encl$`_cache`$has_key(hash)) {
-    encl$`_cache`$drop_key(hash)
+  body[[10]] <- quote(if (encl$`_cache`$exists(key)) {
+    encl$`_cache`$remove(key)
     return(TRUE)
   } else {
     return(FALSE)

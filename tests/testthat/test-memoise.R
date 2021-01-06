@@ -111,6 +111,69 @@ test_that("symbol collision", {
   expect_equal(cachem(), 5)
 })
 
+test_that("different body avoids collisions", {
+  # Same args, different body
+  m <- cachem::cache_mem()
+  times2 <- memoise(function(x) { x * 2 }, cache = m)
+  times4 <- memoise(function(x) { x * 4 }, cache = m)
+
+  expect_identical(times2(10), 20)
+  expect_equal(m$size(), 1)
+  expect_identical(times4(10), 40)
+  expect_equal(m$size(), 2)
+})
+
+test_that("different formals avoids collisions", {
+  # Different formals (even if not used) avoid collisions, because formals
+  # are used in key.
+  m <- cachem::cache_mem()
+  f <- function(x, y) { x * 2 }
+  times2  <- memoise(function(x, y) { x * 2 }, cache = m)
+  times2a <- memoise(function(x, y = 1) { x * 2 }, cache = m)
+
+  expect_identical(times2(10),  20)
+  expect_equal(m$size(), 1)
+  expect_identical(times2a(10), 20)
+  expect_equal(m$size(), 2)
+})
+
+test_that("same body results in collisions", {
+  # Two identical memoised functions should result in cache hits so that cache
+  # can be shared more easily.
+  # https://github.com/r-lib/memoise/issues/58
+  m <- cachem::cache_mem()
+  times2  <- memoise(function(x, y) { x * 2 }, cache = m)
+  times2a <- memoise(function(x, y) { x * 2 }, cache = m)
+
+  expect_identical(times2(10),  20)
+  expect_identical(times2a(10), 20)
+  expect_equal(m$size(), 1)
+})
+
+test_that("same body results in collisions", {
+  # Even though t2 and t4 produce different results, the memoised versions,
+  # times2 and times4, have cache collisions because the functions have the same
+  # body and formals. It would be nice if we could somehow avoid this.
+  m <- cachem::cache_mem()
+
+  t2 <- local({
+    n <- 2
+    function(x) x * n
+  })
+  t4 <- local({
+    n <- 4
+    function(x) x * n
+  })
+
+  times2 <- memoise(t2, cache = m)
+  times4 <- memoise(t4, cache = m)
+
+  expect_identical(times2(10),  20)
+  expect_identical(times4(10), 20)  # Bad (but expected) cache collision!
+  expect_equal(m$size(), 1)
+})
+
+
 test_that("visibility", {
   vis <- function() NULL
   invis <- function() invisible()

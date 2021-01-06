@@ -5,6 +5,7 @@
 #' \code{\link[digest]{digest}} for available algorithms.
 #' @export
 cache_memory <- function(algo = "sha512") {
+  if (!(requireNamespace("digest"))) { stop("Package `digest` must be installed for `cache_memory()`.") } # nocov
 
   cache <- NULL
   cache_reset <- function() {
