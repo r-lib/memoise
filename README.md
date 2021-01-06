@@ -8,9 +8,9 @@
 [![CRAN
 status](https://www.r-pkg.org/badges/version/memoise)](https://CRAN.R-project.org/package=memoise)
 [![R build
-status](https://github.com/hadley/memoise/workflows/R-CMD-check/badge.svg)](https://github.com/hadley/memoise/actions)
+status](https://github.com/r-lib/memoise/workflows/R-CMD-check/badge.svg)](https://github.com/r-lib/memoise/actions)
 [![Codecov test
-coverage](https://codecov.io/gh/hadley/memoise/branch/master/graph/badge.svg)](https://codecov.io/gh/hadley/memoise?branch=master)
+coverage](https://codecov.io/gh/r-lib/memoise/branch/master/graph/badge.svg)](https://codecov.io/gh/r-lib/memoise?branch=master)
 <!-- badges: end -->
 
 The memoise package makes it easy to memoise R functions.
