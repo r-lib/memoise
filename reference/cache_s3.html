@@ -83,7 +83,7 @@ Amazon Web Services S3 backed cache, for remote caching." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -97,7 +97,7 @@ Amazon Web Services S3 backed cache, for remote caching." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/r-lib/memoise/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -125,7 +125,7 @@ Amazon Web Services S3 backed cache, for remote caching.</h1>
 Amazon Web Services S3 backed cache, for remote caching.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cache_s3</span>(<span class='no'>cache_name</span>, <span class='kw'>algo</span> <span class='kw'>=</span> <span class='st'>"sha512"</span>, <span class='kw'>compress</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>cache_s3</span><span class='op'>(</span><span class='va'>cache_name</span>, algo <span class='op'>=</span> <span class='st'>"sha512"</span>, compress <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -149,15 +149,18 @@ Amazon Web Services S3 backed cache, for remote caching.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 <span class='co'># Set AWS credentials.</span>
-<span class='fu'><a href='https://rdrr.io/r/base/Sys.setenv.html'>Sys.setenv</a></span>(<span class='st'>"AWS_ACCESS_KEY_ID"</span> <span class='kw'>=</span> <span class='st'>"&lt;access key&gt;"</span>,
-           <span class='st'>"AWS_SECRET_ACCESS_KEY"</span> <span class='kw'>=</span> <span class='st'>"&lt;access secret&gt;"</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/Sys.setenv.html'>Sys.setenv</a></span><span class='op'>(</span><span class='st'>"AWS_ACCESS_KEY_ID"</span> <span class='op'>=</span> <span class='st'>"&lt;access key&gt;"</span>,
+           <span class='st'>"AWS_SECRET_ACCESS_KEY"</span> <span class='op'>=</span> <span class='st'>"&lt;access secret&gt;"</span><span class='op'>)</span>
 
 <span class='co'># Set up a unique bucket name.</span>
-<span class='no'>s3</span> <span class='kw'>&lt;-</span> <span class='fu'>cache_s3</span>(<span class='st'>"unique-bucket-name"</span>)
-<span class='no'>mem_runif</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='memoise.html'>memoise</a></span>(<span class='no'>runif</span>, <span class='kw'>cache</span> <span class='kw'>=</span> <span class='no'>s3</span>)
-}</div></pre>
+<span class='va'>s3</span> <span class='op'>&lt;-</span> <span class='fu'>cache_s3</span><span class='op'>(</span><span class='st'>"unique-bucket-name"</span><span class='op'>)</span>
+<span class='va'>mem_runif</span> <span class='op'>&lt;-</span> <span class='fu'><a href='memoise.html'>memoise</a></span><span class='op'>(</span><span class='va'>runif</span>, cache <span class='op'>=</span> <span class='va'>s3</span><span class='op'>)</span>
+<span class='op'>}</span>
+
+
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -173,7 +176,7 @@ Amazon Web Services S3 backed cache, for remote caching.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

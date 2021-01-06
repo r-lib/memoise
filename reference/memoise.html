@@ -84,7 +84,7 @@ circumstances, this can provide a very nice speedup indeed." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -98,7 +98,7 @@ circumstances, this can provide a very nice speedup indeed." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/r-lib/memoise/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -128,13 +128,13 @@ new invocations, and re-uses the answers of old ones. Under the right
 circumstances, this can provide a very nice speedup indeed.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>memoise</span>(
-  <span class='no'>f</span>,
-  <span class='no'>...</span>,
-  <span class='kw'>envir</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/environment.html'>environment</a></span>(<span class='no'>f</span>),
-  <span class='kw'>cache</span> <span class='kw'>=</span> <span class='fu'><a href='cache_memory.html'>cache_memory</a></span>(),
-  <span class='kw'>omit_args</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>()
-)</pre>
+    <pre class="usage"><span class='fu'>memoise</span><span class='op'>(</span>
+  <span class='va'>f</span>,
+  <span class='va'>...</span>,
+  envir <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/environment.html'>environment</a></span><span class='op'>(</span><span class='va'>f</span><span class='op'>)</span>,
+  cache <span class='op'>=</span> <span class='fu'><a href='cache_memory.html'>cache_memory</a></span><span class='op'>(</span><span class='op'>)</span>,
+  omit_args <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -195,15 +195,15 @@ but when the package is loaded. The simplest way to do this is within
 <code><a href='https://rdrr.io/r/base/ns-hooks.html'>.onLoad()</a></code> with, for example</p>
 
 <pre>
-# file.R
-fun &amp;lt;- function() {
- some_expensive_process()
-}
+<span class='co'># file.R</span>
+<span class='va'>fun</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='op'>)</span> <span class='op'>{</span>
+ <span class='fu'>some_expensive_process</span><span class='op'>(</span><span class='op'>)</span>
+<span class='op'>}</span>
 
-# zzz.R
-.onLoad &amp;lt;- function(libname, pkgname) {
- fun &amp;lt;&amp;lt;- memoise::memoise(fun)
-}
+<span class='co'># zzz.R</span>
+<span class='va'>.onLoad</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>libname</span>, <span class='va'>pkgname</span><span class='op'>)</span> <span class='op'>{</span>
+ <span class='va'>fun</span> <span class='op'>&lt;&lt;-</span> <span class='fu'>memoise</span><span class='fu'>::</span><span class='fu'>memoise</span><span class='op'>(</span><span class='va'>fun</span><span class='op'>)</span>
+<span class='op'>}</span>
 </pre>
 
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
@@ -214,29 +214,39 @@ fun &amp;lt;- function() {
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># a() is evaluated anew each time. memA() is only re-evaluated</span>
 <span class='co'># when you call it with a new set of parameters.</span>
-<span class='no'>a</span> <span class='kw'>&lt;-</span> <span class='kw'>function</span>(<span class='no'>n</span>) { <span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span>(<span class='no'>n</span>) }
-<span class='no'>memA</span> <span class='kw'>&lt;-</span> <span class='fu'>memoise</span>(<span class='no'>a</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>replicate</a></span>(<span class='fl'>5</span>, <span class='fu'>a</span>(<span class='fl'>2</span>))</div><div class='output co'>#&gt;           [,1]        [,2]      [,3]      [,4]      [,5]
+<span class='va'>a</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>n</span><span class='op'>)</span> <span class='op'>{</span> <span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span><span class='op'>(</span><span class='va'>n</span><span class='op'>)</span> <span class='op'>}</span>
+<span class='va'>memA</span> <span class='op'>&lt;-</span> <span class='fu'>memoise</span><span class='op'>(</span><span class='va'>a</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>replicate</a></span><span class='op'>(</span><span class='fl'>5</span>, <span class='fu'>a</span><span class='op'>(</span><span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;           [,1]        [,2]      [,3]      [,4]      [,5]
 #&gt; [1,] 0.6007609 0.007399441 0.4977774 0.7328820 0.8746007
-#&gt; [2,] 0.1572084 0.466393497 0.2897672 0.7725215 0.1749406</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>replicate</a></span>(<span class='fl'>5</span>, <span class='fu'>memA</span>(<span class='fl'>2</span>))</div><div class='output co'>#&gt;            [,1]       [,2]       [,3]       [,4]       [,5]
+#&gt; [2,] 0.1572084 0.466393497 0.2897672 0.7725215 0.1749406</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>replicate</a></span><span class='op'>(</span><span class='fl'>5</span>, <span class='fu'>memA</span><span class='op'>(</span><span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;            [,1]       [,2]       [,3]       [,4]       [,5]
 #&gt; [1,] 0.03424133 0.03424133 0.03424133 0.03424133 0.03424133
 #&gt; [2,] 0.32038573 0.32038573 0.32038573 0.32038573 0.32038573</div><div class='input'>
 <span class='co'># Caching is done based on parameters' value, so same-name-but-</span>
 <span class='co'># changed-value correctly produces two different outcomes...</span>
-<span class='no'>N</span> <span class='kw'>&lt;-</span> <span class='fl'>4</span>; <span class='fu'>memA</span>(<span class='no'>N</span>)</div><div class='output co'>#&gt; [1] 0.40232824 0.19566983 0.40353812 0.06366146</div><div class='input'><span class='no'>N</span> <span class='kw'>&lt;-</span> <span class='fl'>5</span>; <span class='fu'>memA</span>(<span class='no'>N</span>)</div><div class='output co'>#&gt; [1] 0.3887013 0.9755478 0.2898923 0.6783804 0.7353196</div><div class='input'><span class='co'># ... and same-value-but-different-name correctly produces</span>
+<span class='va'>N</span> <span class='op'>&lt;-</span> <span class='fl'>4</span>; <span class='fu'>memA</span><span class='op'>(</span><span class='va'>N</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 0.40232824 0.19566983 0.40353812 0.06366146</div><div class='input'><span class='va'>N</span> <span class='op'>&lt;-</span> <span class='fl'>5</span>; <span class='fu'>memA</span><span class='op'>(</span><span class='va'>N</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 0.3887013 0.9755478 0.2898923 0.6783804 0.7353196</div><div class='input'><span class='co'># ... and same-value-but-different-name correctly produces</span>
 <span class='co'>#     the same cached outcome.</span>
-<span class='no'>N</span> <span class='kw'>&lt;-</span> <span class='fl'>4</span>; <span class='fu'>memA</span>(<span class='no'>N</span>)</div><div class='output co'>#&gt; [1] 0.40232824 0.19566983 0.40353812 0.06366146</div><div class='input'><span class='no'>N2</span> <span class='kw'>&lt;-</span> <span class='fl'>4</span>; <span class='fu'>memA</span>(<span class='no'>N2</span>)</div><div class='output co'>#&gt; [1] 0.40232824 0.19566983 0.40353812 0.06366146</div><div class='input'>
+<span class='va'>N</span> <span class='op'>&lt;-</span> <span class='fl'>4</span>; <span class='fu'>memA</span><span class='op'>(</span><span class='va'>N</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 0.40232824 0.19566983 0.40353812 0.06366146</div><div class='input'><span class='va'>N2</span> <span class='op'>&lt;-</span> <span class='fl'>4</span>; <span class='fu'>memA</span><span class='op'>(</span><span class='va'>N2</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 0.40232824 0.19566983 0.40353812 0.06366146</div><div class='input'>
 <span class='co'># memoise() knows about default parameters.</span>
-<span class='no'>b</span> <span class='kw'>&lt;-</span> <span class='kw'>function</span>(<span class='no'>n</span>, <span class='no'>dummy</span><span class='kw'>=</span><span class='st'>"a"</span>) { <span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span>(<span class='no'>n</span>) }
-<span class='no'>memB</span> <span class='kw'>&lt;-</span> <span class='fu'>memoise</span>(<span class='no'>b</span>)
-<span class='fu'>memB</span>(<span class='fl'>2</span>)</div><div class='output co'>#&gt; [1] 0.1959567 0.9805397</div><div class='input'><span class='fu'>memB</span>(<span class='fl'>2</span>, <span class='kw'>dummy</span><span class='kw'>=</span><span class='st'>"a"</span>)</div><div class='output co'>#&gt; [1] 0.1959567 0.9805397</div><div class='input'><span class='co'># This works, because the interface of the memoised function is the same as</span>
+<span class='va'>b</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>n</span>, <span class='va'>dummy</span><span class='op'>=</span><span class='st'>"a"</span><span class='op'>)</span> <span class='op'>{</span> <span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span><span class='op'>(</span><span class='va'>n</span><span class='op'>)</span> <span class='op'>}</span>
+<span class='va'>memB</span> <span class='op'>&lt;-</span> <span class='fu'>memoise</span><span class='op'>(</span><span class='va'>b</span><span class='op'>)</span>
+<span class='fu'>memB</span><span class='op'>(</span><span class='fl'>2</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 0.1959567 0.9805397</div><div class='input'><span class='fu'>memB</span><span class='op'>(</span><span class='fl'>2</span>, dummy<span class='op'>=</span><span class='st'>"a"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 0.1959567 0.9805397</div><div class='input'><span class='co'># This works, because the interface of the memoised function is the same as</span>
 <span class='co'># that of the original function.</span>
-<span class='fu'><a href='https://rdrr.io/r/base/formals.html'>formals</a></span>(<span class='no'>b</span>)</div><div class='output co'>#&gt; $n
+<span class='fu'><a href='https://rdrr.io/r/base/formals.html'>formals</a></span><span class='op'>(</span><span class='va'>b</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; $n
 #&gt; 
 #&gt; 
 #&gt; $dummy
 #&gt; [1] "a"
-#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/formals.html'>formals</a></span>(<span class='no'>memB</span>)</div><div class='output co'>#&gt; $n
+#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/formals.html'>formals</a></span><span class='op'>(</span><span class='va'>memB</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; $n
 #&gt; 
 #&gt; 
 #&gt; $dummy
@@ -244,23 +254,31 @@ fun &amp;lt;- function() {
 #&gt; </div><div class='input'><span class='co'># However, it doesn't know about parameter relevance.</span>
 <span class='co'># Different call means different caching, no matter</span>
 <span class='co'># that the outcome is the same.</span>
-<span class='fu'>memB</span>(<span class='fl'>2</span>, <span class='kw'>dummy</span><span class='kw'>=</span><span class='st'>"b"</span>)</div><div class='output co'>#&gt; [1] 0.74152153 0.05144628</div><div class='input'>
+<span class='fu'>memB</span><span class='op'>(</span><span class='fl'>2</span>, dummy<span class='op'>=</span><span class='st'>"b"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 0.74152153 0.05144628</div><div class='input'>
 <span class='co'># You can create multiple memoisations of the same function,</span>
 <span class='co'># and they'll be independent.</span>
-<span class='fu'>memA</span>(<span class='fl'>2</span>)</div><div class='output co'>#&gt; [1] 0.03424133 0.32038573</div><div class='input'><span class='no'>memA2</span> <span class='kw'>&lt;-</span> <span class='fu'>memoise</span>(<span class='no'>a</span>)
-<span class='fu'>memA</span>(<span class='fl'>2</span>)  <span class='co'># Still the same outcome</span></div><div class='output co'>#&gt; [1] 0.03424133 0.32038573</div><div class='input'><span class='fu'>memA2</span>(<span class='fl'>2</span>) <span class='co'># Different cache, different outcome</span></div><div class='output co'>#&gt; [1] 0.5302125 0.6958239</div><div class='input'>
+<span class='fu'>memA</span><span class='op'>(</span><span class='fl'>2</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 0.03424133 0.32038573</div><div class='input'><span class='va'>memA2</span> <span class='op'>&lt;-</span> <span class='fu'>memoise</span><span class='op'>(</span><span class='va'>a</span><span class='op'>)</span>
+<span class='fu'>memA</span><span class='op'>(</span><span class='fl'>2</span><span class='op'>)</span>  <span class='co'># Still the same outcome</span>
+</div><div class='output co'>#&gt; [1] 0.03424133 0.32038573</div><div class='input'><span class='fu'>memA2</span><span class='op'>(</span><span class='fl'>2</span><span class='op'>)</span> <span class='co'># Different cache, different outcome</span>
+</div><div class='output co'>#&gt; [1] 0.5302125 0.6958239</div><div class='input'>
 <span class='co'># Don't do the same memoisation assignment twice: a brand-new</span>
 <span class='co'># memoised function also means a brand-new cache, and *that*</span>
 <span class='co'># you could as easily and more legibly achieve using forget().</span>
 <span class='co'># (If you're not sure whether you already memoised something,</span>
 <span class='co'>#  use is.memoised() to check.)</span>
-<span class='fu'>memA</span>(<span class='fl'>2</span>)</div><div class='output co'>#&gt; [1] 0.03424133 0.32038573</div><div class='input'><span class='no'>memA</span> <span class='kw'>&lt;-</span> <span class='fu'>memoise</span>(<span class='no'>a</span>)
-<span class='fu'>memA</span>(<span class='fl'>2</span>)</div><div class='output co'>#&gt; [1] 0.68855600 0.03123033</div><div class='input'><span class='co'># Making a memoized automatically time out after 10 seconds.</span>
-<span class='no'>memA3</span> <span class='kw'>&lt;-</span> <span class='fu'>memoise</span>(<span class='no'>a</span>, ~{<span class='no'>current</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>as.numeric</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.time</a></span>()); (<span class='no'>current</span> - <span class='no'>current</span> <span class='kw'>%%</span> <span class='fl'>10</span>) <span class='kw'>%/%</span> <span class='fl'>10</span> })
-<span class='fu'>memA3</span>(<span class='fl'>2</span>)</div><div class='output co'>#&gt; [1] 0.2255625 0.3008308</div><div class='input'>
+<span class='fu'>memA</span><span class='op'>(</span><span class='fl'>2</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 0.03424133 0.32038573</div><div class='input'><span class='va'>memA</span> <span class='op'>&lt;-</span> <span class='fu'>memoise</span><span class='op'>(</span><span class='va'>a</span><span class='op'>)</span>
+<span class='fu'>memA</span><span class='op'>(</span><span class='fl'>2</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 0.68855600 0.03123033</div><div class='input'><span class='co'># Making a memoized automatically time out after 10 seconds.</span>
+<span class='va'>memA3</span> <span class='op'>&lt;-</span> <span class='fu'>memoise</span><span class='op'>(</span><span class='va'>a</span>, <span class='op'>~</span><span class='op'>{</span><span class='va'>current</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>as.numeric</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.time</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>; <span class='op'>(</span><span class='va'>current</span> <span class='op'>-</span> <span class='va'>current</span> <span class='op'>%%</span> <span class='fl'>10</span><span class='op'>)</span> <span class='op'>%/%</span> <span class='fl'>10</span> <span class='op'>}</span><span class='op'>)</span>
+<span class='fu'>memA3</span><span class='op'>(</span><span class='fl'>2</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 0.2255625 0.3008308</div><div class='input'>
 <span class='co'># The timeout function is an easy way to do the above.</span>
-<span class='no'>memA4</span> <span class='kw'>&lt;-</span> <span class='fu'>memoise</span>(<span class='no'>a</span>, ~<span class='fu'><a href='timeout.html'>timeout</a></span>(<span class='fl'>10</span>))
-<span class='fu'>memA4</span>(<span class='fl'>2</span>)</div><div class='output co'>#&gt; [1] 0.6364656 0.4790245</div></pre>
+<span class='va'>memA4</span> <span class='op'>&lt;-</span> <span class='fu'>memoise</span><span class='op'>(</span><span class='va'>a</span>, <span class='op'>~</span><span class='fu'><a href='timeout.html'>timeout</a></span><span class='op'>(</span><span class='fl'>10</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'>memA4</span><span class='op'>(</span><span class='fl'>2</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 0.6364656 0.4790245</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -276,7 +294,7 @@ fun &amp;lt;- function() {
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

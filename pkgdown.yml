@@ -1,8 +1,8 @@
 pandoc: 2.7.3
-pkgdown: 1.5.1
+pkgdown: 1.6.1
 pkgdown_sha: ~
-articles: []
-last_built: 2020-09-02T12:50Z
+articles: {}
+last_built: 2021-01-06T15:27Z
 urls:
   reference: https://memoise.r-lib.org/reference
   article: https://memoise.r-lib.org/articles

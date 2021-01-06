@@ -41,7 +41,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -55,7 +55,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/r-lib/memoise/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -83,27 +83,30 @@
 <h1 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h1>
 <p>Install from CRAN with</p>
-<div class="sourceCode" id="cb1"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"memoise"</span>)</pre></div>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"memoise"</span><span class="op">)</span></code></pre></div>
 <div id="usage" class="section level2">
 <h2 class="hasAnchor">
 <a href="#usage" class="anchor"></a>Usage</h2>
 <p>To memoise a function, use <code><a href="reference/memoise.html">memoise()</a></code>:</p>
-<div class="sourceCode" id="cb2"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">memoise</span>)
-<span class="no">f</span> <span class="kw">&lt;-</span> <span class="kw">function</span>(<span class="no">x</span>) {
-  <span class="fu"><a href="https://rdrr.io/r/base/Sys.sleep.html">Sys.sleep</a></span>(<span class="fl">1</span>)
-  <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(<span class="no">x</span>)
-}
-<span class="no">mf</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/memoise.html">memoise</a></span>(<span class="no">f</span>)
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-lib/memoise">memoise</a></span><span class="op">)</span>
+<span class="va">f</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/Sys.sleep.html">Sys.sleep</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
+<span class="op">}</span>
+<span class="va">mf</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/memoise.html">memoise</a></span><span class="op">(</span><span class="va">f</span><span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span>(<span class="fu">mf</span>(<span class="fl">1</span>:<span class="fl">10</span>))
+<span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="fu">mf</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt;    user  system elapsed </span>
 <span class="co">#&gt;   0.000   0.000   1.003</span>
-<span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span>(<span class="fu">mf</span>(<span class="fl">1</span>:<span class="fl">10</span>))
+<span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="fu">mf</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   0.031   0.001   0.032</span></pre></div>
+<span class="co">#&gt;   0.031   0.001   0.032</span></code></pre></div>
 <p>You can clear <code>mf</code>’s cache with:</p>
-<div class="sourceCode" id="cb3"><pre class="r"><span class="fu"><a href="reference/forget.html">forget</a></span>(<span class="no">mf</span>)
-<span class="co">#&gt; [1] TRUE</span></pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="reference/forget.html">forget</a></span><span class="op">(</span><span class="va">mf</span><span class="op">)</span>
+<span class="co">#&gt; [1] TRUE</span></code></pre></div>
 <p>And you can test whether a function is memoised with <code><a href="reference/is.memoised.html">is.memoised()</a></code>.</p>
 </div>
 <div id="caches" class="section level2">
@@ -113,26 +116,29 @@
 <ul>
 <li>
 <p><code><a href="reference/cache_filesystem.html">cache_filesystem()</a></code> allows caching using files on a local filesystem. This is useful for preserving the cache between R sessions as well as sharing between systems when using a shared or synced files system such as Dropbox or Google Drive.</p>
-<div class="sourceCode" id="cb4"><pre class="r"><span class="no">fc</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/cache_filesystem.html">cache_filesystem</a></span>(<span class="st">"~/.cache"</span>)
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">fc</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/cache_filesystem.html">cache_filesystem</a></span><span class="op">(</span><span class="st">"~/.cache"</span><span class="op">)</span>
 
 <span class="co"># Store in Dropbox</span>
-<span class="no">dbc</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/cache_filesystem.html">cache_filesystem</a></span>(<span class="st">"~/Dropbox/.rcache"</span>)</pre></div>
+<span class="va">dbc</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/cache_filesystem.html">cache_filesystem</a></span><span class="op">(</span><span class="st">"~/Dropbox/.rcache"</span><span class="op">)</span></code></pre></div>
 </li>
 <li>
 <p><code><a href="reference/cache_s3.html">cache_s3()</a></code> allows caching on <a href="https://aws.amazon.com/s3/">Amazon S3</a> Requires you to specify a bucket using <code>cache_name</code>. When creating buckets, they must be unique among all s3 users when created.</p>
-<div class="sourceCode" id="cb5"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html">Sys.setenv</a></span>(
-  <span class="st">"AWS_ACCESS_KEY_ID"</span> <span class="kw">=</span> <span class="st">"&lt;access key&gt;"</span>,
-  <span class="st">"AWS_SECRET_ACCESS_KEY"</span> <span class="kw">=</span> <span class="st">"&lt;access secret&gt;"</span>
-)
-<span class="no">cache</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/cache_s3.html">cache_s3</a></span>(<span class="st">"&lt;unique bucket name&gt;"</span>)</pre></div>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html">Sys.setenv</a></span><span class="op">(</span>
+  <span class="st">"AWS_ACCESS_KEY_ID"</span> <span class="op">=</span> <span class="st">"&lt;access key&gt;"</span>,
+  <span class="st">"AWS_SECRET_ACCESS_KEY"</span> <span class="op">=</span> <span class="st">"&lt;access secret&gt;"</span>
+<span class="op">)</span>
+<span class="va">cache</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/cache_s3.html">cache_s3</a></span><span class="op">(</span><span class="st">"&lt;unique bucket name&gt;"</span><span class="op">)</span></code></pre></div>
 </li>
 <li>
 <p><code><a href="reference/cache_gcs.html">cache_gcs()</a></code> saves the cache to Google Cloud Storage. It requires you to authenticate by downloading a JSON authentication file, and specifying a pre-made bucket:</p>
-<div class="sourceCode" id="cb6"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html">Sys.setenv</a></span>(
-  <span class="st">"GCS_AUTH_FILE"</span> <span class="kw">=</span> <span class="st">"&lt;google-service-json&gt;"</span>,
-  <span class="st">"GCS_DEFAULT_BUCKET"</span> <span class="kw">=</span> <span class="st">"unique-bucket-name"</span>
-)
-<span class="no">gcs</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/cache_gcs.html">cache_gcs</a></span>()</pre></div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html">Sys.setenv</a></span><span class="op">(</span>
+  <span class="st">"GCS_AUTH_FILE"</span> <span class="op">=</span> <span class="st">"&lt;google-service-json&gt;"</span>,
+  <span class="st">"GCS_DEFAULT_BUCKET"</span> <span class="op">=</span> <span class="st">"unique-bucket-name"</span>
+<span class="op">)</span>
+<span class="va">gcs</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/cache_gcs.html">cache_gcs</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 </li>
 </ul>
 </div>
@@ -176,8 +182,8 @@
 <h2>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="https://CRAN.R-project.org/package=memoise"><img src="https://www.r-pkg.org/badges/version/memoise" alt="CRAN status"></a></li>
-<li><a href="https://github.com/hadley/memoise/actions"><img src="https://github.com/hadley/memoise/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
-<li><a href="https://codecov.io/gh/hadley/memoise?branch=master"><img src="https://codecov.io/gh/hadley/memoise/branch/master/graph/badge.svg" alt="Codecov test coverage"></a></li>
+<li><a href="https://github.com/r-lib/memoise/actions"><img src="https://github.com/r-lib/memoise/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
+<li><a href="https://codecov.io/gh/r-lib/memoise?branch=master"><img src="https://codecov.io/gh/r-lib/memoise/branch/master/graph/badge.svg" alt="Codecov test coverage"></a></li>
 </ul>
 </div>
 </div>
@@ -189,7 +195,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

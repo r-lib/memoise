@@ -83,7 +83,7 @@ and invalidate a memoised cache after a certain period of time." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -97,7 +97,7 @@ and invalidate a memoised cache after a certain period of time." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/r-lib/memoise/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -126,7 +126,7 @@ will update to the current time. This makes it useful as a way to timeout
 and invalidate a memoised cache after a certain period of time.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>timeout</span>(<span class='no'>seconds</span>, <span class='kw'>current</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>as.numeric</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.time</a></span>()))</pre>
+    <pre class="usage"><span class='fu'>timeout</span><span class='op'>(</span><span class='va'>seconds</span>, current <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>as.numeric</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.time</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -149,9 +149,10 @@ and invalidate a memoised cache after a certain period of time.</p>
     <div class='dont-index'><p><code><a href='memoise.html'>memoise</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>a</span> <span class='kw'>&lt;-</span> <span class='kw'>function</span>(<span class='no'>n</span>) { <span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span>(<span class='no'>n</span>) }
-<span class='no'>memA</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='memoise.html'>memoise</a></span>(<span class='no'>a</span>, ~<span class='fu'>timeout</span>(<span class='fl'>10</span>))
-<span class='fu'>memA</span>(<span class='fl'>2</span>)</div><div class='output co'>#&gt; [1] 0.4321713 0.7064338</div></pre>
+    <pre class="examples"><div class='input'><span class='va'>a</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>n</span><span class='op'>)</span> <span class='op'>{</span> <span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span><span class='op'>(</span><span class='va'>n</span><span class='op'>)</span> <span class='op'>}</span>
+<span class='va'>memA</span> <span class='op'>&lt;-</span> <span class='fu'><a href='memoise.html'>memoise</a></span><span class='op'>(</span><span class='va'>a</span>, <span class='op'>~</span><span class='fu'>timeout</span><span class='op'>(</span><span class='fl'>10</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'>memA</span><span class='op'>(</span><span class='fl'>2</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 0.4321713 0.7064338</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -167,7 +168,7 @@ and invalidate a memoised cache after a certain period of time.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
