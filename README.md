@@ -8,9 +8,9 @@
 [![CRAN
 status](https://www.r-pkg.org/badges/version/memoise)](https://CRAN.R-project.org/package=memoise)
 [![R build
-status](https://github.com/r-lib/memoise/workflows/R-CMD-check/badge.svg)](https://github.com/r-lib/memoise/actions)
+status](https://github.com/hadley/memoise/workflows/R-CMD-check/badge.svg)](https://github.com/hadley/memoise/actions)
 [![Codecov test
-coverage](https://codecov.io/gh/r-lib/memoise/branch/master/graph/badge.svg)](https://codecov.io/gh/r-lib/memoise?branch=master)
+coverage](https://codecov.io/gh/hadley/memoise/branch/master/graph/badge.svg)](https://codecov.io/gh/hadley/memoise?branch=master)
 <!-- badges: end -->
 
 The memoise package makes it easy to memoise R functions.
@@ -59,7 +59,7 @@ And you can test whether a function is memoised with `is.memoised()`.
 ## Caches
 
 By default, memoise uses an in-memory cache, using `cache_mem()` from
-the [cachem](https://github.com/r-lib/cachem) package.
+the [cachem](https://r-lib.github.io/cachem/) package.
 `cachem::cache_disk()` allows caching using files on a local filesystem.
 
 Both `cachem::cache_mem()` and `cachem::cache_disk()` support automatic
@@ -117,17 +117,36 @@ times4(10)
 #> [1] 40
 ```
 
-Before version 1.2, memoise used different caching objects, which did
+### Cache API
+
+It is possible to other caching backends with memoise. These caching
+objects must be key-value stores which use the same API as those from
+the [cachem](https://r-lib.github.io/cachem/) package. The following
+methods are required for full compatibiltiy with memoise:
+
+-   `$set(key, value)`: Sets a `key` to `value` in the cache.
+-   `$get(key)`: Gets the value associated with `key`. If the key is not
+    in the cache, this returns an object with class `"key_missing"`.
+-   `$exists(key)`: Checks for the existence of `key` in the cache.
+-   `$remove(key)`: Removes the value for `key` from the cache.
+-   `$reset()`: Resets the cache, clearing all key/value pairs.
+
+Note that the sentinel value for missing keys can be created by calling
+`cachem::key_missing()`, or `structure(list(), class = "key_missing")`.
+
+### Old-style cache objects
+
+Before version 2.0, memoise used different caching objects, which did
 not have automatic pruning and had a slightly different API. These
 caching objects can still be used, but we recommend using the caching
 objects from cachem when possible. The following cache objects do not
 currently have an equivalent in cachem.
 
-  - `cache_s3()` allows caching on [Amazon
+-   `cache_s3()` allows caching on [Amazon
     S3](https://aws.amazon.com/s3/) Requires you to specify a bucket
     using `cache_name`. When creating buckets, they must be unique among
     all s3 users when created.
-    
+
     ``` r
     Sys.setenv(
       "AWS_ACCESS_KEY_ID" = "<access key>",
@@ -136,10 +155,10 @@ currently have an equivalent in cachem.
     cache <- cache_s3("<unique bucket name>")
     ```
 
-  - `cache_gcs()` saves the cache to Google Cloud Storage. It requires
+-   `cache_gcs()` saves the cache to Google Cloud Storage. It requires
     you to authenticate by downloading a JSON authentication file, and
     specifying a pre-made bucket:
-    
+
     ``` r
     Sys.setenv(
       "GCS_AUTH_FILE" = "<google-service-json>",
