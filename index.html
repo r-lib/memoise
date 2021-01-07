@@ -111,7 +111,7 @@
 <div id="caches" class="section level2">
 <h2 class="hasAnchor">
 <a href="#caches" class="anchor"></a>Caches</h2>
-<p>By default, memoise uses an in-memory cache, using <code>cache_mem()</code> from the <a href="https://github.com/r-lib/cachem">cachem</a> package. <code><a href="https://r-lib.github.io/cachem/reference/cache_disk.html">cachem::cache_disk()</a></code> allows caching using files on a local filesystem.</p>
+<p>By default, memoise uses an in-memory cache, using <code>cache_mem()</code> from the <a href="https://r-lib.github.io/cachem/">cachem</a> package. <code><a href="https://r-lib.github.io/cachem/reference/cache_disk.html">cachem::cache_disk()</a></code> allows caching using files on a local filesystem.</p>
 <p>Both <code><a href="https://r-lib.github.io/cachem/reference/cache_mem.html">cachem::cache_mem()</a></code> and <code><a href="https://r-lib.github.io/cachem/reference/cache_disk.html">cachem::cache_disk()</a></code> support automatic pruning by default; this means that they will not keep growing past a certain size, and eventually older items will be removed from the cache. The default size <code>cache_mem()</code> is 512 MB, and the default size for a <code>cache_disk()</code> is 1 GB, but this can be customized by specifying <code>max_size</code>:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># 100 MB limit</span>
@@ -142,7 +142,28 @@
 <span class="co">#&gt; [1] 20</span>
 <span class="fu">times4</span><span class="op">(</span><span class="fl">10</span><span class="op">)</span>
 <span class="co">#&gt; [1] 40</span></code></pre></div>
-<p>Before version 1.2, memoise used different caching objects, which did not have automatic pruning and had a slightly different API. These caching objects can still be used, but we recommend using the caching objects from cachem when possible. The following cache objects do not currently have an equivalent in cachem.</p>
+<div id="cache-api" class="section level3">
+<h3 class="hasAnchor">
+<a href="#cache-api" class="anchor"></a>Cache API</h3>
+<p>It is possible to other caching backends with memoise. These caching objects must be key-value stores which use the same API as those from the <a href="https://r-lib.github.io/cachem/">cachem</a> package. The following methods are required for full compatibiltiy with memoise:</p>
+<ul>
+<li>
+<code>$set(key, value)</code>: Sets a <code>key</code> to <code>value</code> in the cache.</li>
+<li>
+<code>$get(key)</code>: Gets the value associated with <code>key</code>. If the key is not in the cache, this returns an object with class <code>"key_missing"</code>.</li>
+<li>
+<code>$exists(key)</code>: Checks for the existence of <code>key</code> in the cache.</li>
+<li>
+<code>$remove(key)</code>: Removes the value for <code>key</code> from the cache.</li>
+<li>
+<code>$reset()</code>: Resets the cache, clearing all key/value pairs.</li>
+</ul>
+<p>Note that the sentinel value for missing keys can be created by calling <code><a href="https://r-lib.github.io/fastmap/reference/key_missing.html">cachem::key_missing()</a></code>, or <code><a href="https://rdrr.io/r/base/structure.html">structure(list(), class = "key_missing")</a></code>.</p>
+</div>
+<div id="old-style-cache-objects" class="section level3">
+<h3 class="hasAnchor">
+<a href="#old-style-cache-objects" class="anchor"></a>Old-style cache objects</h3>
+<p>Before version 2.0, memoise used different caching objects, which did not have automatic pruning and had a slightly different API. These caching objects can still be used, but we recommend using the caching objects from cachem when possible. The following cache objects do not currently have an equivalent in cachem.</p>
 <ul>
 <li>
 <p><code><a href="reference/cache_s3.html">cache_s3()</a></code> allows caching on <a href="https://aws.amazon.com/s3/">Amazon S3</a> Requires you to specify a bucket using <code>cache_name</code>. When creating buckets, they must be unique among all s3 users when created.</p>
@@ -163,6 +184,7 @@
 <span class="va">gcs</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/cache_gcs.html">cache_gcs</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 </li>
 </ul>
+</div>
 </div>
 </div>
 
@@ -205,8 +227,8 @@
 <h2>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="https://CRAN.R-project.org/package=memoise"><img src="https://www.r-pkg.org/badges/version/memoise" alt="CRAN status"></a></li>
-<li><a href="https://github.com/r-lib/memoise/actions"><img src="https://github.com/r-lib/memoise/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
-<li><a href="https://codecov.io/gh/r-lib/memoise?branch=master"><img src="https://codecov.io/gh/r-lib/memoise/branch/master/graph/badge.svg" alt="Codecov test coverage"></a></li>
+<li><a href="https://github.com/hadley/memoise/actions"><img src="https://github.com/hadley/memoise/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
+<li><a href="https://codecov.io/gh/hadley/memoise?branch=master"><img src="https://codecov.io/gh/hadley/memoise/branch/master/graph/badge.svg" alt="Codecov test coverage"></a></li>
 </ul>
 </div>
 </div>
