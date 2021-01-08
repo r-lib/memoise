@@ -25,10 +25,8 @@ wrap_old_cache <- function(x) {
 
 # Returns TRUE if it's an old-style cache.
 is_old_cache <- function(x) {
-  is.function(x$reset) &&
-    is.function(x$digest) &&
+  is.function(x$digest) &&
     is.function(x$set) &&
     is.function(x$get) &&
-    is.function(x$has_key) &&
-    is.function(x$drop_key)
+    is.function(x$has_key)
 }
