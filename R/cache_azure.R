@@ -20,9 +20,9 @@
 #'
 #'
 #' @param cache_name Name of the storage container for storing cache files.
-#' @param account The storage account for the cache. This should be an object of class \code{\link[AzureStor::storage_endpoint]{AzureStor::storage_endpoint}}, or inheriting from it. Alternatively, you can provide the storage endpoint URL, along with one of the authentication arguments \code{key}, \code{token} or \code{sas}.
+#' @param account The storage account for the cache. This should be an object of class \code{AzureStor::storage_endpoint}, or inheriting from it. Alternatively, you can provide the storage endpoint URL, along with one of the authentication arguments \code{key}, \code{token} or \code{sas}.
 #' @param key The access key for the storage account.
-#' @param token An Azure Active Directory (AAD) authentication token. This can be either a string, or an object of class \code{AzureToken} created by \code{\link[AzureAuth::get_azure_token]{AzureAuth::get_azure_token}}. The latter is the recommended way of doing it, as it allows for automatic refreshing of expired tokens.
+#' @param token An Azure Active Directory (AAD) authentication token. This can be either a string, or an object of class \code{AzureToken} created by \code{AzureAuth::get_azure_token}. The latter is the recommended way of doing it, as it allows for automatic refreshing of expired tokens.
 #' @param sas A shared access signature (SAS) for the account.
 #' @param compress Argument passed to \code{saveRDS}. One of FALSE, "gzip",
 #' "bzip2" or "xz". Default: FALSE.
