@@ -23,3 +23,14 @@ skip_on_travis_pr <- function() {
 
   invisible(TRUE)
 }
+
+skip_without_azure_credentials <- function() {
+  storage_url <- Sys.getenv("AZ_TEST_STORAGE_MEMOISE_URL")
+  storage_key <- Sys.getenv("AZ_TEST_STORAGE_MEMOISE_KEY")
+
+  if (storage_url == "" || storage_key == "") {
+    testthat::skip("No Azure storage credentials")
+  } else {
+    invisible(TRUE)
+  }
+}

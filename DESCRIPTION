@@ -41,6 +41,8 @@ Suggests:
     covr,
     googleAuthR,
     googleCloudStorageR,
+    AzureStor (>= 3.0.0),
+    AzureAuth,
     httr,
     testthat
 Remotes:
