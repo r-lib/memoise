@@ -33,7 +33,7 @@ cache_azure <- function(cache_name, account, key = NULL, token = NULL, sas = NUL
   if(!requireNamespace("AzureStor")) { stop("Package `AzureStor` must be installed for `cache_azure()`.") } # nocov
 
   if(is.character(account)) {
-    storage_account <- AzureStor::storage_endpoint(account, key, sas, token)
+    storage_account <- AzureStor::storage_endpoint(account, key, token, sas)
   } else if(!inherits(account, "storage_endpoint")) {
     stop("Must provide either the URL of a storage account endpoint, or a `storage_endpoint` object")
   }
