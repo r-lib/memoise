@@ -25,7 +25,11 @@ Authors@R:
       person(given = "Mark",
              family = "Edmondson",
              role = "ctb",
-             email = "r@sunholo.com"))
+             email = "r@sunholo.com"),
+      person(given = "Hong",
+             family = "Ooi",
+             role = "ctb",
+             email = "hongooi73@gmail.com"))
 Description: Cache the results of a function so that when you
     call it again with the same arguments it returns the pre-computed
     value.
