@@ -1,40 +1,44 @@
 #' Azure Storage Cache
-#' Azure Storage backed cache, for remote caching. You can use either file, blob or ADLSgen2 storage.
+#'
+#' Azure Storage backed cache, for remote caching. File, blob and ADLSgen2 storage are all supported.
 #'
 #' @examples
 #'
 #' \dontrun{
 #' library(AzureStor)
 #'
-#' stor <- storage_container("https://blob.{accountname}.core.windows.net",
-#'                           key="{storage-key}")
-#'
+#' # use Azure blob storage for the cache
+#' stor <- storage_endpoint("https://blob.accountname.core.windows.net", key="storage-key")
 #' azcache <- cache_azure("cache_container", stor)
 #' mem_runif <- memoise(runif, cache = azcache)
 #'
 #'
-#' # alternative way of specifying the account
-#' azcache <- cache_azure("cache_container", "https://blob.{accountname}.core.windows.net",
-#'                        key="{storage_key}")
+#' # you can also pass the endpoint URL and key to cache_azure:
+#' azcache <- cache_azure("cache_container", "https://blob.accountname.core.windows.net",
+#'                        key = "storage-key")
+#'
+#' # a better alternative to a master key: OAuth 2.0 authentication via AAD
+#' token <- AzureAuth::get_azure_token(
+#'   "https://storage.azure.com",
+#'   tenant = "mytenant",
+#'   app = "app_id"
+#' )
+#' azcache <- cache_azure("cache_container", "https://blob.accountname.core.windows.net",
+#'                        token = token)
 #' }
 #'
-#'
 #' @param cache_name Name of the storage container for storing cache files.
-#' @param account The storage account for the cache. This should be an object of class \code{AzureStor::storage_endpoint}, or inheriting from it. Alternatively, you can provide the storage endpoint URL, along with one of the authentication arguments \code{key}, \code{token} or \code{sas}.
-#' @param key The access key for the storage account.
-#' @param token An Azure Active Directory (AAD) authentication token. This can be either a string, or an object of class \code{AzureToken} created by \code{AzureAuth::get_azure_token}. The latter is the recommended way of doing it, as it allows for automatic refreshing of expired tokens.
-#' @param sas A shared access signature (SAS) for the account.
+#' @param endpoint The storage account endpoint for the cache. This should be an object of class \code{AzureStor::storage_endpoint}, or inheriting from it. Alternatively, you can provide the endpoint URL as a string, and pass any authentication arguments in `...`.
 #' @param compress Argument passed to \code{saveRDS}. One of FALSE, "gzip",
 #' "bzip2" or "xz". Default: FALSE.
-#' @inheritParams cache_memory
+#' @param ... Further arguments that will be passed to \code{AzureStor::storage_endpoint}, if \code{endpoint} is a URL.
 #' @export
-cache_azure <- function(cache_name, account, key = NULL, token = NULL, sas = NULL,
-                        algo = "sha512", compress = FALSE) {
+cache_azure <- function(cache_name, endpoint, compress = FALSE, ...) {
   if(!requireNamespace("AzureStor")) { stop("Package `AzureStor` must be installed for `cache_azure()`.") } # nocov
 
-  if(is.character(account)) {
-    account <- AzureStor::storage_endpoint(account, key, token, sas)
-  } else if(!inherits(account, "storage_endpoint")) {
+  if(is.character(endpoint)) {
+    endpoint <- AzureStor::storage_endpoint(endpoint, ...)
+  } else if(!inherits(endpoint, "storage_endpoint")) {
     stop("Must provide either the URL of a storage account endpoint, or a `storage_endpoint` object")
   }
 
@@ -42,8 +46,8 @@ cache_azure <- function(cache_name, account, key = NULL, token = NULL, sas = NUL
   dir.create(path)
 
   # create container if it doesn't exist
-  try(AzureStor::create_storage_container(account, cache_name), silent = TRUE)
-  cache <- AzureStor::storage_container(account, cache_name)
+  try(AzureStor::create_storage_container(endpoint, cache_name), silent = TRUE)
+  cache <- AzureStor::storage_container(endpoint, cache_name)
 
   cache_reset <- function() {
     keys <- cache_keys()

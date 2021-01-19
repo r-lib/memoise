@@ -2,56 +2,46 @@
 % Please edit documentation in R/cache_azure.R
 \name{cache_azure}
 \alias{cache_azure}
-\title{Azure Storage Cache
-Azure Storage backed cache, for remote caching. You can use either file, blob or ADLSgen2 storage.}
+\title{Azure Storage Cache}
 \usage{
-cache_azure(
-  cache_name,
-  account,
-  key = NULL,
-  token = NULL,
-  sas = NULL,
-  algo = "sha512",
-  compress = FALSE
-)
+cache_azure(cache_name, endpoint, compress = FALSE, ...)
 }
 \arguments{
 \item{cache_name}{Name of the storage container for storing cache files.}
 
-\item{account}{The storage account for the cache. This should be an object of class \code{AzureStor::storage_endpoint}, or inheriting from it. Alternatively, you can provide the storage endpoint URL, along with one of the authentication arguments \code{key}, \code{token} or \code{sas}.}
-
-\item{key}{The access key for the storage account.}
-
-\item{token}{An Azure Active Directory (AAD) authentication token. This can be either a string, or an object of class \code{AzureToken} created by \code{AzureAuth::get_azure_token}. The latter is the recommended way of doing it, as it allows for automatic refreshing of expired tokens.}
-
-\item{sas}{A shared access signature (SAS) for the account.}
-
-\item{algo}{The hashing algorithm used for the cache, see
-\code{\link[digest]{digest}} for available algorithms.}
+\item{endpoint}{The storage account endpoint for the cache. This should be an object of class \code{AzureStor::storage_endpoint}, or inheriting from it. Alternatively, you can provide the endpoint URL as a string, and pass any authentication arguments in `...`.}
 
 \item{compress}{Argument passed to \code{saveRDS}. One of FALSE, "gzip",
 "bzip2" or "xz". Default: FALSE.}
+
+\item{...}{Further arguments that will be passed to \code{AzureStor::storage_endpoint}, if \code{endpoint} is a URL.}
 }
 \description{
-Azure Storage Cache
-Azure Storage backed cache, for remote caching. You can use either file, blob or ADLSgen2 storage.
+Azure Storage backed cache, for remote caching. File, blob and ADLSgen2 storage are all supported.
 }
 \examples{
 
 \dontrun{
 library(AzureStor)
 
-stor <- storage_container("https://blob.{accountname}.core.windows.net",
-                          key="{storage-key}")
-
+# use Azure blob storage for the cache
+stor <- storage_endpoint("https://blob.accountname.core.windows.net", key="storage-key")
 azcache <- cache_azure("cache_container", stor)
 mem_runif <- memoise(runif, cache = azcache)
 
 
-# alternative way of specifying the account
-azcache <- cache_azure("cache_container", "https://blob.{accountname}.core.windows.net",
-                       key="{storage_key}")
-}
+# you can also pass the endpoint URL and key to cache_azure:
+azcache <- cache_azure("cache_container", "https://blob.accountname.core.windows.net",
+                       key = "storage-key")
 
+# a better alternative to a master key: OAuth 2.0 authentication via AAD
+token <- AzureAuth::get_azure_token(
+  "https://storage.azure.com",
+  tenant = "mytenant",
+  app = "app_id"
+)
+azcache <- cache_azure("cache_container", "https://blob.accountname.core.windows.net",
+                       token = token)
+}
 
 }
