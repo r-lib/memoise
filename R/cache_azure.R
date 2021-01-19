@@ -70,7 +70,10 @@ cache_azure <- function(cache_name, account, key = NULL, token = NULL, sas = NUL
       unlink(rds)
       options(opts)
     })
-    AzureStor::storage_download(cache, key, rds, overwrite = TRUE)
+    res <- try(AzureStor::storage_download(cache, key, rds, overwrite = TRUE), silent = TRUE)
+    if(inherits(res, "try-error")) {
+      return(cachem::key_missing())
+    }
     readRDS(rds)
   }
 
@@ -87,12 +90,11 @@ cache_azure <- function(cache_name, account, key = NULL, token = NULL, sas = NUL
   }
 
   list(
-    digest = function(...) digest::digest(..., algo = algo),
     reset = cache_reset,
     set = cache_set,
     get = cache_get,
-    has_key = cache_has_key,
-    drop_key = cache_drop_key,
+    exists = cache_has_key,
+    remove = cache_drop_key,
     keys = cache_keys
   )
 }

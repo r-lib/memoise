@@ -8,10 +8,11 @@ storage_url <- Sys.getenv("AZ_TEST_STORAGE_MEMOISE_URL")
 storage_key <- Sys.getenv("AZ_TEST_STORAGE_MEMOISE_KEY")
 
 bl_endp <- AzureStor::storage_endpoint(storage_url, key=storage_key)
+cache_name <- paste0(sample(letters, 20, TRUE), collapse = "")
 
 test_that("using an Azure storage cache works", {
 
-  azcache <- cache_azure("memoise-tests", bl_endp)
+  azcache <- cache_azure(cache_name, bl_endp)
   i <- 0
   fn <- function() { i <<- i + 1; i }
   fnm <- memoise(fn, cache = azcache)
@@ -36,5 +37,5 @@ test_that("using an Azure storage cache works", {
 })
 
 teardown({
-    AzureStor::delete_blob_container(bl_endp, "memoise-tests", confirm=FALSE)
+    AzureStor::delete_blob_container(bl_endp, cache_name, confirm = FALSE)
 })
