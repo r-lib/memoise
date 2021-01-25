@@ -119,7 +119,7 @@ times4(10)
 
 ### Cache API
 
-It is possible to other caching backends with memoise. These caching
+It is possible to use other caching backends with memoise. These caching
 objects must be key-value stores which use the same API as those from
 the [cachem](https://r-lib.github.io/cachem/) package. The following
 methods are required for full compatibiltiy with memoise:
