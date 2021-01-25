@@ -132,7 +132,7 @@ circumstances, this can provide a very nice speedup indeed.</p>
   <span class='va'>f</span>,
   <span class='va'>...</span>,
   envir <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/environment.html'>environment</a></span><span class='op'>(</span><span class='va'>f</span><span class='op'>)</span>,
-  cache <span class='op'>=</span> <span class='fu'>cachem</span><span class='fu'>::</span><span class='fu'><a href='https://r-lib.github.io/cachem/reference/cache_mem.html'>cache_mem</a></span><span class='op'>(</span>max_size <span class='op'>=</span> <span class='fl'>1024</span> <span class='op'>*</span> <span class='fl'>1024</span><span class='op'>^</span><span class='fl'>2</span><span class='op'>)</span>,
+  cache <span class='op'>=</span> <span class='fu'>cachem</span><span class='fu'>::</span><span class='fu'><a href='https://cachem.r-lib.org/reference/cache_mem.html'>cache_mem</a></span><span class='op'>(</span>max_size <span class='op'>=</span> <span class='fl'>1024</span> <span class='op'>*</span> <span class='fl'>1024</span><span class='op'>^</span><span class='fl'>2</span><span class='op'>)</span>,
   omit_args <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='op'>)</span>,
   hash <span class='op'>=</span> <span class='fu'>rlang</span><span class='fu'>::</span><span class='va'><a href='https://rlang.r-lib.org/reference/hash.html'>hash</a></span>
 <span class='op'>)</span></pre>
@@ -271,7 +271,7 @@ but when the package is loaded. The simplest way to do this is within
 </div><div class='output co'>#&gt; [1] 0.03424133 0.32038573</div><div class='input'><span class='fu'>memA2</span><span class='op'>(</span><span class='fl'>2</span><span class='op'>)</span> <span class='co'># Different cache, different outcome</span>
 </div><div class='output co'>#&gt; [1] 0.5302125 0.6958239</div><div class='input'>
 <span class='co'># Multiple memoized functions can share a cache.</span>
-<span class='va'>cm</span> <span class='op'>&lt;-</span> <span class='fu'>cachem</span><span class='fu'>::</span><span class='fu'><a href='https://r-lib.github.io/cachem/reference/cache_mem.html'>cache_mem</a></span><span class='op'>(</span>max_size <span class='op'>=</span> <span class='fl'>50</span> <span class='op'>*</span> <span class='fl'>1024</span><span class='op'>^</span><span class='fl'>2</span><span class='op'>)</span>
+<span class='va'>cm</span> <span class='op'>&lt;-</span> <span class='fu'>cachem</span><span class='fu'>::</span><span class='fu'><a href='https://cachem.r-lib.org/reference/cache_mem.html'>cache_mem</a></span><span class='op'>(</span>max_size <span class='op'>=</span> <span class='fl'>50</span> <span class='op'>*</span> <span class='fl'>1024</span><span class='op'>^</span><span class='fl'>2</span><span class='op'>)</span>
 <span class='va'>memA</span> <span class='op'>&lt;-</span> <span class='fu'>memoise</span><span class='op'>(</span><span class='va'>a</span>, cache <span class='op'>=</span> <span class='va'>cm</span><span class='op'>)</span>
 <span class='va'>memB</span> <span class='op'>&lt;-</span> <span class='fu'>memoise</span><span class='op'>(</span><span class='va'>b</span>, cache <span class='op'>=</span> <span class='va'>cm</span><span class='op'>)</span>
 
@@ -285,7 +285,7 @@ but when the package is loaded. The simplest way to do this is within
 <span class='fu'>memA</span><span class='op'>(</span><span class='fl'>2</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [1] 0.2255625 0.3008308</div><div class='input'>
 <span class='co'># Make a memoized result automatically time out after 10 seconds.</span>
-<span class='va'>memA3</span> <span class='op'>&lt;-</span> <span class='fu'>memoise</span><span class='op'>(</span><span class='va'>a</span>, cache <span class='op'>=</span> <span class='fu'>cachem</span><span class='fu'>::</span><span class='fu'><a href='https://r-lib.github.io/cachem/reference/cache_mem.html'>cache_mem</a></span><span class='op'>(</span>max_age <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>memA3</span> <span class='op'>&lt;-</span> <span class='fu'>memoise</span><span class='op'>(</span><span class='va'>a</span>, cache <span class='op'>=</span> <span class='fu'>cachem</span><span class='fu'>::</span><span class='fu'><a href='https://cachem.r-lib.org/reference/cache_mem.html'>cache_mem</a></span><span class='op'>(</span>max_age <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span><span class='op'>)</span>
 <span class='fu'>memA3</span><span class='op'>(</span><span class='fl'>2</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [1] 0.6364656 0.4790245</div></pre>
   </div>
