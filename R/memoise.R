@@ -154,7 +154,7 @@ memoise <- memoize <- function(
     args <- c(lapply(called_args, eval, parent.frame()),
               lapply(default_args, eval, envir = environment()))
 
-    key <- `_hash`(
+    key <- encl$`_hash`(
       c(
         encl$`_f_hash`,
         args,
