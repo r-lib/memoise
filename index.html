@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">memoise</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0.9001</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.0.0</span>
       </span>
     </div>
 
@@ -77,7 +77,7 @@
 <a href="#memoise" class="anchor"></a>memoise</h1></div>
 <!-- badges: start -->
 
-<p>The memoise package makes it easy to memoise R functions. <strong>Memoisation</strong> (<a href="http://en.wikipedia.org/wiki/Memoization" class="uri">http://en.wikipedia.org/wiki/Memoization</a>) caches function calls so that if a previously seen set of inputs is seen, it can return the previously computed output.</p>
+<p>The memoise package makes it easy to memoise R functions. <strong>Memoisation</strong> (<a href="https://en.wikipedia.org/wiki/Memoization" class="uri">https://en.wikipedia.org/wiki/Memoization</a>) caches function calls so that if a previously seen set of inputs is seen, it can return the previously computed output.</p>
 </div>
 <div id="installation" class="section level1">
 <h1 class="hasAnchor">
@@ -111,7 +111,7 @@
 <div id="caches" class="section level2">
 <h2 class="hasAnchor">
 <a href="#caches" class="anchor"></a>Caches</h2>
-<p>By default, memoise uses an in-memory cache, using <code>cache_mem()</code> from the <a href="https://r-lib.github.io/cachem/">cachem</a> package. <code><a href="https://cachem.r-lib.org/reference/cache_disk.html">cachem::cache_disk()</a></code> allows caching using files on a local filesystem.</p>
+<p>By default, memoise uses an in-memory cache, using <code>cache_mem()</code> from the <a href="https://cachem.r-lib.org/">cachem</a> package. <code><a href="https://cachem.r-lib.org/reference/cache_disk.html">cachem::cache_disk()</a></code> allows caching using files on a local filesystem.</p>
 <p>Both <code><a href="https://cachem.r-lib.org/reference/cache_mem.html">cachem::cache_mem()</a></code> and <code><a href="https://cachem.r-lib.org/reference/cache_disk.html">cachem::cache_disk()</a></code> support automatic pruning by default; this means that they will not keep growing past a certain size, and eventually older items will be removed from the cache. The default size <code>cache_mem()</code> is 512 MB, and the default size for a <code>cache_disk()</code> is 1 GB, but this can be customized by specifying <code>max_size</code>:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># 100 MB limit</span>
@@ -145,7 +145,7 @@
 <div id="cache-api" class="section level3">
 <h3 class="hasAnchor">
 <a href="#cache-api" class="anchor"></a>Cache API</h3>
-<p>It is possible to use other caching backends with memoise. These caching objects must be key-value stores which use the same API as those from the <a href="https://r-lib.github.io/cachem/">cachem</a> package. The following methods are required for full compatibiltiy with memoise:</p>
+<p>It is possible to use other caching backends with memoise. These caching objects must be key-value stores which use the same API as those from the <a href="https://cachem.r-lib.org/">cachem</a> package. The following methods are required for full compatibiltiy with memoise:</p>
 <ul>
 <li>
 <code>$set(key, value)</code>: Sets a <code>key</code> to <code>value</code> in the cache.</li>
@@ -227,7 +227,7 @@
 <h2>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="https://CRAN.R-project.org/package=memoise"><img src="https://www.r-pkg.org/badges/version/memoise" alt="CRAN status"></a></li>
-<li><a href="https://github.com/hadley/memoise/actions"><img src="https://github.com/hadley/memoise/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
+<li><a href="https://github.com/r-lib/memoise/actions"><img src="https://github.com/r-lib/memoise/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
 <li><a href="https://codecov.io/gh/hadley/memoise?branch=master"><img src="https://codecov.io/gh/hadley/memoise/branch/master/graph/badge.svg" alt="Codecov test coverage"></a></li>
 </ul>
 </div>
