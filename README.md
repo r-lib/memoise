@@ -8,13 +8,13 @@
 [![CRAN
 status](https://www.r-pkg.org/badges/version/memoise)](https://CRAN.R-project.org/package=memoise)
 [![R build
-status](https://github.com/hadley/memoise/workflows/R-CMD-check/badge.svg)](https://github.com/hadley/memoise/actions)
+status](https://github.com/r-lib/memoise/workflows/R-CMD-check/badge.svg)](https://github.com/r-lib/memoise/actions)
 [![Codecov test
 coverage](https://codecov.io/gh/hadley/memoise/branch/master/graph/badge.svg)](https://codecov.io/gh/hadley/memoise?branch=master)
 <!-- badges: end -->
 
 The memoise package makes it easy to memoise R functions.
-**Memoisation** (<http://en.wikipedia.org/wiki/Memoization>) caches
+**Memoisation** (<https://en.wikipedia.org/wiki/Memoization>) caches
 function calls so that if a previously seen set of inputs is seen, it
 can return the previously computed output.
 
@@ -59,8 +59,8 @@ And you can test whether a function is memoised with `is.memoised()`.
 ## Caches
 
 By default, memoise uses an in-memory cache, using `cache_mem()` from
-the [cachem](https://r-lib.github.io/cachem/) package.
-`cachem::cache_disk()` allows caching using files on a local filesystem.
+the [cachem](https://cachem.r-lib.org/) package. `cachem::cache_disk()`
+allows caching using files on a local filesystem.
 
 Both `cachem::cache_mem()` and `cachem::cache_disk()` support automatic
 pruning by default; this means that they will not keep growing past a
@@ -121,8 +121,8 @@ times4(10)
 
 It is possible to use other caching backends with memoise. These caching
 objects must be key-value stores which use the same API as those from
-the [cachem](https://r-lib.github.io/cachem/) package. The following
-methods are required for full compatibiltiy with memoise:
+the [cachem](https://cachem.r-lib.org/) package. The following methods
+are required for full compatibiltiy with memoise:
 
 -   `$set(key, value)`: Sets a `key` to `value` in the cache.
 -   `$get(key)`: Gets the value associated with `key`. If the key is not

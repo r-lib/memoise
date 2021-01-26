@@ -141,5 +141,5 @@ memA3(2)
 }
 \seealso{
 \code{\link{forget}}, \code{\link{is.memoised}},
-  \code{\link{timeout}}, \url{http://en.wikipedia.org/wiki/Memoization}
+  \code{\link{timeout}}, \url{https://en.wikipedia.org/wiki/Memoization}
 }
