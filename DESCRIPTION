@@ -1,6 +1,6 @@
 Package: memoise
 Title: Memoisation of Functions
-Version: 1.1.0.9001
+Version: 2.0.0
 Authors@R:
     c(person(given = "Hadley",
              family = "Wickham",

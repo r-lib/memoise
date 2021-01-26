@@ -1,4 +1,4 @@
-# Version 1.1.0.9001
+# Version 2.0.0
 
 * Memoise now uses caching objects from the cachem package by default. These caches support automatic pruning, so that they won't grow indefinitely. The older-style cache objects in the memoise package are still supported, but we suggest using new-style caches from cachem. (#112)
 
