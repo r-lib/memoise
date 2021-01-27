@@ -116,10 +116,10 @@
 
     <div id="version-200" class="section level1">
 <h1 class="page-header" data-toc-text="2.0.0">
-<a href="#version-200" class="anchor"></a>Version 2.0.0<small> Unreleased </small>
+<a href="#version-200" class="anchor"></a>Version 2.0.0<small> 2021-01-26 </small>
 </h1>
 <ul>
-<li><p>Memoise now uses caching objects from the cachem package by default. These caches support automatic pruning, so that they won’t grow indefinitely. The older-style cache objects in the memoise package are still supported, but we suggest using new-style caches from cachem. (<a href='https://github.com/r-lib/memoise/issues/112'>#112</a>)</p></li>
+<li><p>Memoise now uses caching objects from the cachem package by default. These caches support automatic pruning, so that they won’t grow indefinitely. The older-style cache objects in the memoise package are still supported, but we suggest using new-style caches from cachem. (<a href='https://github.com/r-lib/memoise/issues/115'>#115</a>)</p></li>
 <li><p>Name clashes between function arguments and variables defined when memoising no longer occur (<a href='https://github.com/egnha'>@egnha</a>, <a href='https://github.com/r-lib/memoise/issues/43'>#43</a>).</p></li>
 <li><p>Add Google Cloud Storage support via <code><a href="../reference/cache_gcs.html">cache_gcs()</a></code> (<a href='https://github.com/MarkEdmondson1234'>@MarkEdmondson1234</a>, <a href='https://github.com/r-lib/memoise/issues/59'>#59</a>)</p></li>
 <li><p>Add <code>compress</code> option for non-memory caches (<a href='https://github.com/coolbutuseless'>@coolbutuseless</a>, <a href='https://github.com/r-lib/memoise/issues/71'>#71</a>).</p></li>
