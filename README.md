@@ -139,8 +139,21 @@ Note that the sentinel value for missing keys can be created by calling
 Before version 2.0, memoise used different caching objects, which did
 not have automatic pruning and had a slightly different API. These
 caching objects can still be used, but we recommend using the caching
-objects from cachem when possible. The following cache objects do not
-currently have an equivalent in cachem.
+objects from cachem when possible.
+
+With the old-style caching objects, memoise first checks for the
+existence of a key in the cache, and if present, it fetches the value.
+This results in a possible race condition (when using caches other than
+the memory cache): an object could be deleted from the cache after the
+existence check, but before the value is fetched. With the new
+cachem-style caching objects, the possibility of a a race condition is
+eliminated: memoise simply tries to fetch the key, and if it’s not
+present in the cache, the cache returns a sentinel value indicating that
+it’s missing. (Note that the caching objects must also be designed to
+avoid a similar race condition internally.)
+
+The following cache objects do not currently have an equivalent in
+cachem.
 
 -   `cache_s3()` allows caching on [Amazon
     S3](https://aws.amazon.com/s3/) Requires you to specify a bucket
