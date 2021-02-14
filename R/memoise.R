@@ -313,7 +313,7 @@ has_cache <- function(f) {
   # Modify the function body of the function to simply return TRUE and FALSE
   # rather than get or set the results of the cache
   body <- body(f)
-  body[[11]] <- quote(return(encl$`_cache`$exists(key)))
+  body[[10]] <- quote(return(encl$`_cache`$exists(key)))
   body(f) <- body
 
   f
