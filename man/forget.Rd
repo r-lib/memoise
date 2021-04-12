@@ -3,7 +3,8 @@
 \name{forget}
 \alias{forget}
 \title{Forget past results.
-Resets the cache of a memoised function.}
+Resets the cache of a memoised function. Use \code{\link{drop_cache}} to
+reset the cache only for particular arguments.}
 \usage{
 forget(f)
 }
@@ -12,7 +13,8 @@ forget(f)
 }
 \description{
 Forget past results.
-Resets the cache of a memoised function.
+Resets the cache of a memoised function. Use \code{\link{drop_cache}} to
+reset the cache only for particular arguments.
 }
 \examples{
 memX <- memoise(function() { Sys.sleep(1); runif(1) })
@@ -23,5 +25,5 @@ forget(memX)
 system.time(print(memX()))
 }
 \seealso{
-\code{\link{memoise}}, \code{\link{is.memoised}}
+\code{\link{memoise}}, \code{\link{is.memoised}}, \code{\link{drop_cache}}
 }
