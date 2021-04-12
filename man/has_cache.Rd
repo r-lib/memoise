@@ -23,5 +23,5 @@ mem_sum(1, 2, 3)
 has_cache(mem_sum)(1, 2, 3) # TRUE
 }
 \seealso{
-\code{\link{is.memoised}}, \code{\link{memoise}}
+\code{\link{is.memoised}}, \code{\link{memoise}}, \code{\link{drop_cache}}
 }
