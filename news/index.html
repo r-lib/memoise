@@ -119,7 +119,8 @@
 <a href="#version-2009000" class="anchor"></a>Version 2.0.0.9000<small> Unreleased </small>
 </h1>
 <ul>
-<li>Fixed a bug in <code><a href="../reference/has_cache.html">has_cache()</a></code> that caused it to get the value unnecessarily. (<a href='https://github.com/r-lib/memoise/issues/123'>#123</a>)</li>
+<li><p>The default value for the <code>hash</code> argument of <code><a href="../reference/memoise.html">memoise()</a></code> is now taken with an indirection in case <code><a href="../reference/memoise.html">memoise()</a></code> is called at the top-level of a namespace (r-lib/rlang<a href='https://github.com/r-lib/memoise/issues/1177'>#1177</a>).</p></li>
+<li><p>Fixed a bug in <code><a href="../reference/has_cache.html">has_cache()</a></code> that caused it to get the value unnecessarily. (<a href='https://github.com/r-lib/memoise/issues/123'>#123</a>)</p></li>
 </ul>
 </div>
     <div id="version-200" class="section level1">
