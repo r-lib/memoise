@@ -127,7 +127,7 @@ memoise <- memoize <- function(
   envir = environment(f),
   cache = cachem::cache_mem(max_size = 1024 * 1024^2),
   omit_args = c(),
-  hash = rlang::hash)
+  hash = function(x) rlang::hash(x))
 {
   f_formals <- formals(args(f))
   if(is.memoised(f)) {
