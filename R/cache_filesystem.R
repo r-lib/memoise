@@ -21,6 +21,12 @@
 #'
 #' mem_runif <- memoise(runif, cache = gd)
 #'
+#' # Use with OneDrive (on Windows)
+#'
+#' od <- cache_filesystem("~/../OneDrive")
+#'
+#' mem_runif <- memoise(runif, cache = od)
+#'
 #' }
 #'
 #' @export
