@@ -1,5 +1,7 @@
 # Version 2.0.0.9000
 
+* Winston Chang is now the maintainer.
+
 * The default value for the `hash` argument of `memoise()` is now
   taken with an indirection in case `memoise()` is called at the
   top-level of a namespace (r-lib/rlang#1177).

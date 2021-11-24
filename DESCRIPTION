@@ -1,5 +1,5 @@
 Package: memoise
-Title: Memoisation of Functions
+Title: 'Memoisation' of Functions
 Version: 2.0.0.9000
 Authors@R:
     c(person(given = "Hadley",
@@ -26,7 +26,7 @@ Authors@R:
              role = "ctb",
              email = "r@sunholo.com"))
 Description: Cache the results of a function so that when you
-    call it again with the same arguments it returns the pre-computed
+    call it again with the same arguments it returns the previously computed
     value.
 License: MIT + file LICENSE
 URL: https://memoise.r-lib.org, https://github.com/r-lib/memoise
@@ -43,4 +43,4 @@ Suggests:
     httr,
     testthat
 Encoding: UTF-8
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
