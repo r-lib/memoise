@@ -11,7 +11,8 @@ memoise(
   envir = environment(f),
   cache = cachem::cache_mem(max_size = 1024 * 1024^2),
   omit_args = c(),
-  hash = function(x) rlang::hash(x)
+  hash = function(x) rlang::hash(x),
+  debug = FALSE
 )
 }
 \arguments{
@@ -29,6 +30,8 @@ size of 1024 MB.}
 
 \item{hash}{A function which takes an R object as input and returns a string
 which is used as a cache key.}
+
+\item{debug}{If set to TRUE, the function will print debugging information}
 }
 \description{
 \code{mf <- memoise(f)} creates \code{mf}, a memoised copy of
@@ -138,6 +141,18 @@ memA(2)
 # Make a memoized result automatically time out after 10 seconds.
 memA3 <- memoise(a, cache = cachem::cache_mem(max_age = 10))
 memA3(2)
+
+# Memoise also allows you to print out debug information this is especially
+# interesting if you need to debug a larger script or shiny application
+# where you have multiple calls to the memoised function and you do not
+# know which call takes too long/uses too much space.
+sleeper <- function(x) {
+  Sys.sleep(x)
+  x
+}
+memDbg <- memoise(sleeper, debug = TRUE)
+memDbg(2)
+memDbg(2)
 }
 \seealso{
 \code{\link{forget}}, \code{\link{is.memoised}},

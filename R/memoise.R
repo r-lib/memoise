@@ -60,6 +60,7 @@
 #' @param hash A function which takes an R object as input and returns a string
 #'   which is used as a cache key.
 #' @param omit_args Names of arguments to ignore when calculating hash.
+#' @param debug If set to TRUE, the function will print debugging information
 #' @seealso \code{\link{forget}}, \code{\link{is.memoised}},
 #'   \code{\link{timeout}}, \url{https://en.wikipedia.org/wiki/Memoization},
 #'   \code{\link{drop_cache}}
@@ -120,6 +121,18 @@
 #' # Make a memoized result automatically time out after 10 seconds.
 #' memA3 <- memoise(a, cache = cachem::cache_mem(max_age = 10))
 #' memA3(2)
+#'
+#' # Memoise also allows you to print out debug information this is especially
+#' # interesting if you need to debug a larger script or shiny application
+#' # where you have multiple calls to the memoised function and you do not
+#' # know which call takes too long/uses too much space.
+#' sleeper <- function(x) {
+#'   Sys.sleep(x)
+#'   x
+#' }
+#' memDbg <- memoise(sleeper, debug = TRUE)
+#' memDbg(2)
+#' memDbg(2)
 #' @importFrom stats setNames
 memoise <- memoize <- function(
   f,
@@ -127,8 +140,9 @@ memoise <- memoize <- function(
   envir = environment(f),
   cache = cachem::cache_mem(max_size = 1024 * 1024^2),
   omit_args = c(),
-  hash = function(x) rlang::hash(x))
-{
+  hash = function(x) rlang::hash(x),
+  debug = FALSE
+) {
   f_formals <- formals(args(f))
   if(is.memoised(f)) {
     stop("`f` must not be memoised.", call. = FALSE)
@@ -155,6 +169,11 @@ memoise <- memoize <- function(
     args <- c(lapply(called_args, eval, parent.frame()),
               lapply(default_args, eval, envir = environment()))
 
+    if (encl$`_debug`) {
+      cat(sprintf("Calling Function %s\n",
+                  paste(utils::capture.output(match.call()), collapse = "")))
+      t0 <- Sys.time()
+    }
     key <- encl$`_hash`(
       c(
         encl$`_f_hash`,
@@ -162,14 +181,47 @@ memoise <- memoize <- function(
         lapply(encl$`_additional`, function(x) eval(x[[2L]], environment(x)))
       )
     )
+    if (encl$`_debug`) {
+      cat(sprintf("\thash time: %.4fs\n\tkey: %s\n",
+                  difftime(Sys.time(), t0, units = "secs"), key))
+      t0 <- Sys.time()
+    }
 
     res <- encl$`_cache`$get(key)
     if (inherits(res, "key_missing")) {
+      if (encl$`_debug`) {
+        cat("\t= no cache found\n")
+        t1 <- Sys.time()
+      }
       # modify the call to use the original function and evaluate it
       mc[[1L]] <- encl$`_f`
       res <- withVisible(eval(mc, parent.frame()))
+      if (encl$`_debug`) {
+        cat(sprintf("\t\teval time: %.4fs\n",
+                    difftime(Sys.time(), t1, units = "secs")))
+        t2 <- Sys.time()
+      }
+
       encl$`_cache`$set(key, res)
+
+      if (encl$`_debug`) {
+        fs_txt <- NULL
+        if ("cache_disk" %in% class(encl$`_cache`))
+          fs_txt <- paste0("\tsize of new cache: ", file.size(list.files(
+            encl$`_cache`$info()[["dir"]], pattern = key, full.names = TRUE
+          )), " bytes\n")
+        cat(sprintf("\t\tcache save time: %.4fs\n%s",
+                    difftime(Sys.time(), t2, units = "secs"), fs_txt))
+      }
+    } else {
+      if (encl$`_debug`)
+        cat(sprintf("\t= cache found\n\t\tcache read time: %.4fs\n",
+                    difftime(Sys.time(), t0, units = "secs")))
     }
+
+    if (encl$`_debug`)
+      cat(sprintf("\t==> total time: %.4fs\n",
+                  difftime(Sys.time(), t0, units = "secs")))
 
     if (res$visible) {
       res$value
@@ -206,6 +258,7 @@ memoise <- memoize <- function(
   memo_f_env$`_omit_args` <- omit_args
   # Formals with a default value
   memo_f_env$`_default_args` <- Filter(function(x) !identical(x, quote(expr = )), f_formals)
+  memo_f_env$`_debug` <- debug
 
   environment(memo_f) <- memo_f_env
 
