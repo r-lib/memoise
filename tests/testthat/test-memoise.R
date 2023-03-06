@@ -326,6 +326,20 @@ test_that("omit_args respected", {
   res2 <- mem_rnorm(10, mean = +100)
 
   expect_true(identical(res1, res2))
+
+  # Also works for default args
+  f <- function(n, x = rnorm(1)) {
+    rnorm(n)
+  }
+  mem_f <- memoise(f)
+  expect_false(identical(res1, res2))
+  res1 <- mem_f(1)
+  res2 <- mem_f(1)
+
+  mem_f2 <- memoise(f, omit_args = "x")
+  res1 <- mem_f2(1)
+  res2 <- mem_f2(1)
+  expect_true(identical(res1, res2))
 })
 
 context("has_cache")

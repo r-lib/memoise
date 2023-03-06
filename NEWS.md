@@ -1,5 +1,7 @@
 # memoise (development version)
 
+* `omit_args` now also works for default arguments (@mgirlich, #145).
+
 # memoise 2.0.1
 
 # Version 2.0.0.9000
