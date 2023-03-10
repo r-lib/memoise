@@ -326,6 +326,29 @@ test_that("omit_args respected", {
   res2 <- mem_rnorm(10, mean = +100)
 
   expect_true(identical(res1, res2))
+
+  # Also works for default arguments
+  a <- 0
+  f <- function(x = a) {
+    a <<- a + 1
+    a
+  }
+
+  # everytime `f()` is called its value increases by 1
+  expect_equal(f(), 1)
+  expect_equal(f(), 2)
+
+  # it still increases by one when memoised as the argument `x` changes
+  a <- 0
+  mem_f <- memoise::memoise(f)
+  expect_equal(mem_f(), 1)
+  expect_equal(mem_f(), 2)
+
+  # but `x` can be ignored via `omit_args`
+  a <- 0
+  mem_f2 <- memoise(f, omit_args = "x")
+  expect_equal(mem_f2(), 1)
+  expect_equal(mem_f2(), 1)
 })
 
 context("has_cache")

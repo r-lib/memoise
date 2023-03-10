@@ -148,12 +148,12 @@ memoise <- memoize <- function(
     # That has not been called
     default_args <- default_args[setdiff(names(default_args), names(called_args))]
 
-    # Ignored specified arguments when hashing
-    called_args[encl$`_omit_args`] <- NULL
-
     # Evaluate all the arguments
     args <- c(lapply(called_args, eval, parent.frame()),
               lapply(default_args, eval, envir = environment()))
+
+    # Ignored specified arguments when hashing
+    args[encl$`_omit_args`] <- NULL
 
     key <- encl$`_hash`(
       c(
